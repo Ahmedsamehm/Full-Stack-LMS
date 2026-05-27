@@ -1,0 +1,95 @@
+import { Controller, Post, Body, HttpStatus, HttpCode, Req, Res, UnauthorizedException } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { CreateAuthDto } from './dto/create-auth.dto';
+import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+import { LoginAuthDto } from './dto/login-auth.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import type { Request, Response } from 'express';
+
+@Controller('auth')
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
+  @Post('register')
+  @HttpCode(HttpStatus.CREATED)
+  @ResponseMessage('User created successfully')
+  create(@Body() createAuthDto: CreateAuthDto) {
+    return this.authService.create(createAuthDto);
+  }
+
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  @ResponseMessage('User logged in successfully')
+  async login(
+    @Body() loginAuthDto: LoginAuthDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const result = await this.authService.login(loginAuthDto);
+    this.setRefreshTokenCookie(res, result.refreshToken);
+    return { accessToken: result.accessToken, user: result.user };
+  }
+
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @ResponseMessage('Token refreshed successfully')
+  async refresh(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const refreshToken = req.cookies?.refreshToken;
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh token not found');
+    }
+    const result = await this.authService.refresh(refreshToken);
+    this.setRefreshTokenCookie(res, result.refreshToken);
+    return { accessToken: result.accessToken };
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  @ResponseMessage('Logged out successfully')
+  async logout(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const refreshToken = req.cookies?.refreshToken;
+    if (refreshToken) {
+      await this.authService.logout(refreshToken);
+    }
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/api/auth',
+    });
+  }
+
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  @ResponseMessage('Password reset link sent to your email')
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    await this.authService.forgotPassword(forgotPasswordDto.email);
+  }
+
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  @ResponseMessage('Password reset successfully')
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    await this.authService.resetPassword(
+      resetPasswordDto.token,
+      resetPasswordDto.NewPassword,
+      resetPasswordDto.confirmNewPassword,
+    );
+  }
+
+  private setRefreshTokenCookie(res: Response, token: string) {
+    res.cookie('refreshToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/api/auth',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+  }
+}
