@@ -4,23 +4,22 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-
 }
 
 model User {
-  id            String         @id @default(uuid())
-  name          String
-  email         String         @unique
-  passwordHash  String
-  role          Roles          @default(STUDENT)
-  status        UserStatus     @default(ACTIVE)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  courses       Course[]
-  enrollments   Enrollment[]
-  payments      Payment[]
-  requests      Request[]      @relation("UserRequests")
-  refreshTokens RefreshToken[]
+  id                  String               @id @default(uuid())
+  name                String
+  email               String               @unique
+  passwordHash        String
+  role                Roles                @default(Student)
+  status              UserStatus           @default(ACTIVE)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  courses             Course[]
+  enrollments         Enrollment[]
+  payments            Payment[]
+  requests            Request[]            @relation("UserRequests")
+  refreshTokens       RefreshToken[]
   passwordResetTokens PasswordResetToken[]
 
   @@map("users")
@@ -37,7 +36,6 @@ model RefreshToken {
   @@map("refresh_tokens")
 }
 
-
 model PasswordResetToken {
   id        String   @id @default(uuid())
   tokenHash String   @unique
@@ -48,6 +46,7 @@ model PasswordResetToken {
 
   @@map("password_reset_tokens")
 }
+
 model Course {
   id           String       @id @default(uuid())
   title        String
@@ -125,10 +124,10 @@ model Request {
 }
 
 enum Roles {
-  SUPER_ADMIN
-  ADMIN
-  TEACHER
-  STUDENT
+  Super_Admin
+  Admin
+  Teacher
+  Student
 }
 
 enum UserStatus {
@@ -172,5 +171,3 @@ enum RequestStatus {
   APPROVED
   REJECTED
 }
-
-
