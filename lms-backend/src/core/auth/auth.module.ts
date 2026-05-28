@@ -10,22 +10,11 @@ import { ResetPasswordService } from './services/reset-password.service';
 import { JwtModule } from '@nestjs/jwt';
 import { logoutService } from './services/logout.service';
 import { MailModule } from 'src/core/mail/mail.module';
+import { PrismaService } from '../database/prisma.service';
 
 @Module({
-  imports: [
-    UsersModule,
-    MailModule,
-    JwtModule.register({ global: true }),
-  ],
-  controllers: [AuthController],
-  providers: [
-    AuthService,
-    RegisterService,
-    LoginService,
-    RefreshTokenService,
-    logoutService,
-    ForgotPasswordService,
-    ResetPasswordService,
-  ],
+    imports: [UsersModule, MailModule, JwtModule.register({ global: true })],
+    controllers: [AuthController],
+    providers: [AuthService, RegisterService, LoginService, RefreshTokenService, logoutService, ForgotPasswordService, ResetPasswordService, PrismaService],
 })
 export class AuthModule {}
