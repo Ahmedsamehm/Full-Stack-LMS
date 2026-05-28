@@ -1,26 +1,50 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { AdminCreateUserDto } from './dto/admin-create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ChangeRoleDto } from './dto/change-role.dto';
+import { GetAllUsersService } from './services/getAllUsers.service';
+import { FindUserByIdService } from './services/findUserById.service';
+import { CreateUserService } from './services/createUser.service';
+import { UpdateUserService } from './services/updateUser.service';
+import { DeleteUserService } from './services/deleteUser.service';
+import { ChangeUserRoleService } from './services/changeUserRole.service';
 
 @Injectable()
 export class UsersService {
-    create(createUserDto: CreateUserDto) {
-        return 'This action adds a new user';
+    constructor(
+        private readonly getAllUsersService: GetAllUsersService,
+        private readonly findUserByIdService: FindUserByIdService,
+        private readonly createUserService: CreateUserService,
+        private readonly updateUserService: UpdateUserService,
+        private readonly deleteUserService: DeleteUserService,
+        private readonly changeUserRoleService: ChangeUserRoleService,
+    ) {}
+
+    async getAllUsers() {
+        return await this.getAllUsersService.getAllUsers();
     }
 
-    findAll() {
-        return `This action returns all users`;
+    async findUserById(id: string) {
+        return await this.findUserByIdService.findUserById(id);
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} user`;
+    async findMe(currentUserId: string) {
+        return await this.findUserByIdService.findUserById(currentUserId);
     }
 
-    update(id: number, updateUserDto: UpdateUserDto) {
-        return `This action updates a #${id} user`;
+    async create(dto: AdminCreateUserDto, currentUserRole: string) {
+        return await this.createUserService.create(dto, currentUserRole);
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} user`;
+    async update(id: string, dto: UpdateUserDto, currentUserId: string, currentUserRole: string) {
+        return await this.updateUserService.update(id, dto, currentUserId, currentUserRole);
+    }
+
+    async delete(id: string) {
+        return await this.deleteUserService.delete(id);
+    }
+
+    async changeRole(id: string, dto: ChangeRoleDto, currentUserRole: string) {
+        return await this.changeUserRoleService.changeRole(id, dto, currentUserRole);
     }
 }

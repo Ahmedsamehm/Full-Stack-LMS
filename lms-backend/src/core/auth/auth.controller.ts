@@ -43,20 +43,28 @@ export class AuthController {
         return { accessToken: result.accessToken };
     }
 
+    // auth.controller.ts
+
     @Post('logout')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Logged out successfully')
     async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-        const refreshToken = req.cookies?.refreshToken;
+        const refreshToken = req.cookies?.['refreshToken'];
+
+        const userId = (req as any).user?.sub;
+
         if (refreshToken) {
-            await this.authService.logout(refreshToken);
+            await this.authService.logout(refreshToken, userId);
         }
+
         res.clearCookie('refreshToken', {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
             path: '/api/auth',
         });
+
+        return { success: true };
     }
 
     @Post('forgot-password')

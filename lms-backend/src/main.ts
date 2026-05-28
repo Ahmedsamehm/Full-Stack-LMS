@@ -7,35 +7,33 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+    const app = await NestFactory.create<NestExpressApplication>(AppModule);
+    app.use(cookieParser());
+    app.use(helmet());
 
-  app.use(helmet());
-  app.use(cookieParser());
+    app.enableCors({
+        origin: ['http://localhost:3000'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+        allowedHeaders: ['Authorization', 'Content-Type', 'Accept', 'x-lang', 'accept-language'],
+        credentials: true,
+    });
 
-  app.enableCors({
-    origin: ['http://localhost:3000'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-      allowedHeaders: ['Authorization', 'Content-Type', 'Accept', 'x-lang', 'accept-language'],
-      credentials: true ,
-  });
+    app.setGlobalPrefix('api');
 
-  app.setGlobalPrefix('api');
+    app.useGlobalInterceptors(new TransformInterceptor(new Reflector()));
 
-  app.useGlobalInterceptors(new TransformInterceptor(new Reflector()));
+    app.useGlobalPipes(
+        new ValidationPipe({
+            whitelist: true,
+            forbidNonWhitelisted: true,
+            transform: true,
+            transformOptions: {
+                enableImplicitConversion: true,
+            },
+            stopAtFirstError: true,
+        }),
+    );
 
-  app.useGlobalPipes(
-     new ValidationPipe({
-        whitelist: true,
-        forbidNonWhitelisted: true,
-        transform: true,
-        transformOptions: {
-          enableImplicitConversion: true,
-        },
-        stopAtFirstError: true,
-      }),
-  );
-
-  await app.listen(process.env.PORT ?? 3000);
-} 
+    await app.listen(process.env.PORT ?? 3000);
+}
 bootstrap();
-
