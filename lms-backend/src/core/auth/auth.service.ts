@@ -10,36 +10,36 @@ import { ResetPasswordService } from './services/reset-password.service';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly RegisterService: RegisterService,
-    private readonly LoginService: LoginService,
-    private readonly RefreshTokenService: RefreshTokenService,
-    private readonly LogoutService: logoutService,
-    private readonly ForgotPasswordService: ForgotPasswordService,
-    private readonly ResetPasswordService: ResetPasswordService,
-  ) {}
+    constructor(
+        private readonly RegisterService: RegisterService,
+        private readonly LoginService: LoginService,
+        private readonly RefreshTokenService: RefreshTokenService,
+        private readonly LogoutService: logoutService,
+        private readonly ForgotPasswordService: ForgotPasswordService,
+        private readonly ResetPasswordService: ResetPasswordService,
+    ) {}
 
-  create(createAuthDto: CreateAuthDto) {
-    return this.RegisterService.create(createAuthDto);
-  }
+    create(createAuthDto: CreateAuthDto) {
+        return this.RegisterService.create(createAuthDto);
+    }
 
-  login(loginAuthDto: LoginAuthDto) {
-    return this.LoginService.login(loginAuthDto);
-  }
+    login(loginAuthDto: LoginAuthDto) {
+        return this.LoginService.login(loginAuthDto);
+    }
 
-  refresh(refreshToken: string) {
-    return this.RefreshTokenService.refresh(refreshToken);
-  }
+    refresh(refreshToken: string) {
+        return this.RefreshTokenService.refresh(refreshToken);
+    }
 
-  logout(refreshToken: string) {
-    return this.LogoutService.logout(refreshToken);
-  }
+    logout(refreshToken: string) {
+        return this.LogoutService.logout(refreshToken);
+    }
 
-  forgotPassword(email: string) {
-    return this.ForgotPasswordService.forgotPassword(email);
-  }
+    forgotPassword(email: string) {
+        return this.ForgotPasswordService.forgotPassword(email);
+    }
 
-  resetPassword(token: string, password: string, confirmPassword: string) {
-    return this.ResetPasswordService.resetPassword(token, password, confirmPassword);
-  }
+    resetPassword(token: string, password: string, confirmPassword: string) {
+        return this.ResetPasswordService.resetPassword(token, password, confirmPassword);
+    }
 }
