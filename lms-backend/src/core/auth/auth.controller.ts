@@ -6,12 +6,15 @@ import { LoginAuthDto } from './dto/login-auth.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import type { Request, Response } from 'express';
+import { Public } from 'src/common/decorators/public.decorator';
+
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
+    @Public()
   @HttpCode(HttpStatus.CREATED)
   @ResponseMessage('User created successfully')
   create(@Body() createAuthDto: CreateAuthDto) {
@@ -19,6 +22,7 @@ export class AuthController {
   }
 
   @Post('login')
+  @Public()
   @HttpCode(HttpStatus.OK)
   @ResponseMessage('User logged in successfully')
   async login(
@@ -66,6 +70,7 @@ export class AuthController {
   }
 
   @Post('forgot-password')
+    @Public()
   @HttpCode(HttpStatus.OK)
   @ResponseMessage('Password reset link sent to your email')
   async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
@@ -73,6 +78,7 @@ export class AuthController {
   }
 
   @Post('reset-password')
+    @Public()
   @HttpCode(HttpStatus.OK)
   @ResponseMessage('Password reset successfully')
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
