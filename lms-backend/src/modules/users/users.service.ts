@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { AdminCreateUserDto } from './dto/admin-create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ChangeRoleDto } from './dto/change-role.dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { GetAllUsersService } from './services/getAllUsers.service';
 import { FindUserByIdService } from './services/findUserById.service';
 import { CreateUserService } from './services/createUser.service';
@@ -22,15 +23,17 @@ export class UsersService {
         private readonly FindUserByEmailService: FindPublicUserByEmailService,
     ) {}
 
-    async getAllUsers() {
-        return await this.getAllUsersService.getAllUsers();
+    async getAllUsers(pagination: PaginationDto) {
+        return await this.getAllUsersService.getAllUsers(pagination);
     }
 
     async findUserById(id: string) {
         return await this.findUserByIdService.findUserById(id);
-    }
+    }   
 
     async findMe(currentUserId: string) {
+    
+    
         return await this.findUserByIdService.findUserById(currentUserId);
     }
 

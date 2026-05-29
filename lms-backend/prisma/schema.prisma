@@ -25,6 +25,17 @@ model User {
   @@map("users")
 }
 
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  courses   Course[]
+
+  @@map("categories")
+}
+
 model RefreshToken {
   id        String   @id @default(uuid())
   tokenHash String   @unique
@@ -59,11 +70,16 @@ model Course {
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   teacher      User         @relation(fields: [teacherId], references: [id])
+  category     Category     @relation(fields: [categoryId], references: [id])
   enrollments  Enrollment[]
   lessons      Lesson[]
   payments     Payment[]
   requests     Request[]
 
+  @@index([teacherId])
+  @@index([categoryId])
+  @@index([status])
+  @@index([teacherId, status])
   @@map("courses")
 }
 
@@ -78,6 +94,7 @@ model Lesson {
   createdAt  DateTime @default(now())
   course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
+  @@index([courseId])
   @@map("lessons")
 }
 
@@ -91,6 +108,8 @@ model Enrollment {
   course    Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
   user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([courseId])
+  @@index([userId, courseId])
   @@map("enrollments")
 }
 
