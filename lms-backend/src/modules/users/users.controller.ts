@@ -1,10 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, ParseUUIDPipe, Query, ParseEnumPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AdminCreateUserDto } from './dto/admin-create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ChangeRoleDto } from './dto/change-role.dto';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
-import { AdminOnly } from 'src/common/decorators/role.decorator';
+import { AdminOnly, TeacherOnly } from 'src/common/decorators/role.decorator';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { UsersResponseDto } from './dto/response-user.dto';
 
@@ -16,7 +16,7 @@ export class UsersController {
     @AdminOnly()
     @ResponseMessage('Users fetched successfully')
     @HttpCode(HttpStatus.OK)
-    findAll() {
+    findAll(@CurrentUser() user: UsersResponseDto) {
         return this.usersService.getAllUsers();
     }
 
@@ -26,7 +26,13 @@ export class UsersController {
     findMe(@CurrentUser() user: UsersResponseDto) {
         return this.usersService.findMe(user.id);
     }
-
+    @Get('email')
+    @TeacherOnly()
+    @ResponseMessage('User fetched successfully')
+    @HttpCode(HttpStatus.OK)
+    findOneByEmail(@Query('email') email: string) {
+        return this.usersService.findUserByEmail(email);
+    }
     @Get(':id')
     @ResponseMessage('User fetched successfully')
     @HttpCode(HttpStatus.OK)
