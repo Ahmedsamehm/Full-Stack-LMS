@@ -8,6 +8,7 @@ import { CreateUserService } from './services/createUser.service';
 import { UpdateUserService } from './services/updateUser.service';
 import { DeleteUserService } from './services/deleteUser.service';
 import { ChangeUserRoleService } from './services/changeUserRole.service';
+import { FindPublicUserByEmailService } from './services/findPublicUserByEmail.service';
 
 @Injectable()
 export class UsersService {
@@ -18,6 +19,7 @@ export class UsersService {
         private readonly updateUserService: UpdateUserService,
         private readonly deleteUserService: DeleteUserService,
         private readonly changeUserRoleService: ChangeUserRoleService,
+        private readonly FindUserByEmailService: FindPublicUserByEmailService,
     ) {}
 
     async getAllUsers() {
@@ -30,6 +32,10 @@ export class UsersService {
 
     async findMe(currentUserId: string) {
         return await this.findUserByIdService.findUserById(currentUserId);
+    }
+
+    async findUserByEmail(email: string) {
+        return await this.FindUserByEmailService.findPublicUserByEmail(email);
     }
 
     async create(dto: AdminCreateUserDto, currentUserRole: string) {

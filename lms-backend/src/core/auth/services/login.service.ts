@@ -28,7 +28,7 @@ export class LoginService {
     }
 
     const payload = {
-      sub: user.id,
+      id: user.id,
       email: user.email,
       role: user.role,
     };

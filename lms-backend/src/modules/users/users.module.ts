@@ -8,10 +8,21 @@ import { CreateUserService } from './services/createUser.service';
 import { UpdateUserService } from './services/updateUser.service';
 import { DeleteUserService } from './services/deleteUser.service';
 import { ChangeUserRoleService } from './services/changeUserRole.service';
+import { FindPublicUserByEmailService } from './services/findPublicUserByEmail.service';
 
 @Module({
     controllers: [UsersController],
-    providers: [UsersService, findUserByEmailService, GetAllUsersService, FindUserByIdService, CreateUserService, UpdateUserService, DeleteUserService, ChangeUserRoleService],
+    providers: [
+        UsersService,
+        findUserByEmailService, // don't use this outside auth module
+        GetAllUsersService,
+        FindUserByIdService,
+        CreateUserService,
+        UpdateUserService,
+        DeleteUserService,
+        ChangeUserRoleService,
+        FindPublicUserByEmailService, // use this to find user ,
+    ],
     exports: [findUserByEmailService],
 })
 export class UsersModule {}
