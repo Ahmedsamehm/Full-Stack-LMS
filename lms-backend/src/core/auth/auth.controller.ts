@@ -50,8 +50,7 @@ export class AuthController {
     @ResponseMessage('Logged out successfully')
     async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
         const refreshToken = req.cookies?.['refreshToken'];
-
-        const userId = (req as any).user?.sub;
+        const userId = (req as any).user?.id;
 
         if (refreshToken) {
             await this.authService.logout(refreshToken, userId);

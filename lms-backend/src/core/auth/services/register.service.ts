@@ -5,40 +5,40 @@ import { hashPassword } from '../utils/hashPassword';
 
 @Injectable()
 export class RegisterService {
-  constructor(private readonly prisma: PrismaService) {}
+    constructor(private readonly prisma: PrismaService) {}
 
-async create(createAuthDto: CreateAuthDto) {
-  const { email, password, confirmPassword } = createAuthDto;
+    async create(createAuthDto: CreateAuthDto) {
+        const { email, password, confirmPassword } = createAuthDto;
 
-  if (password !== confirmPassword) {
-    throw new BadRequestException('Passwords do not match');
-  }
+        if (password !== confirmPassword) {
+            throw new BadRequestException('Passwords do not match');
+        }
 
-  const existingUser = await this.prisma.user.findUnique({
-    where: { email },
-  });
+        const existingUser = await this.prisma.user.findUnique({
+            where: { email },
+        });
 
-  if (existingUser) {
-    throw new ConflictException('Email already exists');
-  }
+        if (existingUser) {
+            throw new ConflictException('Email already exists');
+        }
 
-  const hashedPassword = await hashPassword(password);
+        const hashedPassword = await hashPassword(password);
 
-  const user = await this.prisma.user.create({
-    data: {
-      name: createAuthDto.name,
-      email,
-      passwordHash: hashedPassword,
-    },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      status: true,
-      createdAt: true,
-    },
-  });
+        const user = await this.prisma.user.create({
+            data: {
+                name: createAuthDto.name,
+                email,
+                passwordHash: hashedPassword,
+            },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                status: true,
+                createdAt: true,
+            },
+        });
 
-  return user;
-}
+        return user;
+    }
 }
