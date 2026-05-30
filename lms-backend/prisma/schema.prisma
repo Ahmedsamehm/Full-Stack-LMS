@@ -84,33 +84,54 @@ model Course {
 }
 
 model Lesson {
-  id         String   @id @default(uuid())
-  courseId   String
-  title      String
-  duration   Int
-  content    String?
-  videoUrl   String?
-  orderIndex Int
-  createdAt  DateTime @default(now())
-  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  id             String           @id @default(uuid())
+  courseId       String
+  title          String
+  duration       Int
+  content        String?
+  videoUrl       String?
+  orderIndex     Int
+  createdAt      DateTime         @default(now())
+  course         Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessonProgress LessonProgress[]
 
   @@index([courseId])
   @@map("lessons")
 }
 
 model Enrollment {
-  id        String           @id @default(uuid())
-  userId    String
-  courseId  String
-  status    EnrollmentStatus @default(PENDING)
-  progress  Int              @default(0)
-  createdAt DateTime         @default(now())
-  course    Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String           @id @default(uuid())
+  userId         String
+  courseId        String
+  status         EnrollmentStatus @default(ACTIVE)
+  progress       Int              @default(0)
+  enrolledAt     DateTime         @default(now())
+  expiresAt      DateTime?
+  updatedAt      DateTime         @updatedAt
+  course         Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonProgress LessonProgress[]
 
+  @@unique([userId, courseId])
+  @@index([userId])
   @@index([courseId])
-  @@index([userId, courseId])
   @@map("enrollments")
+}
+
+model LessonProgress {
+  id           String     @id @default(uuid())
+  enrollmentId String
+  lessonId     String
+  completed    Boolean    @default(false)
+  completedAt  DateTime?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  lesson       Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([enrollmentId, lessonId])
+  @@index([enrollmentId])
+  @@map("lesson_progress")
 }
 
 model Payment {

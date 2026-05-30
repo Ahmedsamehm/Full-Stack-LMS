@@ -1,13 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/core/database/prisma.service';
 import { PaginationDto, PaginatedResult } from 'src/common/dto/pagination.dto';
-import { enrollmentSelect } from 'src/common/selects/course.select';
+import { enrollmentSelect } from 'src/common/selects/enrollment.select';
+import { EnrollmentResponseDto } from '../dto/response-enrollment.dto';
 
 @Injectable()
-export class GetCourseEnrollmentsService {
+export class GetEnrollmentsByCourseService {
     constructor(private readonly prisma: PrismaService) {}
 
-    async findByCourseId(courseId: string, teacherId: string, pagination: PaginationDto): Promise<PaginatedResult<any>> {
+    async findByCourseId(courseId: string, teacherId: string, pagination: PaginationDto): Promise<PaginatedResult<EnrollmentResponseDto>> {
         const course = await this.prisma.course.findFirst({ where: { id: courseId, teacherId } });
 
         if (!course) {
@@ -24,7 +25,7 @@ export class GetCourseEnrollmentsService {
                 where,
                 skip,
                 take: limit,
-                orderBy: { createdAt: 'desc' },
+                orderBy: { enrolledAt: 'desc' },
                 select: enrollmentSelect,
             }),
             this.prisma.enrollment.count({ where }),
