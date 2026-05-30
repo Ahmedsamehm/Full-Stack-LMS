@@ -11,9 +11,6 @@ import { GetCoursesByTeacherService } from './services/getCoursesByTeacher.servi
 import { UpdateCourseService } from './services/updateCourse.service';
 import { DeleteCourseService } from './services/deleteCourse.service';
 import { ChangeCourseStatusService } from './services/changeCourseStatus.service';
-import { GetCourseEnrollmentsService } from './services/getCourseEnrollments.service';
-import { EnrollStudentService } from './services/enrollStudent.service';
-import { RemoveStudentService } from './services/removeStudent.service';
 
 @Injectable()
 export class CoursesService {
@@ -26,9 +23,6 @@ export class CoursesService {
         private readonly updateCourseService: UpdateCourseService,
         private readonly deleteCourseService: DeleteCourseService,
         private readonly changeCourseStatusService: ChangeCourseStatusService,
-        private readonly getCourseEnrollmentsService: GetCourseEnrollmentsService,
-        private readonly enrollStudentService: EnrollStudentService,
-        private readonly removeStudentService: RemoveStudentService,
     ) {}
 
     create(dto: CreateCourseDto, teacherId: string) {
@@ -61,17 +55,5 @@ export class CoursesService {
 
     changeStatus(courseId: string, newStatus: CourseStatus, userId: string, userRole: Roles) {
         return this.changeCourseStatusService.changeStatus(courseId, newStatus, userId, userRole);
-    }
-
-    getEnrollments(courseId: string, teacherId: string, pagination: PaginationDto) {
-        return this.getCourseEnrollmentsService.findByCourseId(courseId, teacherId, pagination);
-    }
-
-    enrollStudent(courseId: string, teacherId: string, studentEmail: string) {
-        return this.enrollStudentService.enroll(courseId, teacherId, studentEmail);
-    }
-
-    removeStudent(courseId: string, teacherId: string, enrollmentId: string) {
-        return this.removeStudentService.remove(courseId, teacherId, enrollmentId);
     }
 }

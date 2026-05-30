@@ -9,6 +9,7 @@ import { UsersModule } from './modules/users/users.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { CoursesModule } from './modules/courses/courses.module';
 import { LessonsModule } from './modules/lessons/lessons.module';
+import { EnrollmentsModule } from './modules/enrollments/enrollments.module';
 import { JwtAuthGuard } from './core/auth/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 
@@ -21,6 +22,7 @@ import { RolesGuard } from './common/guards/roles.guard';
     CategoriesModule,
     CoursesModule,
     LessonsModule,
+    EnrollmentsModule,
   ],
   controllers: [AppController],
   providers: [

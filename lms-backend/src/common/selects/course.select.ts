@@ -29,11 +29,3 @@ export const courseDetailSelect = {
     },
     _count: { select: { enrollments: true } },
 } satisfies Prisma.CourseSelect;
-
-export const enrollmentSelect = {
-    id: true,
-    status: true,
-    progress: true,
-    createdAt: true,
-    user: { select: { id: true, name: true, email: true } },
-} satisfies Prisma.EnrollmentSelect;

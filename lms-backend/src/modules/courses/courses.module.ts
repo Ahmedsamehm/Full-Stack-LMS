@@ -9,9 +9,6 @@ import { GetCoursesByTeacherService } from './services/getCoursesByTeacher.servi
 import { UpdateCourseService } from './services/updateCourse.service';
 import { DeleteCourseService } from './services/deleteCourse.service';
 import { ChangeCourseStatusService } from './services/changeCourseStatus.service';
-import { GetCourseEnrollmentsService } from './services/getCourseEnrollments.service';
-import { EnrollStudentService } from './services/enrollStudent.service';
-import { RemoveStudentService } from './services/removeStudent.service';
 
 @Module({
     controllers: [CoursesController],
@@ -25,9 +22,6 @@ import { RemoveStudentService } from './services/removeStudent.service';
         UpdateCourseService,
         DeleteCourseService,
         ChangeCourseStatusService,
-        GetCourseEnrollmentsService,
-        EnrollStudentService,
-        RemoveStudentService,
     ],
     exports: [GetCourseByIdService],
 })

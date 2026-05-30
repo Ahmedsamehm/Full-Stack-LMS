@@ -71,27 +71,4 @@ export class CoursesController {
     changeStatus(@Param('id', ParseUUIDPipe) id: string, @Body() dto: ChangeStatusDto, @CurrentUser() user: UserResponseDto) {
         return this.coursesService.changeStatus(id, dto.status, user.id, user.role);
     }
-
-    @Get(':id/enrollments')
-    @TeacherOnly()
-    @ResponseMessage('Enrollments retrieved successfully')
-    getEnrollments(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: UserResponseDto, @Query() pagination: PaginationDto) {
-        return this.coursesService.getEnrollments(id, user.id, pagination);
-    }
-
-    @Post(':id/enrollments')
-    @TeacherOnly()
-    @HttpCode(HttpStatus.CREATED)
-    @ResponseMessage('Student enrolled successfully')
-    enrollStudent(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: UserResponseDto, @Body('email') studentEmail: string) {
-        return this.coursesService.enrollStudent(id, user.id, studentEmail);
-    }
-
-    @Delete(':id/enrollments/:enrollmentId')
-    @TeacherOnly()
-    @HttpCode(HttpStatus.OK)
-    @ResponseMessage('Student removed from course successfully')
-    removeStudent(@Param('id', ParseUUIDPipe) id: string, @Param('enrollmentId', ParseUUIDPipe) enrollmentId: string, @CurrentUser() user: UserResponseDto) {
-        return this.coursesService.removeStudent(id, user.id, enrollmentId);
-    }
 }
