@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/core/database/prisma.service';
 import { PaginationDto, PaginatedResult } from 'src/common/dto/pagination.dto';
 import { CategoryResponseDto } from '../dto/response-category.dto';
+import { categorySelect } from 'src/common/selects/category.select';
 
 @Injectable()
 export class GetAllCategoriesService {
@@ -19,7 +20,7 @@ export class GetAllCategoriesService {
                 skip,
                 take: limit,
                 orderBy: { name: 'asc' },
-                select: { id: true, name: true, slug: true, createdAt: true, updatedAt: true },
+                select: categorySelect,
             }),
             this.prisma.category.count({ where }),
         ]);

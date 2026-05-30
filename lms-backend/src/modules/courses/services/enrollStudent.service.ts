@@ -1,5 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/core/database/prisma.service';
+import { enrollmentSelect } from 'src/common/selects/course.select';
 
 @Injectable()
 export class EnrollStudentService {
@@ -28,13 +29,7 @@ export class EnrollStudentService {
 
         const enrollment = await this.prisma.enrollment.create({
             data: { courseId, userId: student.id, status: 'ACTIVE' },
-            select: {
-                id: true,
-                status: true,
-                progress: true,
-                createdAt: true,
-                user: { select: { id: true, name: true, email: true } },
-            },
+            select: enrollmentSelect,
         });
 
         return enrollment;

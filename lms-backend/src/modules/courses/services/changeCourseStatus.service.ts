@@ -2,6 +2,8 @@ import { BadRequestException, Injectable, NotFoundException, ForbiddenException 
 import { PrismaService } from 'src/core/database/prisma.service';
 import { CourseStatus, Roles } from '@prisma/client';
 import { CourseResponseDto } from '../dto/response-course.dto';
+import { courseBaseSelect } from 'src/common/selects/course.select';
+import { toCourseResponse } from '../dto/course.mapper';
 
 @Injectable()
 export class ChangeCourseStatusService {
@@ -36,20 +38,9 @@ export class ChangeCourseStatusService {
         const updated = await this.prisma.course.update({
             where: { id: courseId },
             data: { status: newStatus },
-            select: {
-                id: true,
-                title: true,
-                description: true,
-                price: true,
-                categoryId: true,
-                thumbnailUrl: true,
-                teacherId: true,
-                status: true,
-                createdAt: true,
-                updatedAt: true,
-            },
+            select: courseBaseSelect,
         });
 
-        return updated;
+        return toCourseResponse(updated);
     }
 }

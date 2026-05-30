@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/core/database/prisma.service';
 import { CreateCourseDto } from '../dto/create-course.dto';
 import { CourseResponseDto } from '../dto/response-course.dto';
+import { courseBaseSelect } from 'src/common/selects/course.select';
+import { toCourseResponse } from '../dto/course.mapper';
 
 @Injectable()
 export class CreateCourseService {
@@ -24,20 +26,9 @@ export class CreateCourseService {
                 teacherId,
                 status: dto.status ?? 'DRAFT',
             },
-            select: {
-                id: true,
-                title: true,
-                description: true,
-                price: true,
-                categoryId: true,
-                thumbnailUrl: true,
-                teacherId: true,
-                status: true,
-                createdAt: true,
-                updatedAt: true,
-            },
+            select: courseBaseSelect,
         });
 
-        return course;
+        return toCourseResponse(course);
     }
 }

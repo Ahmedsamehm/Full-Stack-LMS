@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/core/database/prisma.service';
 import { hashToken } from '../utils/hashToken';
+import { userAuthSelect } from 'src/common/selects/user.select';
 
 @Injectable()
 export class RefreshTokenService {
@@ -42,7 +43,7 @@ export class RefreshTokenService {
 
         const user = await this.prisma.user.findUnique({
             where: { id: payload.id },
-            select: { id: true, status: true },
+            select: userAuthSelect,
         });
 
         if (!user || user.status !== 'ACTIVE') {

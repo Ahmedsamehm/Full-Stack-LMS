@@ -2,6 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/core/database/prisma.service';
 import { CreateCategoryDto } from '../dto/create-category.dto';
 import { CategoryResponseDto } from '../dto/response-category.dto';
+import { categorySelect } from 'src/common/selects/category.select';
 
 @Injectable()
 export class CreateCategoryService {
@@ -18,7 +19,7 @@ export class CreateCategoryService {
 
         const category = await this.prisma.category.create({
             data: { name: dto.name, slug: dto.slug },
-            select: { id: true, name: true, slug: true, createdAt: true, updatedAt: true },
+            select: categorySelect,
         });
 
         return category;
