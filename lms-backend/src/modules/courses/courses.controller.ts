@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param, Query, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query, HttpCode, HttpStatus, ParseUUIDPipe } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
@@ -25,7 +25,7 @@ export class CoursesController {
     @Get()
     @Public()
     @ResponseMessage('Courses retrieved successfully')
-    findAll(@Query() pagination: PaginationDto, @CurrentUser() user: any, @Query('categoryId') categoryId?: string, @Query('search') search?: string) {
+    findAll(@Query() pagination: PaginationDto, @CurrentUser() user: UserResponseDto, @Query('categoryId') categoryId?: string, @Query('search') search?: string) {
         return this.coursesService.findAll(pagination, categoryId, search, user?.role);
     }
 
@@ -39,21 +39,21 @@ export class CoursesController {
     @Get('teacher/:teacherId')
     @AdminOnly()
     @ResponseMessage('Teacher courses retrieved successfully')
-    findByTeacher(@Param('teacherId') teacherId: string, @Query() pagination: PaginationDto) {
+    findByTeacher(@Param('teacherId', ParseUUIDPipe) teacherId: string, @Query() pagination: PaginationDto) {
         return this.coursesService.findByTeacher(teacherId, pagination);
     }
 
     @Get(':id')
     @Public()
     @ResponseMessage('Course retrieved successfully')
-    findOne(@Param('id') id: string) {
+    findOne(@Param('id', ParseUUIDPipe) id: string) {
         return this.coursesService.findOne(id);
     }
 
     @Patch(':id')
     @TeacherOnly()
     @ResponseMessage('Course updated successfully')
-    update(@Param('id') id: string, @Body() dto: UpdateCourseDto, @CurrentUser() user: UserResponseDto) {
+    update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateCourseDto, @CurrentUser() user: UserResponseDto) {
         return this.coursesService.update(id, dto, user.id);
     }
 
@@ -61,21 +61,21 @@ export class CoursesController {
     @TeacherOnly()
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Course deleted successfully')
-    remove(@Param('id') id: string, @CurrentUser() user: UserResponseDto) {
+    remove(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: UserResponseDto) {
         return this.coursesService.remove(id, user.id);
     }
 
     @Patch(':id/status')
     @TeacherOnly()
     @ResponseMessage('Course status updated successfully')
-    changeStatus(@Param('id') id: string, @Body() dto: ChangeStatusDto, @CurrentUser() user: UserResponseDto) {
+    changeStatus(@Param('id', ParseUUIDPipe) id: string, @Body() dto: ChangeStatusDto, @CurrentUser() user: UserResponseDto) {
         return this.coursesService.changeStatus(id, dto.status, user.id, user.role);
     }
 
     @Get(':id/enrollments')
     @TeacherOnly()
     @ResponseMessage('Enrollments retrieved successfully')
-    getEnrollments(@Param('id') id: string, @CurrentUser() user: UserResponseDto, @Query() pagination: PaginationDto) {
+    getEnrollments(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: UserResponseDto, @Query() pagination: PaginationDto) {
         return this.coursesService.getEnrollments(id, user.id, pagination);
     }
 
@@ -83,7 +83,7 @@ export class CoursesController {
     @TeacherOnly()
     @HttpCode(HttpStatus.CREATED)
     @ResponseMessage('Student enrolled successfully')
-    enrollStudent(@Param('id') id: string, @CurrentUser() user: UserResponseDto, @Body('email') studentEmail: string) {
+    enrollStudent(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: UserResponseDto, @Body('email') studentEmail: string) {
         return this.coursesService.enrollStudent(id, user.id, studentEmail);
     }
 
@@ -91,7 +91,7 @@ export class CoursesController {
     @TeacherOnly()
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Student removed from course successfully')
-    removeStudent(@Param('id') id: string, @Param('enrollmentId') enrollmentId: string, @CurrentUser() user: UserResponseDto) {
+    removeStudent(@Param('id', ParseUUIDPipe) id: string, @Param('enrollmentId', ParseUUIDPipe) enrollmentId: string, @CurrentUser() user: UserResponseDto) {
         return this.coursesService.removeStudent(id, user.id, enrollmentId);
     }
 }

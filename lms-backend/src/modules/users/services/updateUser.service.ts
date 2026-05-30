@@ -4,6 +4,7 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 import { hashPassword } from 'src/core/auth/utils/hashPassword';
 import { Roles, User } from '@prisma/client';
 import { UsersResponseDto } from '../dto/response-user.dto';
+import { userSelect } from 'src/common/selects/user.select';
 
 @Injectable()
 export class UpdateUserService {
@@ -33,15 +34,7 @@ export class UpdateUserService {
         const updated = await this.prisma.user.update({
             where: { id },
             data,
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                role: true,
-                status: true,
-                createdAt: true,
-                updatedAt: true,
-            },
+            select: userSelect,
         });
 
         return updated;

@@ -3,6 +3,7 @@ import { PrismaService } from 'src/core/database/prisma.service';
 import { ChangeRoleDto } from '../dto/change-role.dto';
 import { Roles } from '@prisma/client';
 import { UsersResponseDto } from '../dto/response-user.dto';
+import { userSelect } from 'src/common/selects/user.select';
 
 @Injectable()
 export class ChangeUserRoleService {
@@ -28,15 +29,7 @@ export class ChangeUserRoleService {
         const updated = await this.prisma.user.update({
             where: { id },
             data: { role: dto.role },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                role: true,
-                status: true,
-                createdAt: true,
-                updatedAt: true,
-            },
+            select: userSelect,
         });
 
         return updated;

@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/core/database/prisma.service';
 import { PaginationDto, PaginatedResult } from 'src/common/dto/pagination.dto';
+import { enrollmentSelect } from 'src/common/selects/course.select';
 
 @Injectable()
 export class GetCourseEnrollmentsService {
@@ -24,13 +25,7 @@ export class GetCourseEnrollmentsService {
                 skip,
                 take: limit,
                 orderBy: { createdAt: 'desc' },
-                select: {
-                    id: true,
-                    status: true,
-                    progress: true,
-                    createdAt: true,
-                    user: { select: { id: true, name: true, email: true } },
-                },
+                select: enrollmentSelect,
             }),
             this.prisma.enrollment.count({ where }),
         ]);

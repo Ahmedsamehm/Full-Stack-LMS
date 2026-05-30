@@ -4,6 +4,7 @@ import { AdminCreateUserDto } from '../dto/admin-create-user.dto';
 import { hashPassword } from 'src/core/auth/utils/hashPassword';
 import { Roles } from '@prisma/client';
 import { UsersResponseDto } from '../dto/response-user.dto';
+import { userSelect } from 'src/common/selects/user.select';
 
 @Injectable()
 export class CreateUserService {
@@ -34,15 +35,7 @@ export class CreateUserService {
                 passwordHash: hashedPassword,
                 role: dto.role,
             },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                role: true,
-                status: true,
-                createdAt: true,
-                updatedAt: true,
-            },
+            select: userSelect,
         });
 
         return user;

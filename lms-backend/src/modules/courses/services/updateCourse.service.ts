@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/core/database/prisma.service';
 import { UpdateCourseDto } from '../dto/update-course.dto';
 import { CourseResponseDto } from '../dto/response-course.dto';
+import { courseBaseSelect } from 'src/common/selects/course.select';
+import { toCourseResponse } from '../dto/course.mapper';
 
 @Injectable()
 export class UpdateCourseService {
@@ -24,21 +26,10 @@ export class UpdateCourseService {
         const updated = await this.prisma.course.update({
             where: { id },
             data: { ...dto },
-            select: {
-                id: true,
-                title: true,
-                description: true,
-                price: true,
-                categoryId: true,
-                thumbnailUrl: true,
-                teacherId: true,
-                status: true,
-                createdAt: true,
-                updatedAt: true,
-            },
+            select: courseBaseSelect,
         });
 
-        return updated;
+        return toCourseResponse(updated);
     }
 
     async updateAsAdmin(id: string, dto: UpdateCourseDto): Promise<CourseResponseDto> {
@@ -58,20 +49,9 @@ export class UpdateCourseService {
         const updated = await this.prisma.course.update({
             where: { id },
             data: { ...dto },
-            select: {
-                id: true,
-                title: true,
-                description: true,
-                price: true,
-                categoryId: true,
-                thumbnailUrl: true,
-                teacherId: true,
-                status: true,
-                createdAt: true,
-                updatedAt: true,
-            },
+            select: courseBaseSelect,
         });
 
-        return updated;
+        return toCourseResponse(updated);
     }
 }

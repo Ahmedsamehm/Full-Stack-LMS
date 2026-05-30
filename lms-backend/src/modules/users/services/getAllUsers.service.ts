@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/core/database/prisma.service';
 import { PaginationDto, PaginatedResult } from 'src/common/dto/pagination.dto';
 import { UsersResponseDto } from '../dto/response-user.dto';
+import { userSelect } from 'src/common/selects/user.select';
 
 @Injectable()
 export class GetAllUsersService {
@@ -19,15 +20,7 @@ export class GetAllUsersService {
                 skip,
                 take: limit,
                 orderBy: { createdAt: 'desc' },
-                select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                    role: true,
-                    status: true,
-                    createdAt: true,
-                    updatedAt: true,
-                },
+                select: userSelect,
             }),
             this.prisma.user.count({ where }),
         ]);

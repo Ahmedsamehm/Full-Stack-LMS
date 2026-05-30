@@ -75,7 +75,7 @@ model Course {
   lessons      Lesson[]
   payments     Payment[]
   requests     Request[]
-
+  
   @@index([teacherId])
   @@index([categoryId])
   @@index([status])

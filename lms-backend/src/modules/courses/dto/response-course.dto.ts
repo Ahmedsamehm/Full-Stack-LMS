@@ -5,22 +5,22 @@ export class CourseResponseDto {
     title: string;
     description: string | null;
     price: number;
-    categoryId: string;
     thumbnailUrl: string | null;
     teacherId: string;
-    status: CourseStatus;
-    createdAt: Date;
-    updatedAt: Date;
-}
 
-export class CourseDetailResponseDto extends CourseResponseDto {
-    category?: { id: string; name: string; slug: string };
-    teacher?: { id: string; name: string };
-    lessons?: { id: string; title: string; duration: number; orderIndex: number }[];
-    _count?: { enrollments: number };
+    status: CourseStatus;
+    timestamps: {
+        createdAt: Date;
+        updatedAt: Date;
+    };
 }
 
 export class CourseWithCategoryResponseDto extends CourseResponseDto {
-    category?: { id: string; name: string; slug: string };
-    _count?: { enrollments: number };
+    category: { id: string; name: string; slug: string };
+    stats: { enrollments: number };
+}
+
+export class CourseDetailResponseDto extends CourseWithCategoryResponseDto {
+    teacher: { id: string; name: string };
+    lessons: { id: string; title: string; duration: number; orderIndex: number }[];
 }
