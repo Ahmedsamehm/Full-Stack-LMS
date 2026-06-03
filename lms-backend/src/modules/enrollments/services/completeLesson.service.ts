@@ -2,6 +2,7 @@ import { BadRequestException, ConflictException, Injectable, NotFoundException }
 import { PrismaService } from 'src/core/database/prisma.service';
 import { enrollmentDetailSelect } from 'src/common/selects/enrollment.select';
 import { EnrollmentDetailResponseDto } from '../dto/response-enrollment.dto';
+import { EnrollmentStatus } from '@prisma/client';
 
 @Injectable()
 export class CompleteLessonService {
@@ -16,7 +17,7 @@ export class CompleteLessonService {
             throw new NotFoundException('Enrollment not found');
         }
 
-        if (enrollment.status !== 'ACTIVE') {
+        if (enrollment.status !== EnrollmentStatus.ACTIVE) {
             throw new BadRequestException('Enrollment is not active');
         }
 

@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/core/database/prisma.service';
+import { EnrollmentStatus } from '@prisma/client';
 
 @Injectable()
 export class CheckEnrollmentExpirationService {
@@ -10,10 +11,10 @@ export class CheckEnrollmentExpirationService {
     async checkAndExpire(): Promise<{ expired: number }> {
         const result = await this.prisma.enrollment.updateMany({
             where: {
-                status: 'ACTIVE',
+                status: EnrollmentStatus.ACTIVE,
                 expiresAt: { not: null, lt: new Date() },
             },
-            data: { status: 'EXPIRED' },
+            data: { status: EnrollmentStatus.EXPIRED },
         });
 
         if (result.count > 0) {

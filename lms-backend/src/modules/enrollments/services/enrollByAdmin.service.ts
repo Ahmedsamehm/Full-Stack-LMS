@@ -3,6 +3,7 @@ import { PrismaService } from 'src/core/database/prisma.service';
 import { CreateEnrollmentByAdminDto } from '../dto/create-enrollment-by-admin.dto';
 import { enrollmentSelect } from 'src/common/selects/enrollment.select';
 import { EnrollmentResponseDto } from '../dto/response-enrollment.dto';
+import { EnrollmentStatus } from '@prisma/client';
 
 @Injectable()
 export class EnrollByAdminService {
@@ -36,7 +37,7 @@ export class EnrollByAdminService {
             data: {
                 userId: dto.userId,
                 courseId: dto.courseId,
-                status: 'ACTIVE',
+                status: EnrollmentStatus.ACTIVE,
                 expiresAt,
             },
             select: enrollmentSelect,

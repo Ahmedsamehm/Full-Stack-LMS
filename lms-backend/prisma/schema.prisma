@@ -75,7 +75,7 @@ model Course {
   lessons      Lesson[]
   payments     Payment[]
   requests     Request[]
-  
+
   @@index([teacherId])
   @@index([categoryId])
   @@index([status])
@@ -102,7 +102,7 @@ model Lesson {
 model Enrollment {
   id             String           @id @default(uuid())
   userId         String
-  courseId        String
+  courseId       String
   status         EnrollmentStatus @default(ACTIVE)
   progress       Int              @default(0)
   enrolledAt     DateTime         @default(now())
@@ -139,14 +139,18 @@ model Payment {
   userId        String
   courseId      String
   amount        Float
-  currency      String
-  status        PaymentStatus
-  provider      PaymentProvider
+  currency      String          @default("egp")
+  status        PaymentStatus   @default(PENDING)
+  provider      PaymentProvider @default(STRIPE)
   transactionId String          @unique
   createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  metadata      Json?
   course        Course          @relation(fields: [courseId], references: [id])
   user          User            @relation(fields: [userId], references: [id])
 
+  @@index([userId])
+  @@index([courseId])
   @@map("payments")
 }
 
@@ -187,6 +191,7 @@ enum EnrollmentStatus {
   ACTIVE
   REJECTED
   EXPIRED
+  FAILED
 }
 
 enum PaymentStatus {
@@ -198,7 +203,6 @@ enum PaymentStatus {
 
 enum PaymentProvider {
   STRIPE
-  PAYMOB
 }
 
 enum RequestType {
