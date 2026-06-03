@@ -31,7 +31,7 @@ export class JwtAuthGuard implements CanActivate {
                 secret: process.env.JWT_ACCESS_SECRET,
             });
         } catch {
-            throw new UnauthorizedException('TokenExpired');
+            throw new UnauthorizedException('Invalid or expired access token');
         }
 
         const rawRefreshToken = request.cookies?.['refreshToken'] || request.headers['x-refresh-token'];

@@ -1,14 +1,7 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-
-/**
- * Extracts the authenticated user from the request object.
- *
- * Usage:
- *   @Get('profile')
- *   @UseGuards(JwtAuthGuard)
- *   getProfile(@CurrentUser() user: any) { ... }
- */
-export const CurrentUser = createParamDecorator((data: unknown, ctx: ExecutionContext) => {
+import { UserResponseDto } from 'src/core/auth/dto/response-auth.dto';
+export const CurrentUser = createParamDecorator((data: keyof UserResponseDto | undefined, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
-    return request.user;
+    const user = request.user as UserResponseDto;
+    return data ? user?.[data] : user;
 });

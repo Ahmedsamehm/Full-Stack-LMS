@@ -3,6 +3,7 @@ import { PrismaService } from 'src/core/database/prisma.service';
 import { CourseDetailResponseDto } from '../dto/response-course.dto';
 import { courseDetailSelect } from 'src/common/selects/course.select';
 import { toCourseDetailResponse } from '../dto/course.mapper';
+import { CourseStatus } from '@prisma/client';
 
 @Injectable()
 export class GetCourseByIdService {
@@ -10,7 +11,7 @@ export class GetCourseByIdService {
 
     async findById(id: string): Promise<CourseDetailResponseDto> {
         const course = await this.prisma.course.findFirst({
-            where: { id, status: 'PUBLISHED' },
+            where: { id, status: CourseStatus.PUBLISHED },
             select: courseDetailSelect,
         });
 

@@ -2,6 +2,7 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { PrismaService } from 'src/core/database/prisma.service';
 import { enrollmentSelect } from 'src/common/selects/enrollment.select';
 import { EnrollmentResponseDto } from '../dto/response-enrollment.dto';
+import { EnrollmentStatus } from '@prisma/client';
 
 @Injectable()
 export class EnrollByPaymentService {
@@ -29,7 +30,7 @@ export class EnrollByPaymentService {
             data: {
                 userId,
                 courseId,
-                status: 'ACTIVE',
+                status: EnrollmentStatus.ACTIVE,
                 expiresAt,
             },
             select: enrollmentSelect,
