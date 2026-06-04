@@ -1,7 +1,7 @@
 import { createRouter as createTanStackRouter } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
 import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query'
-import { getContext } from './integrations/tanstack-query/root-provider'
+import { getContext } from './lib/root-provider'
 
 export function getRouter() {
   const context = getContext()
@@ -10,7 +10,7 @@ export function getRouter() {
     routeTree,
     context,
     scrollRestoration: true,
-    defaultPreload: 'intent',
+    defaultPreload: 'viewport',
     defaultPreloadStaleTime: 0,
     defaultNotFoundComponent: () => <div>404 - Page not found</div>,
   
