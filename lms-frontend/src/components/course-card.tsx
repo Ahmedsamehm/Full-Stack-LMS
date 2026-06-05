@@ -1,11 +1,11 @@
 import { Button } from '#/components/ui/button'
 import { Card, CardContent } from '#/components/ui/card'
-import CategoryBadge from './category-badge'
-import CourseInstructor from './course-instructor'
-import CourseThumbnail from './course-thumbnail'
-import PriceTag from './price-tag'
+import CategoryBadge from '../features/landing/_components/category-badge'
+import CourseInstructor from '../features/landing/_components/course-instructor'
+import CourseThumbnail from '../features/landing/_components/course-thumbnail'
+import PriceTag from '../features/landing/_components/price-tag'
 
-import type { LandingCourse } from '../_types/landing.types'
+import type { LandingCourse } from '../features/landing/_types/landing.types'
 
 interface CourseCardProps {
   course: LandingCourse

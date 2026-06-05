@@ -13,6 +13,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PublicCoursesCoursesRouteImport } from './routes/_public/_courses/courses'
 import { Route as PublicAuthRegisterRouteImport } from './routes/_public/_auth/register'
 import { Route as PublicAuthLoginRouteImport } from './routes/_public/_auth/login'
 import { Route as PublicAuthForgotPasswordRouteImport } from './routes/_public/_auth/forgotPassword'
@@ -37,6 +38,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const PublicCoursesCoursesRoute = PublicCoursesCoursesRouteImport.update({
+  id: '/_courses/courses',
+  path: '/courses',
+  getParentRoute: () => PublicRouteRoute,
 } as any)
 const PublicAuthRegisterRoute = PublicAuthRegisterRouteImport.update({
   id: '/_auth/register',
@@ -79,6 +85,7 @@ export interface FileRoutesByFullPath {
   '/forgotPassword': typeof PublicAuthForgotPasswordRoute
   '/login': typeof PublicAuthLoginRoute
   '/register': typeof PublicAuthRegisterRoute
+  '/courses': typeof PublicCoursesCoursesRoute
   '/dashboards/admins/': typeof ProtectedDashboardsAdminsIndexRoute
   '/dashboards/student/': typeof ProtectedDashboardsStudentIndexRoute
   '/dashboards/teacher/': typeof ProtectedDashboardsTeacherIndexRoute
@@ -89,6 +96,7 @@ export interface FileRoutesByTo {
   '/forgotPassword': typeof PublicAuthForgotPasswordRoute
   '/login': typeof PublicAuthLoginRoute
   '/register': typeof PublicAuthRegisterRoute
+  '/courses': typeof PublicCoursesCoursesRoute
   '/dashboards/admins': typeof ProtectedDashboardsAdminsIndexRoute
   '/dashboards/student': typeof ProtectedDashboardsStudentIndexRoute
   '/dashboards/teacher': typeof ProtectedDashboardsTeacherIndexRoute
@@ -102,6 +110,7 @@ export interface FileRoutesById {
   '/_public/_auth/forgotPassword': typeof PublicAuthForgotPasswordRoute
   '/_public/_auth/login': typeof PublicAuthLoginRoute
   '/_public/_auth/register': typeof PublicAuthRegisterRoute
+  '/_public/_courses/courses': typeof PublicCoursesCoursesRoute
   '/_protected/dashboards/admins/': typeof ProtectedDashboardsAdminsIndexRoute
   '/_protected/dashboards/student/': typeof ProtectedDashboardsStudentIndexRoute
   '/_protected/dashboards/teacher/': typeof ProtectedDashboardsTeacherIndexRoute
@@ -114,6 +123,7 @@ export interface FileRouteTypes {
     | '/forgotPassword'
     | '/login'
     | '/register'
+    | '/courses'
     | '/dashboards/admins/'
     | '/dashboards/student/'
     | '/dashboards/teacher/'
@@ -124,6 +134,7 @@ export interface FileRouteTypes {
     | '/forgotPassword'
     | '/login'
     | '/register'
+    | '/courses'
     | '/dashboards/admins'
     | '/dashboards/student'
     | '/dashboards/teacher'
@@ -136,6 +147,7 @@ export interface FileRouteTypes {
     | '/_public/_auth/forgotPassword'
     | '/_public/_auth/login'
     | '/_public/_auth/register'
+    | '/_public/_courses/courses'
     | '/_protected/dashboards/admins/'
     | '/_protected/dashboards/student/'
     | '/_protected/dashboards/teacher/'
@@ -177,6 +189,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_public/_courses/courses': {
+      id: '/_public/_courses/courses'
+      path: '/courses'
+      fullPath: '/courses'
+      preLoaderRoute: typeof PublicCoursesCoursesRouteImport
+      parentRoute: typeof PublicRouteRoute
     }
     '/_public/_auth/register': {
       id: '/_public/_auth/register'
@@ -243,12 +262,14 @@ interface PublicRouteRouteChildren {
   PublicAuthForgotPasswordRoute: typeof PublicAuthForgotPasswordRoute
   PublicAuthLoginRoute: typeof PublicAuthLoginRoute
   PublicAuthRegisterRoute: typeof PublicAuthRegisterRoute
+  PublicCoursesCoursesRoute: typeof PublicCoursesCoursesRoute
 }
 
 const PublicRouteRouteChildren: PublicRouteRouteChildren = {
   PublicAuthForgotPasswordRoute: PublicAuthForgotPasswordRoute,
   PublicAuthLoginRoute: PublicAuthLoginRoute,
   PublicAuthRegisterRoute: PublicAuthRegisterRoute,
+  PublicCoursesCoursesRoute: PublicCoursesCoursesRoute,
 }
 
 const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(
