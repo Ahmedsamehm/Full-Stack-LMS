@@ -48,10 +48,16 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       
         <HeadContent />
       </head>
+<<<<<<< Updated upstream
       <body className="font-sans antialiased wrap-anywhere ">
         <Header />
         {children}
         <Footer />
+=======
+      <body className="font-sans antialiased w-full animate-in fade-in duration-300  min-h-dvh  ">
+        {children}
+
+>>>>>>> Stashed changes
         <TanStackDevtools
           config={{
             position: 'bottom-right',

@@ -5,7 +5,5 @@ export const Route = createFileRoute('/about')({
 })
 
 function About() {
-  return (
-   <></>
-  )
+  return <></>
 }
