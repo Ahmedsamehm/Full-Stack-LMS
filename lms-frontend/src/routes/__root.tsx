@@ -44,10 +44,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body className="font-sans antialiased ">
-       
+      <body className="font-sans antialiased w-full animate-in fade-in duration-300  min-h-dvh  ">
         {children}
-       
         <TanStackDevtools
           config={{
             position: 'bottom-right',

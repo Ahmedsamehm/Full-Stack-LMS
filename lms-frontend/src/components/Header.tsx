@@ -1,39 +1,42 @@
 import { Link } from '@tanstack/react-router'
+import { Bell, HelpCircle, Search, User } from 'lucide-react'
+import { Input } from './ui/input'
+import { Button } from './ui/button'
 
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-card/80 px-4 backdrop-blur-lg">
-      <nav className="page-wrap flex flex-wrap items-center gap-x-3 gap-y-2 py-3 sm:py-4">
-        <h2 className="m-0 flex-shrink-0 text-base font-semibold tracking-tight">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-sm text-foreground no-underline shadow-low sm:px-4 sm:py-2"
-          >
-            <span className="h-2 w-2 rounded-full bg-primary" />
-            LMS
-          </Link>
-        </h2>
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 supports-backdrop-filter:bg-background/60">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-2 font-bold text-xl text-primary ">
+          EduPro SaaS
+        </Link>
 
-        <div className="order-3 flex w-full flex-wrap items-center gap-x-4 gap-y-1 pb-1 text-sm font-semibold sm:order-none sm:w-auto sm:flex-nowrap sm:pb-0">
-          <Link
-            to="/"
-            className="nav-link"
-            activeProps={{ className: 'nav-link is-active' }}
-          >
-            Home
-          </Link>
-          <Link
-            to="/about"
-            className="nav-link"
-            activeProps={{ className: 'nav-link is-active' }}
-          >
-            About
-          </Link>
+        {/* Search - Hidden on small mobile */}
+        <div className="hidden md:block relative w-full max-w-2xl mx-8">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input 
+            placeholder="Search courses, teachers..." 
+            className="pl-9 bg-muted/50 border-none focus-visible:ring-1"
+          />
         </div>
 
-      
-      </nav>
+        {/* Actions */}
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" aria-label="Notifications">
+            <Bell className="h-5 w-5" />
+          </Button>
+          <Button variant="ghost" size="icon" aria-label="Help">
+            <HelpCircle className="h-5 w-5" />
+          </Button>
+          <Button variant="ghost" size="icon" className="rounded-full overflow-hidden p-0 border">
+             <div className="h-8 w-8 bg-gray-200 flex items-center justify-center">
+                <User className="h-4 w-4 text-gray-500" />
+             </div>
+          </Button>
+        </div>
+      </div>
     </header>
   )
 }
