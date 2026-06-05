@@ -5,9 +5,6 @@ import {
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
-
 import TanStackQueryDevtools from '../lib/devtools'
 
 import appCss from '../styles.css?url'
@@ -45,19 +42,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-      
         <HeadContent />
       </head>
-<<<<<<< Updated upstream
-      <body className="font-sans antialiased wrap-anywhere ">
-        <Header />
-        {children}
-        <Footer />
-=======
       <body className="font-sans antialiased w-full animate-in fade-in duration-300  min-h-dvh  ">
         {children}
-
->>>>>>> Stashed changes
         <TanStackDevtools
           config={{
             position: 'bottom-right',
