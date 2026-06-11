@@ -1,0 +1,73 @@
+import type { TeacherDashboardData } from '../_types/teacher.types'
+
+export const teacherDashboardData: TeacherDashboardData = {
+  stats: {
+    totalCourses: 12,
+    totalStudents: 1248,
+    monthlyEarnings: 8450,
+    newCourses: 2,
+    studentGrowth: '15%',
+    earningsGrowth: '+4.2%',
+  },
+  courses: [
+    {
+      id: '1',
+      title: 'Advanced Web Development',
+      code: 'CS-401',
+      icon: 'code',
+      iconBg: 'bg-primary-fixed-dim/30',
+      iconColor: 'text-primary-container',
+      status: 'published',
+      students: 342,
+      lastUpdated: 'Today, 09:41 AM',
+    },
+    {
+      id: '2',
+      title: 'UI/UX Design Principles',
+      code: 'DES-205',
+      icon: 'brush',
+      iconBg: 'bg-tertiary-fixed-dim/30',
+      iconColor: 'text-tertiary',
+      status: 'published',
+      students: 185,
+      lastUpdated: 'Yesterday',
+    },
+    {
+      id: '3',
+      title: 'Data Structures',
+      code: 'CS-301',
+      icon: 'science',
+      iconBg: 'bg-surface-variant',
+      iconColor: 'text-secondary',
+      status: 'draft',
+      students: 0,
+      lastUpdated: 'Oct 12, 2023',
+    },
+  ],
+  pendingRequests: [
+    {
+      id: '1',
+      studentName: 'Sarah Jenkins',
+      studentAvatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDOLfR3TbNZDamE4EZT5Acg4nhF7oXdDhlUOpMk1_EOv7RMPHgSnxJrUdiI_z0cU5k-LOlS04tzNyyLJX2Tg9Ea6HVIqJMOEv5cE7z-YcxbrKWf-wRIDTeSDdDP7ZGGPyub5jPcGgbak6ABaWSDkPU_pS4GdLh2rNPPqGzXyjVWZZfqfr1vDYn-VyTXUHt9Y0v63ZM62hpEi2poxBSlHObMMI-bySWDG3Q5Uxe1TBht03_T1m6LE-dHJCvSKLUxYpGmPnFGtjrcdnRP',
+      time: '2h ago',
+      description: 'Requested extension for Assignment 3: React Router Implementation.',
+      actionLabel: 'Review',
+    },
+    {
+      id: '2',
+      studentName: 'Michael Chang',
+      studentInitials: 'MJ',
+      time: '5h ago',
+      description: 'Course enrollment request for CS-401 (Waitlist).',
+      actionLabel: 'Review',
+    },
+    {
+      id: '3',
+      studentName: 'David Miller',
+      studentAvatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBJ5yd0JFa4Lx7yW0cLkZbcxuksw37fboYfetkiLl08i7YhLADVy6SgiHxZngiCSVItIOb26bd8zf9_ExLZkwoptBN9X5Rg_VHZoQ8YzLXWD5KfSSqOregKTnuLpGktlUYvaVLlBFFT7DhKZtmEURXwrgCU2Xjt0k_IkNiY7KLqMyi4R4Zi8yIvUHMIi650ZoEXwuJimOHg92nozgUWGJoF5qtO0lZAoKQK6LmxhaBqW277EvQg-YrIygZQe-Q2bEQJ7kbDZXzvUUxG',
+      time: '1d ago',
+      description: 'Question regarding the upcoming midterm format.',
+      actionLabel: 'Reply',
+    },
+  ],
+}

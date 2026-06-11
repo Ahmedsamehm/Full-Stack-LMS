@@ -59,15 +59,13 @@ export function Pagination({ pageCount, className = '' }: PaginationProps) {
   if (pageCount <= 1) return null
 
   return (
-    <nav className={`flex items-center justify-center gap-1 ${className}`}>
+    <nav className={`flex items-center justify-center gap-1 ${className} `}>
       {/* Previous Button */}
       <button
         onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
         disabled={currentPage <= 1}
         className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-          currentPage <= 1
-            ? 'text-gray-600 cursor-not-allowed'
-            : 'text-gray-300 hover:bg-slate-700 hover:text-white'
+          currentPage <= 1 ? 'text-black' : 'text-black'
         }`}
       >
         <ChevronLeft className="w-4 h-4" />
@@ -80,7 +78,7 @@ export function Pagination({ pageCount, className = '' }: PaginationProps) {
           page === 'ellipsis' ? (
             <span
               key={`ellipsis-${index}`}
-              className="px-2 py-2 text-gray-500 hidden md:block"
+              className="px-2 py-2 text-black hidden md:block"
             >
               ...
             </span>
@@ -90,8 +88,8 @@ export function Pagination({ pageCount, className = '' }: PaginationProps) {
               onClick={() => handlePageChange(page)}
               className={`min-w-[40px] px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                 currentPage === page
-                  ? 'bg-cyan-500 text-white'
-                  : 'text-gray-300 hover:bg-slate-700 hover:text-white'
+                  ? ' text-black'
+                  : ' hover:bg-slate-700/50 hover:text-white'
               }`}
             >
               {page}

@@ -1,19 +1,19 @@
-import LandingHeader from './landing-header'
 import LandingHero from './landing-hero'
 import PopularCourses from './popular-courses'
 import AboutSection from './about-section'
-import LandingFooter from './landing-footer'
+import Header from '#/components/header'
+import Footer from '#/components/footer'
 
 export default function LandingPage() {
   return (
     <>
-      <LandingHeader />
+      <Header />
       <main>
         <LandingHero />
         <PopularCourses />
         <AboutSection />
       </main>
-      <LandingFooter />
+      <Footer />
     </>
   )
 }

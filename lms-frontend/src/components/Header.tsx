@@ -1,42 +1,53 @@
 import { Link } from '@tanstack/react-router'
-import { Bell, HelpCircle, Search, User } from 'lucide-react'
-import { Input } from './ui/input'
-import { Button } from './ui/button'
 
+import { Button } from '#/components/ui/button'
+import BrandLogo from '../features/landing/_components/brand-logo'
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 supports-backdrop-filter:bg-background/60">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 font-bold text-xl text-primary ">
-          EduPro SaaS
-        </Link>
+    <header className="sticky top-0 z-50 border-b border-border bg-card/80 px-4 sm:px-6 lg:px-8 backdrop-blur-lg">
+      <nav className="flex items-center justify-between gap-4 h-16 max-w-[1440px] mx-auto">
+        <BrandLogo />
 
-        {/* Search - Hidden on small mobile */}
-        <div className="hidden md:block relative w-full max-w-2xl mx-8">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input 
-            placeholder="Search courses, teachers..." 
-            className="pl-9 bg-muted/50 border-none focus-visible:ring-1"
-          />
+        <div className="hidden sm:flex items-center gap-6">
+          <Link
+            to="/courses"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground no-underline! transition-colors"
+          >
+            Courses
+          </Link>
+          <Link
+            to="/dashboards/student"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground no-underline! transition-colors"
+          >
+            Dashboard
+          </Link>
         </div>
 
-        {/* Actions */}
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" aria-label="Notifications">
-            <Bell className="h-5 w-5" />
+        <div className="flex items-center gap-2 ">
+          <Button size="sm" className="hidden sm:inline-flex " asChild>
+            <Link to="/login" className="no-underline! text-white! ">
+              Sign In
+            </Link>
           </Button>
-          <Button variant="ghost" size="icon" aria-label="Help">
-            <HelpCircle className="h-5 w-5" />
+          <Button
+            size="sm"
+            variant="outline"
+            className="hidden sm:inline-flex"
+            asChild
+          >
+            <Link to="/register" className="no-underline!">
+              Get Started
+            </Link>
           </Button>
-          <Button variant="ghost" size="icon" className="rounded-full overflow-hidden p-0 border">
-             <div className="h-8 w-8 bg-gray-200 flex items-center justify-center">
-                <User className="h-4 w-4 text-gray-500" />
-             </div>
+
+          <Button size="sm" className="sm:hidden" asChild>
+            <Link to="/login" className="no-underline! text-white! ">
+              Sign In
+            </Link>
           </Button>
         </div>
-      </div>
+      </nav>
     </header>
   )
 }

@@ -4,11 +4,14 @@ import { aboutCopy } from '../_data/landing.mock'
 
 export default function AboutSection() {
   return (
-    <section className="px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20" aria-labelledby="about-heading">
+    <section
+      className="px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20"
+      aria-labelledby="about-heading"
+    >
       <div className="max-w-[1440px] mx-auto">
         <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
           <div className="w-full lg:w-5/12">
-              <img src='/public/aboutus.webp'/>
+            <img src="/aboutus.webp" />
           </div>
 
           <div className="flex-1 space-y-6">

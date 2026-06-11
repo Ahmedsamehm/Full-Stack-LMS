@@ -220,18 +220,19 @@ export default function RegisterForm() {
                   )}
                   {...register('confirmPassword')}
                 />
-                <button
+                <Button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  variant={"ghost"}
                 >
                   {showConfirmPassword ? (
                     <EyeOff className="h-4 w-4" />
                   ) : (
                     <Eye className="h-4 w-4" />
                   )}
-                </button>
+                </Button>
               </div>
               {errors.confirmPassword && (
                 <p className="mt-1 text-sm text-destructive">
@@ -250,7 +251,7 @@ export default function RegisterForm() {
               />
               <Label
                 htmlFor="terms"
-                className="text-sm w-full inline-block font-normal leading-snug text-muted-foreground"
+                className="text-sm w-full inline-block font-normal leading-snug text-muted-foreground  cursor-pointer"
               >
                 I agree to the{" "}
                 <span className="font-medium   text-primary hover:underline">

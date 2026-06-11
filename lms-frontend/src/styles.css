@@ -258,7 +258,9 @@
 
 /* ── Base ────────────────────────────────────────────────────── */
 
-html, body, #app {
+html,
+body,
+#app {
   min-height: 100%;
 }
 
@@ -310,7 +312,9 @@ pre code {
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-low);
-  transition: box-shadow 200ms ease, transform 200ms ease;
+  transition:
+    box-shadow 200ms ease,
+    transform 200ms ease;
 }
 
 .card:hover {
@@ -339,7 +343,10 @@ pre code {
   border: none;
   border-radius: var(--radius-lg);
   cursor: pointer;
-  transition: background 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  transition:
+    background 150ms ease,
+    transform 150ms ease,
+    box-shadow 150ms ease;
 }
 .btn-primary:hover {
   background: var(--on-primary-fixed-variant);
@@ -362,7 +369,9 @@ pre code {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   cursor: pointer;
-  transition: background 150ms ease, border-color 150ms ease;
+  transition:
+    background 150ms ease,
+    border-color 150ms ease;
 }
 .btn-secondary:hover {
   background: var(--surface-container-high);
@@ -399,7 +408,9 @@ pre code {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   outline: none;
-  transition: border-color 150ms ease, box-shadow 150ms ease;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
 }
 .input:focus {
   border-color: var(--primary);
@@ -454,8 +465,14 @@ pre code {
 }
 
 @keyframes rise-in {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ── Base Layer ──────────────────────────────────────────────── */
