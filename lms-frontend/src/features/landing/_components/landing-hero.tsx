@@ -1,4 +1,5 @@
 import { Button } from '#/components/ui/button'
+import { Link } from '@tanstack/react-router'
 
 import { heroContent } from '../_data/landing.mock'
 
@@ -21,19 +22,21 @@ export default function LandingHero() {
               >
                 {heroContent.ctaPrimary.label}
               </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="w-full sm:w-auto text-base px-8"
-              >
-                {heroContent.ctaSecondary.label}
-              </Button>
+              <Link to="/courses">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto text-base px-8"
+                >
+                  {heroContent.ctaSecondary.label}
+                </Button>
+              </Link>
             </div>
           </div>
 
           <div className="flex-1 w-full hidden lg:block">
             <img
-              src="public/Auth/screen3.webp"
+              src="Auth/screen3.webp"
               alt="Landing Hero"
               className="w-full h-full object-cover"
             />

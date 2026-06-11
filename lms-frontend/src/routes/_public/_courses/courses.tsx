@@ -2,7 +2,7 @@ import Footer from '#/components/footer'
 import Header from '#/components/header'
 import { createFileRoute } from '@tanstack/react-router'
 
-import CoursesPage from '#/features/courses/_components/courses-page'
+import CoursesPage from '#/features/courses/_components/courses/courses-page'
 
 export const Route = createFileRoute('/_public/_courses/courses')({
   head: () => ({
