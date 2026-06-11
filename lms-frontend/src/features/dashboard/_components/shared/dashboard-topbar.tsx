@@ -29,8 +29,8 @@ export default function DashboardTopbar({
             className="bg-surface-container-low border border-outline-variant rounded-full py-2 px-3 md:pl-10 pr-4 text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all md:w-80  xl:w-200 "
           />
         </div>
-        <div className="flex items-center gap-2 md:gap-4">
-          <NotificationDropdown />
+        <div className="flex items-center gap-2 md:gap-4 ">
+          <NotificationDropdown  />
           {/* <button className="size-9 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors hidden sm:flex">
             <HelpCircle className="size-5" />
           </button> */}

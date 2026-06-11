@@ -25,6 +25,7 @@ import { Route as ProtectedDashboardsSettingsIndexRouteImport } from './routes/_
 import { Route as ProtectedDashboardsCoursesIndexRouteImport } from './routes/_protected/dashboards/courses/index'
 import { Route as ProtectedDashboardsCoursesIdRouteImport } from './routes/_protected/dashboards/courses/$id'
 import { Route as ProtectedDashboardsSettingsSecurityIndexRouteImport } from './routes/_protected/dashboards/settings/security/index'
+import { Route as ProtectedDashboardsSettingsProfileIndexRouteImport } from './routes/_protected/dashboards/settings/profile/index'
 import { Route as ProtectedDashboardsSettingsNotificationsIndexRouteImport } from './routes/_protected/dashboards/settings/notifications/index'
 import { Route as ProtectedDashboardsSettingsBillingIndexRouteImport } from './routes/_protected/dashboards/settings/billing/index'
 import { Route as PublicCoursesIdCoursesIdRouteImport } from './routes/_public/_courses/_id/courses.$id'
@@ -116,6 +117,12 @@ const ProtectedDashboardsSettingsSecurityIndexRoute =
     path: '/settings/security/',
     getParentRoute: () => ProtectedDashboardsRouteRoute,
   } as any)
+const ProtectedDashboardsSettingsProfileIndexRoute =
+  ProtectedDashboardsSettingsProfileIndexRouteImport.update({
+    id: '/settings/profile/',
+    path: '/settings/profile/',
+    getParentRoute: () => ProtectedDashboardsRouteRoute,
+  } as any)
 const ProtectedDashboardsSettingsNotificationsIndexRoute =
   ProtectedDashboardsSettingsNotificationsIndexRouteImport.update({
     id: '/settings/notifications/',
@@ -152,6 +159,7 @@ export interface FileRoutesByFullPath {
   '/courses/$id': typeof PublicCoursesIdCoursesIdRoute
   '/dashboards/settings/billing/': typeof ProtectedDashboardsSettingsBillingIndexRoute
   '/dashboards/settings/notifications/': typeof ProtectedDashboardsSettingsNotificationsIndexRoute
+  '/dashboards/settings/profile/': typeof ProtectedDashboardsSettingsProfileIndexRoute
   '/dashboards/settings/security/': typeof ProtectedDashboardsSettingsSecurityIndexRoute
 }
 export interface FileRoutesByTo {
@@ -169,6 +177,7 @@ export interface FileRoutesByTo {
   '/courses/$id': typeof PublicCoursesIdCoursesIdRoute
   '/dashboards/settings/billing': typeof ProtectedDashboardsSettingsBillingIndexRoute
   '/dashboards/settings/notifications': typeof ProtectedDashboardsSettingsNotificationsIndexRoute
+  '/dashboards/settings/profile': typeof ProtectedDashboardsSettingsProfileIndexRoute
   '/dashboards/settings/security': typeof ProtectedDashboardsSettingsSecurityIndexRoute
 }
 export interface FileRoutesById {
@@ -191,6 +200,7 @@ export interface FileRoutesById {
   '/_public/_courses/_id/courses/$id': typeof PublicCoursesIdCoursesIdRoute
   '/_protected/dashboards/settings/billing/': typeof ProtectedDashboardsSettingsBillingIndexRoute
   '/_protected/dashboards/settings/notifications/': typeof ProtectedDashboardsSettingsNotificationsIndexRoute
+  '/_protected/dashboards/settings/profile/': typeof ProtectedDashboardsSettingsProfileIndexRoute
   '/_protected/dashboards/settings/security/': typeof ProtectedDashboardsSettingsSecurityIndexRoute
 }
 export interface FileRouteTypes {
@@ -212,6 +222,7 @@ export interface FileRouteTypes {
     | '/courses/$id'
     | '/dashboards/settings/billing/'
     | '/dashboards/settings/notifications/'
+    | '/dashboards/settings/profile/'
     | '/dashboards/settings/security/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -229,6 +240,7 @@ export interface FileRouteTypes {
     | '/courses/$id'
     | '/dashboards/settings/billing'
     | '/dashboards/settings/notifications'
+    | '/dashboards/settings/profile'
     | '/dashboards/settings/security'
   id:
     | '__root__'
@@ -250,6 +262,7 @@ export interface FileRouteTypes {
     | '/_public/_courses/_id/courses/$id'
     | '/_protected/dashboards/settings/billing/'
     | '/_protected/dashboards/settings/notifications/'
+    | '/_protected/dashboards/settings/profile/'
     | '/_protected/dashboards/settings/security/'
   fileRoutesById: FileRoutesById
 }
@@ -374,6 +387,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDashboardsSettingsSecurityIndexRouteImport
       parentRoute: typeof ProtectedDashboardsRouteRoute
     }
+    '/_protected/dashboards/settings/profile/': {
+      id: '/_protected/dashboards/settings/profile/'
+      path: '/settings/profile'
+      fullPath: '/dashboards/settings/profile/'
+      preLoaderRoute: typeof ProtectedDashboardsSettingsProfileIndexRouteImport
+      parentRoute: typeof ProtectedDashboardsRouteRoute
+    }
     '/_protected/dashboards/settings/notifications/': {
       id: '/_protected/dashboards/settings/notifications/'
       path: '/settings/notifications'
@@ -421,6 +441,7 @@ interface ProtectedDashboardsRouteRouteChildren {
   ProtectedDashboardsStudentsIndexRoute: typeof ProtectedDashboardsStudentsIndexRoute
   ProtectedDashboardsSettingsBillingIndexRoute: typeof ProtectedDashboardsSettingsBillingIndexRoute
   ProtectedDashboardsSettingsNotificationsIndexRoute: typeof ProtectedDashboardsSettingsNotificationsIndexRoute
+  ProtectedDashboardsSettingsProfileIndexRoute: typeof ProtectedDashboardsSettingsProfileIndexRoute
   ProtectedDashboardsSettingsSecurityIndexRoute: typeof ProtectedDashboardsSettingsSecurityIndexRoute
 }
 
@@ -437,6 +458,8 @@ const ProtectedDashboardsRouteRouteChildren: ProtectedDashboardsRouteRouteChildr
       ProtectedDashboardsSettingsBillingIndexRoute,
     ProtectedDashboardsSettingsNotificationsIndexRoute:
       ProtectedDashboardsSettingsNotificationsIndexRoute,
+    ProtectedDashboardsSettingsProfileIndexRoute:
+      ProtectedDashboardsSettingsProfileIndexRoute,
     ProtectedDashboardsSettingsSecurityIndexRoute:
       ProtectedDashboardsSettingsSecurityIndexRoute,
   }

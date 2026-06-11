@@ -13,7 +13,9 @@ export default function DashboardSidebar({ config }: DashboardSidebarProps) {
   const sidebarContent = (
     <>
       <div className="flex items-center justify-between gap-3 px-6 py-6 pb-4">
+         <Link to="/" className='no-underline!'>
         <div className="flex items-center gap-3">
+         
           <div className="size-10 rounded-lg bg-primary-container text-primary flex items-center justify-center font-bold text-lg shadow-sm shrink-0">
             E
           </div>
@@ -25,7 +27,9 @@ export default function DashboardSidebar({ config }: DashboardSidebarProps) {
               {config.brandSubtitle}
             </span>
           </div>
+        
         </div>
+          </Link>
       </div>
       <nav className="flex flex-col px-4 gap-1 flex-1 overflow-y-auto">
         {config.navItems.map((item) => {

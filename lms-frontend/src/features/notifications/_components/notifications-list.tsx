@@ -1,23 +1,13 @@
 import { Bell, CheckCheck } from 'lucide-react'
 
-import { Skeleton } from '#/components/ui/skeleton'
+import { NotificationListSkeleton } from '#/components/loading-skeleton'
 import { useNotifications } from '../_hooks/use-notifications'
 import NotificationItem from './notification-item'
 
 export default function NotificationsList() {
   const { data, isLoading } = useNotifications()
 
-  if (isLoading) {
-    return (
-      <div className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden">
-        <div className="p-6 space-y-4">
-          {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={i} className="h-16 w-full" />
-          ))}
-        </div>
-      </div>
-    )
-  }
+  if (isLoading) return <NotificationListSkeleton />
 
   if (!data) return null
 

@@ -4,7 +4,7 @@ import { ChevronRight, ExternalLink } from 'lucide-react'
 import type { SettingsTab } from '../_types/settings.types'
 
 const tabs: { id: SettingsTab; label: string; href?: string }[] = [
-  { id: 'profile', label: 'Profile' },
+  { id: 'profile', label: 'Profile', href: '/dashboards/settings/profile' },
   { id: 'notifications', label: 'Notifications', href: '/dashboards/settings/notifications' },
   { id: 'security', label: 'Security', href: '/dashboards/settings/security' },
   { id: 'billing', label: 'Billing', href: '/dashboards/settings/billing' },

@@ -1,6 +1,6 @@
 import { Download, FileText } from 'lucide-react'
 
-import { Skeleton } from '#/components/ui/skeleton'
+import { SettingsTableSkeleton } from '#/components/loading-skeleton'
 
 import type { BillingInvoice } from '../_types/settings.types'
 
@@ -34,21 +34,7 @@ export default function SettingsBillingForm({
   invoices,
   isLoading,
 }: SettingsBillingFormProps) {
-  if (isLoading) {
-    return (
-      <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
-        <div className="p-6 md:p-8 border-b border-outline-variant bg-surface-bright">
-          <Skeleton className="h-6 w-36 mb-1" />
-          <Skeleton className="h-4 w-64" />
-        </div>
-        <div className="p-6 md:p-8 space-y-4">
-          {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={i} className="h-14 w-full" />
-          ))}
-        </div>
-      </div>
-    )
-  }
+  if (isLoading) return <SettingsTableSkeleton />
 
   if (!invoices) return null
 

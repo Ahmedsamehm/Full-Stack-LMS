@@ -21,10 +21,10 @@ export default function NotificationDropdown() {
   }, [])
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} className="relative cursor-pointer">
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="size-9 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors relative"
+        className="size-9 cursor-pointer rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors relative"
       >
         <Bell className="size-5" />
         {data && data.unreadCount > 0 && (
