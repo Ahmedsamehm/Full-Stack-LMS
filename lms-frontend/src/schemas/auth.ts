@@ -34,9 +34,19 @@ export const resetPasswordRequestSchema = z
     path: ['confirmNewPassword'],
   })
 
+export const authResponseSchema = z.object({
+  // accessToken is no longer in the JSON body — it's set as an httpOnly cookie by the backend.
+  user: z.object({
+    id: z.string(),
+    name: z.string().optional(),
+    email: z.string().email(),
+    role: z.enum(['admin', 'teacher', 'student']),
+  }),
+})
 // ─── Inferred Types ───────────────────────────────────────────────────────────
 
 export type LoginRequest = z.infer<typeof loginRequestSchema>
 export type RegisterRequest = z.infer<typeof registerRequestSchema>
 export type ForgotPasswordRequest = z.infer<typeof forgotPasswordRequestSchema>
 export type ResetPasswordRequest = z.infer<typeof resetPasswordRequestSchema>
+export type AuthResponse = z.infer<typeof authResponseSchema>

@@ -1,17 +1,16 @@
 import { getUser } from '#/features/users/_api/users'
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_protected')({
-  beforeLoad: async () => {
+export const Route = createFileRoute('/_public/_auth')({
+  beforeLoad: async()=>{
     const user = await getUser()
-    if (!user) {
-      throw redirect({ to: '/login' })
-    }
-    return { user }
+
+    if (user) throw redirect({ to: '/dashboard' })
   },
+
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  return <Outlet />
+  return <Outlet/>
 }

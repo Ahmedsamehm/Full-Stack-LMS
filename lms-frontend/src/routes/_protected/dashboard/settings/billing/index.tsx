@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import SettingsBillingPage from '#/features/settings/_components/settings-billing-page'
 
 export const Route = createFileRoute(
-  '/_protected/dashboards/settings/billing/',
+  '/_protected/dashboard/settings/billing/',
 )({
   head: () => ({
     meta: [

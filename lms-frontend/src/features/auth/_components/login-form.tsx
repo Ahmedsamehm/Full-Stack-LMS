@@ -12,10 +12,12 @@ import { cn } from '#/lib/utils'
 import { loginRequestSchema } from '#/schemas/auth'
 
 import type { LoginRequest } from '#/schemas/auth'
+import { useLogin } from '../_hooks/useLogin'
+import { getAuthErrorMessage } from '../_utils/getAuthErrorMessage'
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false)
-
+  const { mutateAsync, isPending, error } = useLogin()
   const {
     register,
     handleSubmit,
@@ -28,8 +30,8 @@ export default function LoginForm() {
     },
   })
 
-  function onSubmit(data: LoginRequest) {
-    console.log('Login:', data)
+  const onSubmit = async (data: LoginRequest) => {
+    await mutateAsync(data)
   }
 
   return (
@@ -40,7 +42,7 @@ export default function LoginForm() {
     {/* Image Container */}
     <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-low">
       <img
-        src="/Auth/screen3.webp"
+        src="/Auth/screen3.webp"  
         alt="Login illustration"
         className="size-auto object-cover"
       />
@@ -161,10 +163,18 @@ export default function LoginForm() {
               type="submit"
               size="lg"
               className="h-12 w-full text-base text-white"
-              disabled={isSubmitting}
+              disabled={isPending}
             >
-              {isSubmitting ? 'Signing In...' : 'Sign In'}
+              {isSubmitting || isPending ? 'Signing In...' : 'Sign In'}
             </Button>
+            {error && (
+              <p className="text-sm text-destructive">
+                {getAuthErrorMessage(
+                  error,
+                  'Login failed. Please check your email and password.',
+                )}
+              </p>
+            )}
           </form>
   <Separator className="flex-1" />
           {/* Divider */}

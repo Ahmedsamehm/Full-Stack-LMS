@@ -13,21 +13,22 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ProtectedDashboardsRouteRouteImport } from './routes/_protected/dashboards/route'
-import { Route as ProtectedDashboardsIndexRouteImport } from './routes/_protected/dashboards/index'
+import { Route as PublicAuthRouteRouteImport } from './routes/_public/_auth/route'
+import { Route as ProtectedDashboardRouteRouteImport } from './routes/_protected/dashboard/route'
+import { Route as ProtectedDashboardIndexRouteImport } from './routes/_protected/dashboard/index'
 import { Route as PublicCoursesCoursesRouteImport } from './routes/_public/_courses/courses'
 import { Route as PublicAuthRegisterRouteImport } from './routes/_public/_auth/register'
 import { Route as PublicAuthLoginRouteImport } from './routes/_public/_auth/login'
 import { Route as PublicAuthForgotPasswordRouteImport } from './routes/_public/_auth/forgotPassword'
-import { Route as ProtectedDashboardsCoursesRouteRouteImport } from './routes/_protected/dashboards/courses/route'
-import { Route as ProtectedDashboardsStudentsIndexRouteImport } from './routes/_protected/dashboards/students/index'
-import { Route as ProtectedDashboardsSettingsIndexRouteImport } from './routes/_protected/dashboards/settings/index'
-import { Route as ProtectedDashboardsCoursesIndexRouteImport } from './routes/_protected/dashboards/courses/index'
-import { Route as ProtectedDashboardsCoursesIdRouteImport } from './routes/_protected/dashboards/courses/$id'
-import { Route as ProtectedDashboardsSettingsSecurityIndexRouteImport } from './routes/_protected/dashboards/settings/security/index'
-import { Route as ProtectedDashboardsSettingsProfileIndexRouteImport } from './routes/_protected/dashboards/settings/profile/index'
-import { Route as ProtectedDashboardsSettingsNotificationsIndexRouteImport } from './routes/_protected/dashboards/settings/notifications/index'
-import { Route as ProtectedDashboardsSettingsBillingIndexRouteImport } from './routes/_protected/dashboards/settings/billing/index'
+import { Route as ProtectedDashboardCoursesRouteRouteImport } from './routes/_protected/dashboard/courses/route'
+import { Route as ProtectedDashboardStudentsIndexRouteImport } from './routes/_protected/dashboard/students/index'
+import { Route as ProtectedDashboardSettingsIndexRouteImport } from './routes/_protected/dashboard/settings/index'
+import { Route as ProtectedDashboardCoursesIndexRouteImport } from './routes/_protected/dashboard/courses/index'
+import { Route as ProtectedDashboardCoursesIdRouteImport } from './routes/_protected/dashboard/courses/$id'
+import { Route as ProtectedDashboardSettingsSecurityIndexRouteImport } from './routes/_protected/dashboard/settings/security/index'
+import { Route as ProtectedDashboardSettingsProfileIndexRouteImport } from './routes/_protected/dashboard/settings/profile/index'
+import { Route as ProtectedDashboardSettingsNotificationsIndexRouteImport } from './routes/_protected/dashboard/settings/notifications/index'
+import { Route as ProtectedDashboardSettingsBillingIndexRouteImport } from './routes/_protected/dashboard/settings/billing/index'
 import { Route as PublicCoursesIdCoursesIdRouteImport } from './routes/_public/_courses/_id/courses.$id'
 
 const AboutRoute = AboutRouteImport.update({
@@ -48,92 +49,94 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProtectedDashboardsRouteRoute =
-  ProtectedDashboardsRouteRouteImport.update({
-    id: '/dashboards',
-    path: '/dashboards',
-    getParentRoute: () => ProtectedRouteRoute,
-  } as any)
-const ProtectedDashboardsIndexRoute =
-  ProtectedDashboardsIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => ProtectedDashboardsRouteRoute,
-  } as any)
+const PublicAuthRouteRoute = PublicAuthRouteRouteImport.update({
+  id: '/_auth',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
+const ProtectedDashboardRouteRoute = ProtectedDashboardRouteRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const ProtectedDashboardIndexRoute = ProtectedDashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProtectedDashboardRouteRoute,
+} as any)
 const PublicCoursesCoursesRoute = PublicCoursesCoursesRouteImport.update({
   id: '/_courses/courses',
   path: '/courses',
   getParentRoute: () => PublicRouteRoute,
 } as any)
 const PublicAuthRegisterRoute = PublicAuthRegisterRouteImport.update({
-  id: '/_auth/register',
+  id: '/register',
   path: '/register',
-  getParentRoute: () => PublicRouteRoute,
+  getParentRoute: () => PublicAuthRouteRoute,
 } as any)
 const PublicAuthLoginRoute = PublicAuthLoginRouteImport.update({
-  id: '/_auth/login',
+  id: '/login',
   path: '/login',
-  getParentRoute: () => PublicRouteRoute,
+  getParentRoute: () => PublicAuthRouteRoute,
 } as any)
 const PublicAuthForgotPasswordRoute =
   PublicAuthForgotPasswordRouteImport.update({
-    id: '/_auth/forgotPassword',
+    id: '/forgotPassword',
     path: '/forgotPassword',
-    getParentRoute: () => PublicRouteRoute,
+    getParentRoute: () => PublicAuthRouteRoute,
   } as any)
-const ProtectedDashboardsCoursesRouteRoute =
-  ProtectedDashboardsCoursesRouteRouteImport.update({
+const ProtectedDashboardCoursesRouteRoute =
+  ProtectedDashboardCoursesRouteRouteImport.update({
     id: '/courses',
     path: '/courses',
-    getParentRoute: () => ProtectedDashboardsRouteRoute,
+    getParentRoute: () => ProtectedDashboardRouteRoute,
   } as any)
-const ProtectedDashboardsStudentsIndexRoute =
-  ProtectedDashboardsStudentsIndexRouteImport.update({
+const ProtectedDashboardStudentsIndexRoute =
+  ProtectedDashboardStudentsIndexRouteImport.update({
     id: '/students/',
     path: '/students/',
-    getParentRoute: () => ProtectedDashboardsRouteRoute,
+    getParentRoute: () => ProtectedDashboardRouteRoute,
   } as any)
-const ProtectedDashboardsSettingsIndexRoute =
-  ProtectedDashboardsSettingsIndexRouteImport.update({
+const ProtectedDashboardSettingsIndexRoute =
+  ProtectedDashboardSettingsIndexRouteImport.update({
     id: '/settings/',
     path: '/settings/',
-    getParentRoute: () => ProtectedDashboardsRouteRoute,
+    getParentRoute: () => ProtectedDashboardRouteRoute,
   } as any)
-const ProtectedDashboardsCoursesIndexRoute =
-  ProtectedDashboardsCoursesIndexRouteImport.update({
+const ProtectedDashboardCoursesIndexRoute =
+  ProtectedDashboardCoursesIndexRouteImport.update({
     id: '/',
     path: '/',
-    getParentRoute: () => ProtectedDashboardsCoursesRouteRoute,
+    getParentRoute: () => ProtectedDashboardCoursesRouteRoute,
   } as any)
-const ProtectedDashboardsCoursesIdRoute =
-  ProtectedDashboardsCoursesIdRouteImport.update({
+const ProtectedDashboardCoursesIdRoute =
+  ProtectedDashboardCoursesIdRouteImport.update({
     id: '/$id',
     path: '/$id',
-    getParentRoute: () => ProtectedDashboardsCoursesRouteRoute,
+    getParentRoute: () => ProtectedDashboardCoursesRouteRoute,
   } as any)
-const ProtectedDashboardsSettingsSecurityIndexRoute =
-  ProtectedDashboardsSettingsSecurityIndexRouteImport.update({
+const ProtectedDashboardSettingsSecurityIndexRoute =
+  ProtectedDashboardSettingsSecurityIndexRouteImport.update({
     id: '/settings/security/',
     path: '/settings/security/',
-    getParentRoute: () => ProtectedDashboardsRouteRoute,
+    getParentRoute: () => ProtectedDashboardRouteRoute,
   } as any)
-const ProtectedDashboardsSettingsProfileIndexRoute =
-  ProtectedDashboardsSettingsProfileIndexRouteImport.update({
+const ProtectedDashboardSettingsProfileIndexRoute =
+  ProtectedDashboardSettingsProfileIndexRouteImport.update({
     id: '/settings/profile/',
     path: '/settings/profile/',
-    getParentRoute: () => ProtectedDashboardsRouteRoute,
+    getParentRoute: () => ProtectedDashboardRouteRoute,
   } as any)
-const ProtectedDashboardsSettingsNotificationsIndexRoute =
-  ProtectedDashboardsSettingsNotificationsIndexRouteImport.update({
+const ProtectedDashboardSettingsNotificationsIndexRoute =
+  ProtectedDashboardSettingsNotificationsIndexRouteImport.update({
     id: '/settings/notifications/',
     path: '/settings/notifications/',
-    getParentRoute: () => ProtectedDashboardsRouteRoute,
+    getParentRoute: () => ProtectedDashboardRouteRoute,
   } as any)
-const ProtectedDashboardsSettingsBillingIndexRoute =
-  ProtectedDashboardsSettingsBillingIndexRouteImport.update({
+const ProtectedDashboardSettingsBillingIndexRoute =
+  ProtectedDashboardSettingsBillingIndexRouteImport.update({
     id: '/settings/billing/',
     path: '/settings/billing/',
-    getParentRoute: () => ProtectedDashboardsRouteRoute,
+    getParentRoute: () => ProtectedDashboardRouteRoute,
   } as any)
 const PublicCoursesIdCoursesIdRoute =
   PublicCoursesIdCoursesIdRouteImport.update({
@@ -145,22 +148,22 @@ const PublicCoursesIdCoursesIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/dashboards': typeof ProtectedDashboardsRouteRouteWithChildren
-  '/dashboards/courses': typeof ProtectedDashboardsCoursesRouteRouteWithChildren
+  '/dashboard': typeof ProtectedDashboardRouteRouteWithChildren
+  '/dashboard/courses': typeof ProtectedDashboardCoursesRouteRouteWithChildren
   '/forgotPassword': typeof PublicAuthForgotPasswordRoute
   '/login': typeof PublicAuthLoginRoute
   '/register': typeof PublicAuthRegisterRoute
   '/courses': typeof PublicCoursesCoursesRoute
-  '/dashboards/': typeof ProtectedDashboardsIndexRoute
-  '/dashboards/courses/$id': typeof ProtectedDashboardsCoursesIdRoute
-  '/dashboards/courses/': typeof ProtectedDashboardsCoursesIndexRoute
-  '/dashboards/settings/': typeof ProtectedDashboardsSettingsIndexRoute
-  '/dashboards/students/': typeof ProtectedDashboardsStudentsIndexRoute
+  '/dashboard/': typeof ProtectedDashboardIndexRoute
+  '/dashboard/courses/$id': typeof ProtectedDashboardCoursesIdRoute
+  '/dashboard/courses/': typeof ProtectedDashboardCoursesIndexRoute
+  '/dashboard/settings/': typeof ProtectedDashboardSettingsIndexRoute
+  '/dashboard/students/': typeof ProtectedDashboardStudentsIndexRoute
   '/courses/$id': typeof PublicCoursesIdCoursesIdRoute
-  '/dashboards/settings/billing/': typeof ProtectedDashboardsSettingsBillingIndexRoute
-  '/dashboards/settings/notifications/': typeof ProtectedDashboardsSettingsNotificationsIndexRoute
-  '/dashboards/settings/profile/': typeof ProtectedDashboardsSettingsProfileIndexRoute
-  '/dashboards/settings/security/': typeof ProtectedDashboardsSettingsSecurityIndexRoute
+  '/dashboard/settings/billing/': typeof ProtectedDashboardSettingsBillingIndexRoute
+  '/dashboard/settings/notifications/': typeof ProtectedDashboardSettingsNotificationsIndexRoute
+  '/dashboard/settings/profile/': typeof ProtectedDashboardSettingsProfileIndexRoute
+  '/dashboard/settings/security/': typeof ProtectedDashboardSettingsSecurityIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -169,16 +172,16 @@ export interface FileRoutesByTo {
   '/login': typeof PublicAuthLoginRoute
   '/register': typeof PublicAuthRegisterRoute
   '/courses': typeof PublicCoursesCoursesRoute
-  '/dashboards': typeof ProtectedDashboardsIndexRoute
-  '/dashboards/courses/$id': typeof ProtectedDashboardsCoursesIdRoute
-  '/dashboards/courses': typeof ProtectedDashboardsCoursesIndexRoute
-  '/dashboards/settings': typeof ProtectedDashboardsSettingsIndexRoute
-  '/dashboards/students': typeof ProtectedDashboardsStudentsIndexRoute
+  '/dashboard': typeof ProtectedDashboardIndexRoute
+  '/dashboard/courses/$id': typeof ProtectedDashboardCoursesIdRoute
+  '/dashboard/courses': typeof ProtectedDashboardCoursesIndexRoute
+  '/dashboard/settings': typeof ProtectedDashboardSettingsIndexRoute
+  '/dashboard/students': typeof ProtectedDashboardStudentsIndexRoute
   '/courses/$id': typeof PublicCoursesIdCoursesIdRoute
-  '/dashboards/settings/billing': typeof ProtectedDashboardsSettingsBillingIndexRoute
-  '/dashboards/settings/notifications': typeof ProtectedDashboardsSettingsNotificationsIndexRoute
-  '/dashboards/settings/profile': typeof ProtectedDashboardsSettingsProfileIndexRoute
-  '/dashboards/settings/security': typeof ProtectedDashboardsSettingsSecurityIndexRoute
+  '/dashboard/settings/billing': typeof ProtectedDashboardSettingsBillingIndexRoute
+  '/dashboard/settings/notifications': typeof ProtectedDashboardSettingsNotificationsIndexRoute
+  '/dashboard/settings/profile': typeof ProtectedDashboardSettingsProfileIndexRoute
+  '/dashboard/settings/security': typeof ProtectedDashboardSettingsSecurityIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -186,44 +189,45 @@ export interface FileRoutesById {
   '/_protected': typeof ProtectedRouteRouteWithChildren
   '/_public': typeof PublicRouteRouteWithChildren
   '/about': typeof AboutRoute
-  '/_protected/dashboards': typeof ProtectedDashboardsRouteRouteWithChildren
-  '/_protected/dashboards/courses': typeof ProtectedDashboardsCoursesRouteRouteWithChildren
+  '/_protected/dashboard': typeof ProtectedDashboardRouteRouteWithChildren
+  '/_public/_auth': typeof PublicAuthRouteRouteWithChildren
+  '/_protected/dashboard/courses': typeof ProtectedDashboardCoursesRouteRouteWithChildren
   '/_public/_auth/forgotPassword': typeof PublicAuthForgotPasswordRoute
   '/_public/_auth/login': typeof PublicAuthLoginRoute
   '/_public/_auth/register': typeof PublicAuthRegisterRoute
   '/_public/_courses/courses': typeof PublicCoursesCoursesRoute
-  '/_protected/dashboards/': typeof ProtectedDashboardsIndexRoute
-  '/_protected/dashboards/courses/$id': typeof ProtectedDashboardsCoursesIdRoute
-  '/_protected/dashboards/courses/': typeof ProtectedDashboardsCoursesIndexRoute
-  '/_protected/dashboards/settings/': typeof ProtectedDashboardsSettingsIndexRoute
-  '/_protected/dashboards/students/': typeof ProtectedDashboardsStudentsIndexRoute
+  '/_protected/dashboard/': typeof ProtectedDashboardIndexRoute
+  '/_protected/dashboard/courses/$id': typeof ProtectedDashboardCoursesIdRoute
+  '/_protected/dashboard/courses/': typeof ProtectedDashboardCoursesIndexRoute
+  '/_protected/dashboard/settings/': typeof ProtectedDashboardSettingsIndexRoute
+  '/_protected/dashboard/students/': typeof ProtectedDashboardStudentsIndexRoute
   '/_public/_courses/_id/courses/$id': typeof PublicCoursesIdCoursesIdRoute
-  '/_protected/dashboards/settings/billing/': typeof ProtectedDashboardsSettingsBillingIndexRoute
-  '/_protected/dashboards/settings/notifications/': typeof ProtectedDashboardsSettingsNotificationsIndexRoute
-  '/_protected/dashboards/settings/profile/': typeof ProtectedDashboardsSettingsProfileIndexRoute
-  '/_protected/dashboards/settings/security/': typeof ProtectedDashboardsSettingsSecurityIndexRoute
+  '/_protected/dashboard/settings/billing/': typeof ProtectedDashboardSettingsBillingIndexRoute
+  '/_protected/dashboard/settings/notifications/': typeof ProtectedDashboardSettingsNotificationsIndexRoute
+  '/_protected/dashboard/settings/profile/': typeof ProtectedDashboardSettingsProfileIndexRoute
+  '/_protected/dashboard/settings/security/': typeof ProtectedDashboardSettingsSecurityIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
-    | '/dashboards'
-    | '/dashboards/courses'
+    | '/dashboard'
+    | '/dashboard/courses'
     | '/forgotPassword'
     | '/login'
     | '/register'
     | '/courses'
-    | '/dashboards/'
-    | '/dashboards/courses/$id'
-    | '/dashboards/courses/'
-    | '/dashboards/settings/'
-    | '/dashboards/students/'
+    | '/dashboard/'
+    | '/dashboard/courses/$id'
+    | '/dashboard/courses/'
+    | '/dashboard/settings/'
+    | '/dashboard/students/'
     | '/courses/$id'
-    | '/dashboards/settings/billing/'
-    | '/dashboards/settings/notifications/'
-    | '/dashboards/settings/profile/'
-    | '/dashboards/settings/security/'
+    | '/dashboard/settings/billing/'
+    | '/dashboard/settings/notifications/'
+    | '/dashboard/settings/profile/'
+    | '/dashboard/settings/security/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -232,38 +236,39 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/courses'
-    | '/dashboards'
-    | '/dashboards/courses/$id'
-    | '/dashboards/courses'
-    | '/dashboards/settings'
-    | '/dashboards/students'
+    | '/dashboard'
+    | '/dashboard/courses/$id'
+    | '/dashboard/courses'
+    | '/dashboard/settings'
+    | '/dashboard/students'
     | '/courses/$id'
-    | '/dashboards/settings/billing'
-    | '/dashboards/settings/notifications'
-    | '/dashboards/settings/profile'
-    | '/dashboards/settings/security'
+    | '/dashboard/settings/billing'
+    | '/dashboard/settings/notifications'
+    | '/dashboard/settings/profile'
+    | '/dashboard/settings/security'
   id:
     | '__root__'
     | '/'
     | '/_protected'
     | '/_public'
     | '/about'
-    | '/_protected/dashboards'
-    | '/_protected/dashboards/courses'
+    | '/_protected/dashboard'
+    | '/_public/_auth'
+    | '/_protected/dashboard/courses'
     | '/_public/_auth/forgotPassword'
     | '/_public/_auth/login'
     | '/_public/_auth/register'
     | '/_public/_courses/courses'
-    | '/_protected/dashboards/'
-    | '/_protected/dashboards/courses/$id'
-    | '/_protected/dashboards/courses/'
-    | '/_protected/dashboards/settings/'
-    | '/_protected/dashboards/students/'
+    | '/_protected/dashboard/'
+    | '/_protected/dashboard/courses/$id'
+    | '/_protected/dashboard/courses/'
+    | '/_protected/dashboard/settings/'
+    | '/_protected/dashboard/students/'
     | '/_public/_courses/_id/courses/$id'
-    | '/_protected/dashboards/settings/billing/'
-    | '/_protected/dashboards/settings/notifications/'
-    | '/_protected/dashboards/settings/profile/'
-    | '/_protected/dashboards/settings/security/'
+    | '/_protected/dashboard/settings/billing/'
+    | '/_protected/dashboard/settings/notifications/'
+    | '/_protected/dashboard/settings/profile/'
+    | '/_protected/dashboard/settings/security/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -303,19 +308,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_protected/dashboards': {
-      id: '/_protected/dashboards'
-      path: '/dashboards'
-      fullPath: '/dashboards'
-      preLoaderRoute: typeof ProtectedDashboardsRouteRouteImport
+    '/_public/_auth': {
+      id: '/_public/_auth'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PublicAuthRouteRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
+    '/_protected/dashboard': {
+      id: '/_protected/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof ProtectedDashboardRouteRouteImport
       parentRoute: typeof ProtectedRouteRoute
     }
-    '/_protected/dashboards/': {
-      id: '/_protected/dashboards/'
+    '/_protected/dashboard/': {
+      id: '/_protected/dashboard/'
       path: '/'
-      fullPath: '/dashboards/'
-      preLoaderRoute: typeof ProtectedDashboardsIndexRouteImport
-      parentRoute: typeof ProtectedDashboardsRouteRoute
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof ProtectedDashboardIndexRouteImport
+      parentRoute: typeof ProtectedDashboardRouteRoute
     }
     '/_public/_courses/courses': {
       id: '/_public/_courses/courses'
@@ -329,84 +341,84 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof PublicAuthRegisterRouteImport
-      parentRoute: typeof PublicRouteRoute
+      parentRoute: typeof PublicAuthRouteRoute
     }
     '/_public/_auth/login': {
       id: '/_public/_auth/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof PublicAuthLoginRouteImport
-      parentRoute: typeof PublicRouteRoute
+      parentRoute: typeof PublicAuthRouteRoute
     }
     '/_public/_auth/forgotPassword': {
       id: '/_public/_auth/forgotPassword'
       path: '/forgotPassword'
       fullPath: '/forgotPassword'
       preLoaderRoute: typeof PublicAuthForgotPasswordRouteImport
-      parentRoute: typeof PublicRouteRoute
+      parentRoute: typeof PublicAuthRouteRoute
     }
-    '/_protected/dashboards/courses': {
-      id: '/_protected/dashboards/courses'
+    '/_protected/dashboard/courses': {
+      id: '/_protected/dashboard/courses'
       path: '/courses'
-      fullPath: '/dashboards/courses'
-      preLoaderRoute: typeof ProtectedDashboardsCoursesRouteRouteImport
-      parentRoute: typeof ProtectedDashboardsRouteRoute
+      fullPath: '/dashboard/courses'
+      preLoaderRoute: typeof ProtectedDashboardCoursesRouteRouteImport
+      parentRoute: typeof ProtectedDashboardRouteRoute
     }
-    '/_protected/dashboards/students/': {
-      id: '/_protected/dashboards/students/'
+    '/_protected/dashboard/students/': {
+      id: '/_protected/dashboard/students/'
       path: '/students'
-      fullPath: '/dashboards/students/'
-      preLoaderRoute: typeof ProtectedDashboardsStudentsIndexRouteImport
-      parentRoute: typeof ProtectedDashboardsRouteRoute
+      fullPath: '/dashboard/students/'
+      preLoaderRoute: typeof ProtectedDashboardStudentsIndexRouteImport
+      parentRoute: typeof ProtectedDashboardRouteRoute
     }
-    '/_protected/dashboards/settings/': {
-      id: '/_protected/dashboards/settings/'
+    '/_protected/dashboard/settings/': {
+      id: '/_protected/dashboard/settings/'
       path: '/settings'
-      fullPath: '/dashboards/settings/'
-      preLoaderRoute: typeof ProtectedDashboardsSettingsIndexRouteImport
-      parentRoute: typeof ProtectedDashboardsRouteRoute
+      fullPath: '/dashboard/settings/'
+      preLoaderRoute: typeof ProtectedDashboardSettingsIndexRouteImport
+      parentRoute: typeof ProtectedDashboardRouteRoute
     }
-    '/_protected/dashboards/courses/': {
-      id: '/_protected/dashboards/courses/'
+    '/_protected/dashboard/courses/': {
+      id: '/_protected/dashboard/courses/'
       path: '/'
-      fullPath: '/dashboards/courses/'
-      preLoaderRoute: typeof ProtectedDashboardsCoursesIndexRouteImport
-      parentRoute: typeof ProtectedDashboardsCoursesRouteRoute
+      fullPath: '/dashboard/courses/'
+      preLoaderRoute: typeof ProtectedDashboardCoursesIndexRouteImport
+      parentRoute: typeof ProtectedDashboardCoursesRouteRoute
     }
-    '/_protected/dashboards/courses/$id': {
-      id: '/_protected/dashboards/courses/$id'
+    '/_protected/dashboard/courses/$id': {
+      id: '/_protected/dashboard/courses/$id'
       path: '/$id'
-      fullPath: '/dashboards/courses/$id'
-      preLoaderRoute: typeof ProtectedDashboardsCoursesIdRouteImport
-      parentRoute: typeof ProtectedDashboardsCoursesRouteRoute
+      fullPath: '/dashboard/courses/$id'
+      preLoaderRoute: typeof ProtectedDashboardCoursesIdRouteImport
+      parentRoute: typeof ProtectedDashboardCoursesRouteRoute
     }
-    '/_protected/dashboards/settings/security/': {
-      id: '/_protected/dashboards/settings/security/'
+    '/_protected/dashboard/settings/security/': {
+      id: '/_protected/dashboard/settings/security/'
       path: '/settings/security'
-      fullPath: '/dashboards/settings/security/'
-      preLoaderRoute: typeof ProtectedDashboardsSettingsSecurityIndexRouteImport
-      parentRoute: typeof ProtectedDashboardsRouteRoute
+      fullPath: '/dashboard/settings/security/'
+      preLoaderRoute: typeof ProtectedDashboardSettingsSecurityIndexRouteImport
+      parentRoute: typeof ProtectedDashboardRouteRoute
     }
-    '/_protected/dashboards/settings/profile/': {
-      id: '/_protected/dashboards/settings/profile/'
+    '/_protected/dashboard/settings/profile/': {
+      id: '/_protected/dashboard/settings/profile/'
       path: '/settings/profile'
-      fullPath: '/dashboards/settings/profile/'
-      preLoaderRoute: typeof ProtectedDashboardsSettingsProfileIndexRouteImport
-      parentRoute: typeof ProtectedDashboardsRouteRoute
+      fullPath: '/dashboard/settings/profile/'
+      preLoaderRoute: typeof ProtectedDashboardSettingsProfileIndexRouteImport
+      parentRoute: typeof ProtectedDashboardRouteRoute
     }
-    '/_protected/dashboards/settings/notifications/': {
-      id: '/_protected/dashboards/settings/notifications/'
+    '/_protected/dashboard/settings/notifications/': {
+      id: '/_protected/dashboard/settings/notifications/'
       path: '/settings/notifications'
-      fullPath: '/dashboards/settings/notifications/'
-      preLoaderRoute: typeof ProtectedDashboardsSettingsNotificationsIndexRouteImport
-      parentRoute: typeof ProtectedDashboardsRouteRoute
+      fullPath: '/dashboard/settings/notifications/'
+      preLoaderRoute: typeof ProtectedDashboardSettingsNotificationsIndexRouteImport
+      parentRoute: typeof ProtectedDashboardRouteRoute
     }
-    '/_protected/dashboards/settings/billing/': {
-      id: '/_protected/dashboards/settings/billing/'
+    '/_protected/dashboard/settings/billing/': {
+      id: '/_protected/dashboard/settings/billing/'
       path: '/settings/billing'
-      fullPath: '/dashboards/settings/billing/'
-      preLoaderRoute: typeof ProtectedDashboardsSettingsBillingIndexRouteImport
-      parentRoute: typeof ProtectedDashboardsRouteRoute
+      fullPath: '/dashboard/settings/billing/'
+      preLoaderRoute: typeof ProtectedDashboardSettingsBillingIndexRouteImport
+      parentRoute: typeof ProtectedDashboardRouteRoute
     }
     '/_public/_courses/_id/courses/$id': {
       id: '/_public/_courses/_id/courses/$id'
@@ -418,81 +430,91 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface ProtectedDashboardsCoursesRouteRouteChildren {
-  ProtectedDashboardsCoursesIdRoute: typeof ProtectedDashboardsCoursesIdRoute
-  ProtectedDashboardsCoursesIndexRoute: typeof ProtectedDashboardsCoursesIndexRoute
+interface ProtectedDashboardCoursesRouteRouteChildren {
+  ProtectedDashboardCoursesIdRoute: typeof ProtectedDashboardCoursesIdRoute
+  ProtectedDashboardCoursesIndexRoute: typeof ProtectedDashboardCoursesIndexRoute
 }
 
-const ProtectedDashboardsCoursesRouteRouteChildren: ProtectedDashboardsCoursesRouteRouteChildren =
+const ProtectedDashboardCoursesRouteRouteChildren: ProtectedDashboardCoursesRouteRouteChildren =
   {
-    ProtectedDashboardsCoursesIdRoute: ProtectedDashboardsCoursesIdRoute,
-    ProtectedDashboardsCoursesIndexRoute: ProtectedDashboardsCoursesIndexRoute,
+    ProtectedDashboardCoursesIdRoute: ProtectedDashboardCoursesIdRoute,
+    ProtectedDashboardCoursesIndexRoute: ProtectedDashboardCoursesIndexRoute,
   }
 
-const ProtectedDashboardsCoursesRouteRouteWithChildren =
-  ProtectedDashboardsCoursesRouteRoute._addFileChildren(
-    ProtectedDashboardsCoursesRouteRouteChildren,
+const ProtectedDashboardCoursesRouteRouteWithChildren =
+  ProtectedDashboardCoursesRouteRoute._addFileChildren(
+    ProtectedDashboardCoursesRouteRouteChildren,
   )
 
-interface ProtectedDashboardsRouteRouteChildren {
-  ProtectedDashboardsCoursesRouteRoute: typeof ProtectedDashboardsCoursesRouteRouteWithChildren
-  ProtectedDashboardsIndexRoute: typeof ProtectedDashboardsIndexRoute
-  ProtectedDashboardsSettingsIndexRoute: typeof ProtectedDashboardsSettingsIndexRoute
-  ProtectedDashboardsStudentsIndexRoute: typeof ProtectedDashboardsStudentsIndexRoute
-  ProtectedDashboardsSettingsBillingIndexRoute: typeof ProtectedDashboardsSettingsBillingIndexRoute
-  ProtectedDashboardsSettingsNotificationsIndexRoute: typeof ProtectedDashboardsSettingsNotificationsIndexRoute
-  ProtectedDashboardsSettingsProfileIndexRoute: typeof ProtectedDashboardsSettingsProfileIndexRoute
-  ProtectedDashboardsSettingsSecurityIndexRoute: typeof ProtectedDashboardsSettingsSecurityIndexRoute
+interface ProtectedDashboardRouteRouteChildren {
+  ProtectedDashboardCoursesRouteRoute: typeof ProtectedDashboardCoursesRouteRouteWithChildren
+  ProtectedDashboardIndexRoute: typeof ProtectedDashboardIndexRoute
+  ProtectedDashboardSettingsIndexRoute: typeof ProtectedDashboardSettingsIndexRoute
+  ProtectedDashboardStudentsIndexRoute: typeof ProtectedDashboardStudentsIndexRoute
+  ProtectedDashboardSettingsBillingIndexRoute: typeof ProtectedDashboardSettingsBillingIndexRoute
+  ProtectedDashboardSettingsNotificationsIndexRoute: typeof ProtectedDashboardSettingsNotificationsIndexRoute
+  ProtectedDashboardSettingsProfileIndexRoute: typeof ProtectedDashboardSettingsProfileIndexRoute
+  ProtectedDashboardSettingsSecurityIndexRoute: typeof ProtectedDashboardSettingsSecurityIndexRoute
 }
 
-const ProtectedDashboardsRouteRouteChildren: ProtectedDashboardsRouteRouteChildren =
+const ProtectedDashboardRouteRouteChildren: ProtectedDashboardRouteRouteChildren =
   {
-    ProtectedDashboardsCoursesRouteRoute:
-      ProtectedDashboardsCoursesRouteRouteWithChildren,
-    ProtectedDashboardsIndexRoute: ProtectedDashboardsIndexRoute,
-    ProtectedDashboardsSettingsIndexRoute:
-      ProtectedDashboardsSettingsIndexRoute,
-    ProtectedDashboardsStudentsIndexRoute:
-      ProtectedDashboardsStudentsIndexRoute,
-    ProtectedDashboardsSettingsBillingIndexRoute:
-      ProtectedDashboardsSettingsBillingIndexRoute,
-    ProtectedDashboardsSettingsNotificationsIndexRoute:
-      ProtectedDashboardsSettingsNotificationsIndexRoute,
-    ProtectedDashboardsSettingsProfileIndexRoute:
-      ProtectedDashboardsSettingsProfileIndexRoute,
-    ProtectedDashboardsSettingsSecurityIndexRoute:
-      ProtectedDashboardsSettingsSecurityIndexRoute,
+    ProtectedDashboardCoursesRouteRoute:
+      ProtectedDashboardCoursesRouteRouteWithChildren,
+    ProtectedDashboardIndexRoute: ProtectedDashboardIndexRoute,
+    ProtectedDashboardSettingsIndexRoute: ProtectedDashboardSettingsIndexRoute,
+    ProtectedDashboardStudentsIndexRoute: ProtectedDashboardStudentsIndexRoute,
+    ProtectedDashboardSettingsBillingIndexRoute:
+      ProtectedDashboardSettingsBillingIndexRoute,
+    ProtectedDashboardSettingsNotificationsIndexRoute:
+      ProtectedDashboardSettingsNotificationsIndexRoute,
+    ProtectedDashboardSettingsProfileIndexRoute:
+      ProtectedDashboardSettingsProfileIndexRoute,
+    ProtectedDashboardSettingsSecurityIndexRoute:
+      ProtectedDashboardSettingsSecurityIndexRoute,
   }
 
-const ProtectedDashboardsRouteRouteWithChildren =
-  ProtectedDashboardsRouteRoute._addFileChildren(
-    ProtectedDashboardsRouteRouteChildren,
+const ProtectedDashboardRouteRouteWithChildren =
+  ProtectedDashboardRouteRoute._addFileChildren(
+    ProtectedDashboardRouteRouteChildren,
   )
 
 interface ProtectedRouteRouteChildren {
-  ProtectedDashboardsRouteRoute: typeof ProtectedDashboardsRouteRouteWithChildren
+  ProtectedDashboardRouteRoute: typeof ProtectedDashboardRouteRouteWithChildren
 }
 
 const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
-  ProtectedDashboardsRouteRoute: ProtectedDashboardsRouteRouteWithChildren,
+  ProtectedDashboardRouteRoute: ProtectedDashboardRouteRouteWithChildren,
 }
 
 const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(
   ProtectedRouteRouteChildren,
 )
 
-interface PublicRouteRouteChildren {
+interface PublicAuthRouteRouteChildren {
   PublicAuthForgotPasswordRoute: typeof PublicAuthForgotPasswordRoute
   PublicAuthLoginRoute: typeof PublicAuthLoginRoute
   PublicAuthRegisterRoute: typeof PublicAuthRegisterRoute
+}
+
+const PublicAuthRouteRouteChildren: PublicAuthRouteRouteChildren = {
+  PublicAuthForgotPasswordRoute: PublicAuthForgotPasswordRoute,
+  PublicAuthLoginRoute: PublicAuthLoginRoute,
+  PublicAuthRegisterRoute: PublicAuthRegisterRoute,
+}
+
+const PublicAuthRouteRouteWithChildren = PublicAuthRouteRoute._addFileChildren(
+  PublicAuthRouteRouteChildren,
+)
+
+interface PublicRouteRouteChildren {
+  PublicAuthRouteRoute: typeof PublicAuthRouteRouteWithChildren
   PublicCoursesCoursesRoute: typeof PublicCoursesCoursesRoute
   PublicCoursesIdCoursesIdRoute: typeof PublicCoursesIdCoursesIdRoute
 }
 
 const PublicRouteRouteChildren: PublicRouteRouteChildren = {
-  PublicAuthForgotPasswordRoute: PublicAuthForgotPasswordRoute,
-  PublicAuthLoginRoute: PublicAuthLoginRoute,
-  PublicAuthRegisterRoute: PublicAuthRegisterRoute,
+  PublicAuthRouteRoute: PublicAuthRouteRouteWithChildren,
   PublicCoursesCoursesRoute: PublicCoursesCoursesRoute,
   PublicCoursesIdCoursesIdRoute: PublicCoursesIdCoursesIdRoute,
 }

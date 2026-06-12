@@ -7,6 +7,7 @@ import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { AdminOnly, TeacherOnly } from 'src/common/decorators/role.decorator';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { UserResponseDto } from 'src/core/auth/dto/response-auth.dto';
 
 @Controller('users')
 export class UsersController {
@@ -16,14 +17,14 @@ export class UsersController {
     @AdminOnly()
     @ResponseMessage('Users fetched successfully')
     @HttpCode(HttpStatus.OK)
-    findAll(@CurrentUser() user: any, @Query() pagination: PaginationDto) {
+    findAll(@Query() pagination: PaginationDto) {
         return this.usersService.getAllUsers(pagination);
     }
 
     @Get('me')
     @ResponseMessage('Profile fetched successfully')
     @HttpCode(HttpStatus.OK)
-    findMe(@CurrentUser() user: any) {
+    findMe(@CurrentUser() user: UserResponseDto) {
         return this.usersService.findMe(user.id);
     }
 
@@ -46,14 +47,14 @@ export class UsersController {
     @AdminOnly()
     @ResponseMessage('User created successfully')
     @HttpCode(HttpStatus.CREATED)
-    create(@Body() dto: AdminCreateUserDto, @CurrentUser() user: any) {
+    create(@Body() dto: AdminCreateUserDto, @CurrentUser() user: UserResponseDto) {
         return this.usersService.create(dto, user.role);
     }
 
     @Patch(':id')
     @ResponseMessage('User updated successfully')
     @HttpCode(HttpStatus.OK)
-    update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateUserDto, @CurrentUser() user: any) {
+    update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateUserDto, @CurrentUser() user: UserResponseDto) {
         return this.usersService.update(id, dto, user.id, user.role);
     }
 
@@ -69,7 +70,7 @@ export class UsersController {
     @AdminOnly()
     @ResponseMessage('User role updated successfully')
     @HttpCode(HttpStatus.OK)
-    changeRole(@Param('id', ParseUUIDPipe) id: string, @Body() dto: ChangeRoleDto, @CurrentUser() user: any) {
+    changeRole(@Param('id', ParseUUIDPipe) id: string, @Body() dto: ChangeRoleDto, @CurrentUser() user: UserResponseDto) {
         return this.usersService.changeRole(id, dto, user.role);
     }
 }

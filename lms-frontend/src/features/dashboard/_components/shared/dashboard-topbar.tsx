@@ -1,6 +1,8 @@
 import { Search, ChevronDown } from 'lucide-react'
 import { Avatar, AvatarFallback } from '#/components/ui/avatar'
 import NotificationDropdown from '#/features/notifications/_components/notification-dropdown'
+import { useGetUser } from '#/features/users/_hooks/useGetUser'
+import { Skeleton } from '#/components/ui/skeleton'
 
 interface DashboardTopbarProps {
   userName?: string
@@ -13,9 +15,16 @@ export default function DashboardTopbar({
   userInitials = 'U',
   userAvatar,
 }: DashboardTopbarProps) {
+  const {data:user ,isPending} = useGetUser()
+
+  
+
   return (
     <header className="bg-white/30 backdrop-blur-sm border-b border-outline-variant sticky top-0 z-40">
-      <div className="flex items-center justify-between h-16 w-full px-4 md:px-8 max-w-360 mx-auto">
+      <div
+        className="flex items-center justify-between h-16 w-full px-4 md:px-8 max-w-360 mx-auto"
+        suppressHydrationWarning
+      >
         <div className="flex items-center gap-4 ">
           <span className="text-lg font-bold text-primary lg:block">
             EduPro
@@ -38,7 +47,15 @@ export default function DashboardTopbar({
           <div className="h-6 w-px bg-outline-variant mx-1 hidden md:block" />
 
           <button className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <Avatar className="size-8">
+           
+              {isPending?
+              <Skeleton className="h-3 w-24" />
+
+              
+              :  
+              <>
+              
+               <Avatar className="size-8">
               {userAvatar ? (
                 <img
                   src={userAvatar}
@@ -51,9 +68,13 @@ export default function DashboardTopbar({
                 </AvatarFallback>
               )}
             </Avatar>
-            <span className="text-sm font-medium text-on-surface hidden md:block">
-              {userName}
+              
+              <span className="text-sm font-medium text-on-surface hidden md:block">
+              {user.data.name}
             </span>
+              </>
+              }
+           
             <ChevronDown className="size-4 text-on-surface-variant hidden md:block" />
           </button>
         </div>

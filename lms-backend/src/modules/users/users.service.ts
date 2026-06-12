@@ -29,11 +29,9 @@ export class UsersService {
 
     async findUserById(id: string) {
         return await this.findUserByIdService.findUserById(id);
-    }   
+    }
 
     async findMe(currentUserId: string) {
-    
-    
         return await this.findUserByIdService.findUserById(currentUserId);
     }
 

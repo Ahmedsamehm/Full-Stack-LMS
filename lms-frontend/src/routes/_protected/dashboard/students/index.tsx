@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import StudentsPage from '#/features/students/_components/students-page'
 
-export const Route = createFileRoute('/_protected/dashboards/students/')({
+export const Route = createFileRoute('/_protected/dashboard/students/')({
   head: () => ({
     meta: [
       {

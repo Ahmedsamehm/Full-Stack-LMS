@@ -13,11 +13,14 @@ import { cn } from '#/lib/utils'
 import { registerRequestSchema } from '#/schemas/auth'
 
 import type { RegisterRequest } from '#/schemas/auth'
+import { useRegister } from '../_hooks/useRegister'
+import { getAuthErrorMessage } from '../_utils/getAuthErrorMessage'
 
 export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [agreedToTerms, setAgreedToTerms] = useState(false)
+  const { mutateAsync, isPending, error } = useRegister()
 
   const {
     register,
@@ -33,8 +36,8 @@ export default function RegisterForm() {
     },
   })
 
-  function onSubmit(data: RegisterRequest) {
-    console.log('Register:', data)
+  async function onSubmit(data: RegisterRequest) {
+    await mutateAsync(data)
   }
 
   return (
@@ -271,10 +274,18 @@ export default function RegisterForm() {
               type="submit"
               className="mt-2 h-12 w-full text-base text-white"
               size="lg"
-              disabled={isSubmitting || !agreedToTerms}
+              disabled={isPending || !agreedToTerms}
             >
-              {isSubmitting ? 'Creating Account...' : 'Create Account'}
+              {isSubmitting || isPending ? 'Creating Account...' : 'Create Account'}
             </Button>
+            {error && (
+              <p className="text-sm text-destructive">
+                {getAuthErrorMessage(
+                  error,
+                  'Registration failed. Please check your details and try again.',
+                )}
+              </p>
+            )}
           </form>
 
           {/* Footer Link */}

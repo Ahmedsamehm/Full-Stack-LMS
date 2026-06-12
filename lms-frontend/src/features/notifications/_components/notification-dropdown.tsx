@@ -62,7 +62,7 @@ export default function NotificationDropdown() {
           </div>
 
           <Link
-            to="/dashboards/settings/notifications"
+            to="/dashboard/settings/notifications"
             onClick={() => setOpen(false)}
             className="w-full block text-center py-3 text-sm font-semibold text-primary hover:bg-surface-container transition-colors border-t border-outline-variant no-underline!"
           >

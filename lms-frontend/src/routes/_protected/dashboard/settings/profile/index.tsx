@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import SettingsProfilePage from '#/features/settings/_components/settings-profile-page'
 
 export const Route = createFileRoute(
-  '/_protected/dashboards/settings/profile/',
+  '/_protected/dashboard/settings/profile/',
 )({
   head: () => ({
     meta: [

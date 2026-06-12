@@ -67,14 +67,12 @@ function CourseCard({ course }: { course: DashboardCourse }) {
                 {course.enrolledCount} Enrolled
               </span>
             </div>
-            <Link
-              to="/dashboards/courses/$id"
-              params={{ id: course.id }}
+            <div
               className="text-sm font-medium text-primary hover:text-primary-container transition-colors flex items-center gap-1 no-underline!"
             >
               View Details
               <ArrowRight className="size-4" />
-            </Link>
+            </div>
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import CourseDetailPage from '#/features/courses/_components/dashboard/course-detail-page'
 import { dashboardCourseDetails } from '#/features/courses/_data/dashboard-course-detail.mock'
 
-export const Route = createFileRoute('/_protected/dashboards/courses/$id')({
+export const Route = createFileRoute('/_protected/dashboard/courses/$id')({
   head: () => ({
     meta: [
       {

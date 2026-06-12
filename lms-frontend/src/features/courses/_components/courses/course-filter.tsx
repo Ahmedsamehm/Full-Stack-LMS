@@ -4,7 +4,7 @@ import { Button } from '#/components/ui/button'
 
 export default function CourseFilter() {
   return (
-    <div className="flex flex-col gap-4 mb-8 items-center justify-center w-full">
+    <div className="flex flex-col gap-4 mb-8 items-center justify-center w-full" suppressHydrationWarning>
       <div className="relative flex-1 max-w-2xl! w-full mb-5 ">
         <SearchBar />
       </div>

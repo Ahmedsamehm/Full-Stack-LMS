@@ -15,7 +15,7 @@ const courseData: Record<Role, DashboardCourse[]> = {
   Admin: adminCourses,
 }
 
-export const Route = createFileRoute('/_protected/dashboards/courses/')({
+export const Route = createFileRoute('/_protected/dashboard/courses/')({
   head: () => ({
     meta: [
       {

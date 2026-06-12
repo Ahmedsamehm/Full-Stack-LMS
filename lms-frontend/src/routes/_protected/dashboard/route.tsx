@@ -27,19 +27,19 @@ const navItems: NavItem[] = [
   {
     icon: LayoutDashboard,
     label: 'Dashboard',
-    href: '/dashboards',
+    href: '/dashboard',
     active: true,
   },
   {
     icon: GraduationCap,
     label: 'Courses',
-    href: '/dashboards/courses',
+    href: '/dashboard/courses',
     active: false,
   },
   {
     icon: Users,
     label: 'Students',
-    href: '/dashboards/students',
+    href: '/dashboard/students',
     active: false,
   },
   // { icon: ClipboardList, label: 'Assignments', href: '#', active: false },
@@ -49,25 +49,25 @@ const mobileTabs: NavItem[] = [
   {
     icon: LayoutDashboard,
     label: 'Dashboard',
-    href: '/dashboards',
+    href: '/dashboard',
     active: true,
   },
   {
     icon: GraduationCap,
     label: 'Courses',
-    href: '/dashboards/courses',
+    href: '/dashboard/courses',
     active: false,
   },
   {
     icon: Users,
     label: 'Students',
-    href: '/dashboards/students',
+    href: '/dashboard/students',
     active: false,
   },
   // { icon: BarChart3, label: 'Reports', href: '#', active: false },
 ]
 
-export const Route = createFileRoute('/_protected/dashboards')({
+export const Route = createFileRoute('/_protected/dashboard')({
   component: RouteComponent,
 })
 

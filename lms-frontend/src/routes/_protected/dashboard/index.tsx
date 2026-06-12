@@ -5,13 +5,15 @@ import StudentDashboardPage from '#/features/dashboard/_components/student/stude
 import AdminDashboardPage from '#/features/dashboard/_components/admin/admin-dashboard-page'
 import { useAuthStore, type Role } from '#/store/auth'
 
+
 const dashboardPages: Record<Role, () => React.ReactNode> = {
   Teacher: TeacherDashboardPage,
   Student: StudentDashboardPage,
   Admin: AdminDashboardPage,
 }
 
-export const Route = createFileRoute('/_protected/dashboards/')({
+export const Route = createFileRoute('/_protected/dashboard/')({
+ 
   head: () => ({
     meta: [
       {

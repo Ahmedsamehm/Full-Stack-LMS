@@ -34,27 +34,12 @@ export class JwtAuthGuard implements CanActivate {
             throw new UnauthorizedException('Invalid or expired access token');
         }
 
-        const rawRefreshToken = request.cookies?.['refreshToken'] || request.headers['x-refresh-token'];
-
-        if (!rawRefreshToken) {
-            throw new UnauthorizedException('Session expired. Please log in again.');
-        }
-
-        const tokenHash = hashToken(rawRefreshToken as string);
-        const storedToken = await this.prisma.refreshToken.findUnique({
-            where: { tokenHash },
-        });
-
-        if (!storedToken) {
-            throw new UnauthorizedException('Session expired. Please log in again.');
-        }
-
         request.user = payload;
         return true;
     }
 
     private extractTokenFromHeader(request: Request): string | undefined {
         const [type, token] = request.headers.authorization?.split(' ') ?? [];
-        return type === 'Bearer' ? token : undefined;
+        return (type === 'Bearer' ? token : undefined) || request.cookies?.['accessToken'];
     }
 }

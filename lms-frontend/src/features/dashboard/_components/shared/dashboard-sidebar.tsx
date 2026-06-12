@@ -1,8 +1,9 @@
 import { Link } from '@tanstack/react-router'
 import { Button } from '#/components/ui/button'
-import { X, Settings, LogOut } from 'lucide-react'
+import { Settings, LogOut } from 'lucide-react'
 
 import type { DashboardConfig } from '../../_types/dashboard.types'
+import { useLogout } from '#/features/auth/_hooks/useLogout'
 
 interface DashboardSidebarProps {
   config: DashboardConfig
@@ -10,6 +11,8 @@ interface DashboardSidebarProps {
 }
 
 export default function DashboardSidebar({ config }: DashboardSidebarProps) {
+  const { mutate: logout, isPending: isLoggingOut } = useLogout()
+
   const sidebarContent = (
     <>
       <div className="flex items-center justify-between gap-3 px-6 py-6 pb-4">
@@ -65,19 +68,21 @@ export default function DashboardSidebar({ config }: DashboardSidebarProps) {
 
       <div className="p-4 flex flex-col gap-1 mt-auto border-t border-outline-variant">
         <Link
-          to="/dashboards/settings"
+          to="/dashboard/settings"
           className="flex items-center gap-3 px-4 py-2 text-secondary hover:bg-surface-container transition-all rounded-lg text-sm font-medium no-underline!"
         >
           <Settings className="size-5" />
           Settings
         </Link>
-        <Link
-          to="/login"
+        <button
+          type="button"
+          onClick={() => logout()}
+          disabled={isLoggingOut}
           className="flex items-center gap-3 px-4 py-2 text-error   transition-all rounded-lg text-sm font-medium no-underline!"
         >
           <LogOut className="size-5" />
-          Logout
-        </Link>
+          {isLoggingOut ? 'Logging out...' : 'Logout'}
+        </button>
       </div>
     </>
   )

@@ -116,7 +116,7 @@ export default function CourseDetailPage({
         <ol className="inline-flex items-center space-x-1 md:space-x-2">
           <li className="inline-flex items-center">
             <Link
-              to="/dashboards/courses"
+              to="/dashboard/courses"
               className="hover:text-primary transition-colors text-sm"
             >
               Courses
