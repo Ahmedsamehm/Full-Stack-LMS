@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from 'src/core/database/prisma.service';
 
 @Injectable()
@@ -12,7 +12,14 @@ export class DeleteCourseService {
             throw new NotFoundException('Course not found');
         }
 
-        await this.prisma.course.delete({ where: { id } });
+        try {
+            await this.prisma.course.delete({ where: { id } });
+        } catch (error) {
+            if (error?.code === 'P2003') {
+                throw new BadRequestException('Cannot delete course: it has associated records that prevent deletion.');
+            }
+            throw error;
+        }
 
         return { message: 'Course deleted successfully' };
     }
@@ -24,7 +31,14 @@ export class DeleteCourseService {
             throw new NotFoundException('Course not found');
         }
 
-        await this.prisma.course.delete({ where: { id } });
+        try {
+            await this.prisma.course.delete({ where: { id } });
+        } catch (error) {
+            if (error?.code === 'P2003') {
+                throw new BadRequestException('Cannot delete course: it has associated records that prevent deletion.');
+            }
+            throw error;
+        }
 
         return { message: 'Course deleted successfully' };
     }

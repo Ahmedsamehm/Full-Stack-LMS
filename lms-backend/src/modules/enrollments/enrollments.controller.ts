@@ -5,6 +5,7 @@ import { CreateEnrollmentByAdminDto } from './dto/create-enrollment-by-admin.dto
 import { UpdateEnrollmentStatusDto } from './dto/update-enrollment-status.dto';
 import { CompleteLessonDto } from './dto/complete-lesson.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { EnrollmentQueryDto } from './dto/enrollment-query.dto';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { Public } from 'src/common/decorators/public.decorator';
@@ -63,8 +64,8 @@ export class EnrollmentsController {
     @Get()
     @AdminOnly()
     @ResponseMessage('All enrollments retrieved successfully')
-    findAll(@Query() pagination: PaginationDto) {
-        return this.enrollmentsService.findAll(pagination);
+    findAll(@Query() query: EnrollmentQueryDto) {
+        return this.enrollmentsService.findAll(query);
     }
 
     @Get(':id')

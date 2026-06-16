@@ -6,7 +6,7 @@ import { ChangeRoleDto } from './dto/change-role.dto';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { AdminOnly, TeacherOnly } from 'src/common/decorators/role.decorator';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { UserQueryDto } from 'src/common/dto/pagination.dto';
 import { UserResponseDto } from 'src/core/auth/dto/response-auth.dto';
 
 @Controller('users')
@@ -14,11 +14,11 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
     @Get()
-    @AdminOnly()
+    @TeacherOnly()
     @ResponseMessage('Users fetched successfully')
     @HttpCode(HttpStatus.OK)
-    findAll(@Query() pagination: PaginationDto) {
-        return this.usersService.getAllUsers(pagination);
+    findAll(@Query() query: UserQueryDto, @CurrentUser() user: UserResponseDto) {
+        return this.usersService.getAllUsers(query, user.id, user.role);
     }
 
     @Get('me')
@@ -34,6 +34,14 @@ export class UsersController {
     @HttpCode(HttpStatus.OK)
     findOneByEmail(@Query('email') email: string) {
         return this.usersService.findUserByEmail(email);
+    }
+
+    @Get(':id/details')
+    @AdminOnly()
+    @ResponseMessage('User details fetched successfully')
+    @HttpCode(HttpStatus.OK)
+    findUserDetails(@Param('id', ParseUUIDPipe) id: string) {
+        return this.usersService.getUserDetails(id);
     }
 
     @Get(':id')

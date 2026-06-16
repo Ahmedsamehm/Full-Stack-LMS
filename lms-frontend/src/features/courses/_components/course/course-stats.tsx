@@ -1,11 +1,10 @@
 import { BookOpen, Clock, Users } from 'lucide-react'
+import { formatDuration } from '#/lib/duration'
 
-import type { CourseStatsProps } from '../../_types/courses.types'
-
-function formatDuration(hours: number): string {
-  const h = Math.floor(hours)
-  const m = Math.round((hours - h) * 60)
-  return h > 0 ? `${h}h ${m}min` : `${m}min`
+interface CourseStatsProps {
+  totalLessons: number
+  totalDuration: number
+  enrollments: number
 }
 
 export default function CourseStats({ totalLessons, totalDuration, enrollments }: CourseStatsProps) {

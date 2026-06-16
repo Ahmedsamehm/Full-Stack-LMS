@@ -1,9 +1,12 @@
 export interface SettingsProfile {
-  firstName: string
-  lastName: string
+  id: string
+  name: string
   email: string
-  bio: string
-  avatarUrl?: string
+  bio: string | null
+  role: string
+  status: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface NotificationPreference {
@@ -22,10 +25,3 @@ export interface BillingInvoice {
 }
 
 export type SettingsTab = 'profile' | 'notifications' | 'security' | 'billing'
-
-export interface SettingsPageData {
-  activeTab: SettingsTab
-  profile: SettingsProfile
-  notificationPreferences: NotificationPreference[]
-  billingHistory: BillingInvoice[]
-}

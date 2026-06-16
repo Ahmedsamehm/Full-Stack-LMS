@@ -1,10 +1,17 @@
+import { useState } from 'react'
 import { MoreHorizontal } from 'lucide-react'
 
-import { Skeleton } from '#/components/ui/skeleton'
+import { TableSkeleton } from '#/components/loading-skeleton'
+import { EmptyState } from '#/components/empty-state'
 import { Avatar, AvatarFallback } from '#/components/ui/avatar'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '#/components/ui/table'
+import { Progress } from '#/components/ui/progress'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '#/components/ui/dropdown-menu'
 
-import type { Student } from '../_types/student-management.types'
+import type { Student } from '#/schemas/student'
 import StudentsStatusBadge from './students-status-badge'
+import StudentDetailsDialog from './student-details-dialog'
+import { getStudentInitials } from '../_utils/student'
 
 interface StudentsTableProps {
   students?: Student[]
@@ -15,15 +22,8 @@ function ProgressBar({ progress }: { progress: number }) {
   const isLow = progress < 25
   return (
     <div className="flex items-center gap-2">
-      <div className="w-full max-w-[120px] bg-surface-variant rounded-full h-2">
-        <div
-          className={`h-2 rounded-full ${
-            isLow ? 'bg-tertiary-container' : 'bg-primary'
-          }`}
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-      <span className="text-sm text-on-surface-variant">{progress}%</span>
+      <Progress value={progress} className="w-[120px] bg-surface-variant h-2" indicatorClassName={isLow ? 'bg-error' : 'bg-primary'} />
+      <span className="text-sm text-on-surface-variant min-w-[32px]">{progress}%</span>
     </div>
   )
 }
@@ -31,112 +31,178 @@ function ProgressBar({ progress }: { progress: number }) {
 function StudentAvatar({ student }: { student: Student }) {
   return (
     <Avatar className="size-10 border border-outline-variant">
-      {student.avatar ? (
-        <img src={student.avatar} alt={student.name} className="size-full object-cover" />
-      ) : null}
-      <AvatarFallback className="bg-surface-variant text-on-surface-variant text-xs font-medium">
-        {student.initials}
-      </AvatarFallback>
+      {student.avatar ? <img src={student.avatar} alt={student.name} className="size-full object-cover" /> : null}
+      <AvatarFallback className="bg-surface-variant text-on-surface-variant text-xs font-medium">{getStudentInitials(student.name)}</AvatarFallback>
     </Avatar>
   )
 }
 
 export default function StudentsTable({ students, isLoading }: StudentsTableProps) {
-  if (isLoading) {
-    return (
-      <div className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden">
-        <div className="p-6 space-y-4">
-          {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={i} className="h-14 w-full" />
-          ))}
-        </div>
-      </div>
-    )
+  const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null)
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false)
+
+  const handleViewDetails = (id: string) => {
+    setSelectedStudentId(id)
+    setIsDetailsOpen(true)
   }
 
-  if (!students) return null
+  const handleOpenChange = (open: boolean) => {
+    setIsDetailsOpen(open)
+    if (!open) {
+      setTimeout(() => setSelectedStudentId(null), 200)
+    }
+  }
+
+  if (isLoading) {
+    return <TableSkeleton />
+  }
+
+  if (!students || students.length === 0) {
+    return <EmptyState title="No students found" message="There are no students to display at the moment." />
+  }
 
   return (
-    <div className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-[0_2px_8px_rgba(15,23,42,0.04)] overflow-hidden">
-      <div className="overflow-x-auto w-full">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-surface-container-low border-b border-outline-variant">
-              <th className="py-3 px-6 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
-                Student Name
-              </th>
-              <th className="py-3 px-6 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
-                Enrolled Courses
-              </th>
-              <th className="py-3 px-6 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
-                Progress
-              </th>
-              <th className="py-3 px-6 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
-                Last Active
-              </th>
-              <th className="py-3 px-6 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
-                Status
-              </th>
-              <th className="py-3 px-6 text-xs font-semibold text-on-surface-variant uppercase tracking-wider text-right">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-outline-variant">
-            {students.map((student) => (
-              <tr
-                key={student.id}
-                className="hover:bg-surface transition-colors duration-150 group"
-              >
-                <td className="py-4 px-6 whitespace-nowrap">
-                  <div className="flex items-center gap-3">
-                    <StudentAvatar student={student} />
-                    <div>
-                      <p className="text-sm font-medium text-on-surface">
-                        {student.name}
-                      </p>
-                      <p className="text-xs text-on-surface-variant">
-                        ID: {student.studentId}
-                      </p>
-                    </div>
+    <>
+      <div className="flex flex-col gap-4">
+        {/* Mobile Card Layout */}
+        <div className="md:hidden flex flex-col gap-4">
+          {students.map((student) => (
+            <div
+              key={student.id}
+              className="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant shadow-[0_2px_8px_rgba(15,23,42,0.04)] flex flex-col gap-3"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <StudentAvatar student={student} />
+                  <div>
+                    <p className="text-sm font-semibold text-on-surface">{student.name}</p>
+                    <p className="text-xs text-on-surface-variant">ID: {student.studentId}</p>
                   </div>
-                </td>
+                </div>
+                <div className="flex items-center gap-2">
+                  <StudentsStatusBadge status={student.status} />
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className="p-1.5 hover:text-primary transition-colors text-on-surface-variant">
+                        <MoreHorizontal className="size-5" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => handleViewDetails(student.id)}>View Details</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
 
-                <td className="py-4 px-6">
-                  <div className="flex flex-wrap gap-2">
-                    {student.enrolledCourses.map((course) => (
-                      <span
-                        key={course.name}
-                        className="inline-flex items-center px-2 py-1 rounded bg-surface-container text-on-surface text-xs font-semibold"
-                      >
-                        {course.name}
-                      </span>
+              {student.enrolledCourses.length > 0 && (
+                <div className="flex flex-col gap-2 border-t border-outline-variant/60 pt-3">
+                  <span className="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Enrolled Courses & Progress</span>
+                  <div className="flex flex-col gap-2.5">
+                    {student.enrolledCourses.map((course, idx) => (
+                      <div key={course.name} className="flex flex-col gap-1">
+                        <div className="flex justify-between items-center text-xs">
+                          <span className="font-medium text-on-surface">{course.name}</span>
+                          {idx === 0 && <span className="text-on-surface-variant">{course.progress}%</span>}
+                        </div>
+                        {idx === 0 && (
+                          <Progress
+                             value={course.progress}
+                            className="bg-surface-variant h-1.5"
+                            indicatorClassName={course.progress < 25 ? 'bg-error' : 'bg-primary'}
+                          />
+                        )}
+                      </div>
                     ))}
                   </div>
-                </td>
+                </div>
+              )}
 
-                <td className="py-4 px-6 whitespace-nowrap">
-                  <ProgressBar progress={student.enrolledCourses[0]?.progress ?? 0} />
-                </td>
+              <div className="flex justify-between items-center border-t border-outline-variant/60 pt-2.5 text-xs text-on-surface-variant">
+                <span>Last Active</span>
+                <span className="font-medium text-on-surface">{student.lastActive}</span>
+              </div>
+            </div>
+          ))}
+        </div>
 
-                <td className="py-4 px-6 whitespace-nowrap">
-                  <p className="text-sm text-on-surface">{student.lastActive}</p>
-                </td>
+        {/* Desktop Table Layout */}
+        <div className="hidden md:block bg-surface-container-lowest rounded-xl border border-outline-variant shadow-[0_2px_8px_rgba(15,23,42,0.04)] overflow-hidden">
+          <Table>
+            <TableHeader className="bg-surface-container-low border-b border-outline-variant">
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="py-3 px-6 text-xs font-semibold text-on-surface-variant uppercase tracking-wider h-11">Student Name</TableHead>
+                <TableHead className="py-3 px-6 text-xs font-semibold text-on-surface-variant uppercase tracking-wider h-11">
+                  Enrolled Courses
+                </TableHead>
+                <TableHead className="py-3 px-6 text-xs font-semibold text-on-surface-variant uppercase tracking-wider h-11">Progress</TableHead>
+                <TableHead className="py-3 px-6 text-xs font-semibold text-on-surface-variant uppercase tracking-wider h-11">Last Active</TableHead>
+                <TableHead className="py-3 px-6 text-xs font-semibold text-on-surface-variant uppercase tracking-wider h-11">Status</TableHead>
+                <TableHead className="py-3 px-6 text-xs font-semibold text-on-surface-variant uppercase tracking-wider text-right h-11">
+                  Actions
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="divide-y divide-outline-variant">
+              {students.map((student) => (
+                <TableRow key={student.id} className="hover:bg-surface transition-colors duration-150 group">
+                  <TableCell className="py-4 px-6 whitespace-nowrap">
+                    <div className="flex items-center gap-3">
+                      <StudentAvatar student={student} />
+                      <div>
+                        <p className="text-sm font-medium text-on-surface">{student.name}</p>
+                        <p className="text-xs text-on-surface-variant">ID: {student.studentId}</p>
+                      </div>
+                    </div>
+                  </TableCell>
 
-                <td className="py-4 px-6 whitespace-nowrap">
-                  <StudentsStatusBadge status={student.status} />
-                </td>
+                  <TableCell className="py-4 px-6">
+                    <div className="flex flex-wrap gap-1">
+                      {student.enrolledCourses.map((course) => (
+                        <span
+                          key={course.name}
+                          className="inline-flex items-center px-2 py-1 rounded bg-surface-container text-on-surface text-xs font-semibold"
+                        >
+                          {course.name}
+                        </span>
+                      ))}
+                    </div>
+                  </TableCell>
 
-                <td className="py-4 px-6 whitespace-nowrap text-right">
-                  <button className="p-1 hover:text-primary transition-colors text-on-surface-variant">
-                    <MoreHorizontal className="size-5" />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  <TableCell className="py-4 px-6 whitespace-nowrap">
+                    <ProgressBar progress={student.enrolledCourses[0]?.progress ?? 0} />
+                  </TableCell>
+
+                  <TableCell className="py-4 px-6 whitespace-nowrap">
+                    <p className="text-sm text-on-surface">{student.lastActive}</p>
+                  </TableCell>
+
+                  <TableCell className="py-4 px-6 whitespace-nowrap">
+                    <StudentsStatusBadge status={student.status} />
+                  </TableCell>
+
+                  <TableCell className="py-4 px-6 whitespace-nowrap text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="p-1 hover:text-primary transition-colors text-on-surface-variant">
+                          <MoreHorizontal className="size-5" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => handleViewDetails(student.id)}>View Details</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
-    </div>
+
+      {selectedStudentId && (
+        <StudentDetailsDialog studentId={selectedStudentId} open={isDetailsOpen} onOpenChange={handleOpenChange} />
+      )}
+    </>
   )
 }
+

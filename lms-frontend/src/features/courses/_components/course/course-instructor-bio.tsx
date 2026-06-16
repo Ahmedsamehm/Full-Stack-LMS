@@ -3,7 +3,13 @@ import { Avatar, AvatarFallback } from '#/components/ui/avatar'
 import { Separator } from '#/components/ui/separator'
 import { Card } from '#/components/ui/card'
 
-import type { CourseInstructorBioProps } from '../../_types/courses.types'
+interface CourseInstructorBioProps {
+  name: string
+  initials: string
+  rating: number
+  reviewCount: number
+  bio: string
+}
 
 export default function CourseInstructorBio({
   name,

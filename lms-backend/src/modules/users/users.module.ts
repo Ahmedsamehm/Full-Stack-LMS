@@ -9,6 +9,7 @@ import { UpdateUserService } from './services/updateUser.service';
 import { DeleteUserService } from './services/deleteUser.service';
 import { ChangeUserRoleService } from './services/changeUserRole.service';
 import { FindPublicUserByEmailService } from './services/findPublicUserByEmail.service';
+import { GetUserDetailsService } from './services/getUserDetails.service';
 
 @Module({
     controllers: [UsersController],
@@ -22,6 +23,7 @@ import { FindPublicUserByEmailService } from './services/findPublicUserByEmail.s
         DeleteUserService,
         ChangeUserRoleService,
         FindPublicUserByEmailService, // use this to find user ,
+        GetUserDetailsService,
     ],
     exports: [findUserByEmailService],
 })

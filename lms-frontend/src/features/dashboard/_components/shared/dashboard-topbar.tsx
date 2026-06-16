@@ -1,8 +1,20 @@
-import { Search, ChevronDown } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import { Avatar, AvatarFallback } from '#/components/ui/avatar'
 import NotificationDropdown from '#/features/notifications/_components/notification-dropdown'
 import { useGetUser } from '#/features/users/_hooks/useGetUser'
 import { Skeleton } from '#/components/ui/skeleton'
+import SearchBar from '#/components/search-bar'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '#/components/ui/dropdown-menu'
+import { Button } from '#/components/ui/button'
+import { Link } from '@tanstack/react-router'
+import { useLogout } from '#/features/auth/_hooks/useLogout'
 
 interface DashboardTopbarProps {
   userName?: string
@@ -10,73 +22,73 @@ interface DashboardTopbarProps {
   userAvatar?: string
 }
 
-export default function DashboardTopbar({
-  userName = 'User',
-  userInitials = 'U',
-  userAvatar,
-}: DashboardTopbarProps) {
-  const {data:user ,isPending} = useGetUser()
+export default function DashboardTopbar({ userName = 'User', userInitials = 'U', userAvatar }: DashboardTopbarProps) {
+  const { data: user, isPending } = useGetUser()
+  const { mutate } = useLogout()
 
-  
+  const handleLogout = () => {
+    mutate()
+  }
 
   return (
-    <header className="bg-white/30 backdrop-blur-sm border-b border-outline-variant sticky top-0 z-40">
-      <div
-        className="flex items-center justify-between h-16 w-full px-4 md:px-8 max-w-360 mx-auto"
-        suppressHydrationWarning
-      >
-        <div className="flex items-center gap-4 ">
-          <span className="text-lg font-bold text-primary lg:block">
-            EduPro
-          </span>
+    <header className="bg-background/80 backdrop-blur-sm border-b border-border sticky top-0 z-40">
+      <div className="flex items-center justify-between h-14 sm:h-16 w-full px-3 sm:px-4 md:px-8 max-w-[1440px] mx-auto" suppressHydrationWarning>
+        <div className="flex items-center gap-2 sm:gap-4">
+          <span className="text-base sm:text-lg font-bold text-primary">EduPro</span>
         </div>
-        <div className="relative ml-0 md:ml-4 sm:block ">
-          <Search className="absolute hidden md:block left-3 top-1/2 -translate-y-1/2 text-on-surface-variant size-4" />
-          <input
-            type="text"
-            placeholder="Search courses, students..."
-            className="bg-surface-container-low border border-outline-variant rounded-full py-2 px-3 md:pl-10 pr-4 text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all md:w-80  xl:w-200 "
-          />
+
+        <div className="hidden sm:block ml-2 md:ml-4">
+          <SearchBar />
         </div>
-        <div className="flex items-center gap-2 md:gap-4 ">
-          <NotificationDropdown  />
-          {/* <button className="size-9 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors hidden sm:flex">
-            <HelpCircle className="size-5" />
-          </button> */}
 
-          <div className="h-6 w-px bg-outline-variant mx-1 hidden md:block" />
+        <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4">
+          <NotificationDropdown />
 
-          <button className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-           
-              {isPending?
-              <Skeleton className="h-3 w-24" />
+          <div className="h-6 w-px bg-border mx-0.5 sm:mx-1 hidden md:block" />
 
-              
-              :  
-              <>
-              
-               <Avatar className="size-8">
-              {userAvatar ? (
-                <img
-                  src={userAvatar}
-                  alt={userName}
-                  className="size-full object-cover"
-                />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              {isPending ? (
+                <Skeleton className="h-8 w-24" />
               ) : (
-                <AvatarFallback className="bg-primary text-white text-xs font-medium">
-                  {userInitials}
-                </AvatarFallback>
+                <Button variant="ghost" className="gap-2 px-2 sm:px-3">
+                  <Avatar className="size-7 sm:size-8">
+                    {userAvatar ? (
+                      <img src={userAvatar} alt={user?.data?.name ?? userName} className="size-full object-cover" />
+                    ) : (
+                      <AvatarFallback className="bg-primary text-white text-xs font-medium">
+                        {user?.data?.name
+                          ? user.data.name
+                              .split(' ')
+                              .map((n: string) => n[0])
+                              .join('')
+                              .toUpperCase()
+                              .slice(0, 2)
+                          : userInitials}
+                      </AvatarFallback>
+                    )}
+                  </Avatar>
+                  <span className="text-sm font-medium text-foreground hidden md:block">{user?.data?.name ?? userName}</span>
+                  <ChevronDown className="size-4 text-muted-foreground hidden sm:block" />
+                </Button>
               )}
-            </Avatar>
-              
-              <span className="text-sm font-medium text-on-surface hidden md:block">
-              {user.data.name}
-            </span>
-              </>
-              }
-           
-            <ChevronDown className="size-4 text-on-surface-variant hidden md:block" />
-          </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuGroup>
+                <DropdownMenuItem>
+                  <Link to="/dashboard/settings" className="no-underline! w-full">
+                    Settings
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>

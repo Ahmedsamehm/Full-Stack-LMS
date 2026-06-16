@@ -1,19 +1,19 @@
 import { createFileRoute } from '@tanstack/react-router'
-
-import TeacherDashboardPage from '#/features/dashboard/_components/teacher/teacher-dashboard-page'
+import TeacherDashboardPage from '#/features/teacher/_components/teacher-dashboard-page'
 import StudentDashboardPage from '#/features/dashboard/_components/student/student-dashboard-page'
 import AdminDashboardPage from '#/features/dashboard/_components/admin/admin-dashboard-page'
-import { useAuthStore, type Role } from '#/store/auth'
+import { DashboardSkeleton } from '#/components/loading-skeleton'
+import { useAuthStore } from '#/store/auth'
+import type { Roles } from '#/schemas/enums'
 
-
-const dashboardPages: Record<Role, () => React.ReactNode> = {
+const dashboardPages: Record<Roles, () => React.ReactNode> = {
+  Super_Admin: AdminDashboardPage,
+  Admin: AdminDashboardPage,
   Teacher: TeacherDashboardPage,
   Student: StudentDashboardPage,
-  Admin: AdminDashboardPage,
 }
 
 export const Route = createFileRoute('/_protected/dashboard/')({
- 
   head: () => ({
     meta: [
       {
@@ -27,7 +27,9 @@ export const Route = createFileRoute('/_protected/dashboard/')({
 
 function RouteComponent() {
   const role = useAuthStore((s) => s.role)
-  const Page = dashboardPages[role]
 
+  if (!role) return <DashboardSkeleton />
+
+  const Page = dashboardPages[role]
   return <Page />
 }

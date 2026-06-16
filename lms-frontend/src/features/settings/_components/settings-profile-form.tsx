@@ -8,11 +8,11 @@ import { Label } from '#/components/ui/label'
 import { cn } from '#/lib/utils'
 import { SettingsFormSkeleton } from '#/components/loading-skeleton'
 
+import { useUpdateProfile } from '../_hooks/useUpdateProfile'
 import type { SettingsProfile } from '../_types/settings.types'
 
 const profileSchema = z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
+  name: z.string().min(1, 'Name is required'),
   email: z.string().email('Please enter a valid email address'),
   bio: z.string().max(500, 'Bio must be under 500 characters').optional(),
 })
@@ -28,24 +28,25 @@ export default function SettingsProfileForm({
   profile,
   isLoading,
 }: SettingsProfileFormProps) {
+  const updateMutation = useUpdateProfile()
+
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: profile
       ? {
-          firstName: profile.firstName,
-          lastName: profile.lastName,
+          name: profile.name,
           email: profile.email,
-          bio: profile.bio,
+          bio: profile.bio ?? '',
         }
       : undefined,
   })
 
   function onSubmit(data: ProfileFormData) {
-    console.log('Profile:', data)
+    updateMutation.mutate(data)
   }
 
   if (isLoading) return <SettingsFormSkeleton />
@@ -68,18 +69,14 @@ export default function SettingsProfileForm({
         <div className="p-6 md:p-8 space-y-10">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
             <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-surface-container-high group cursor-pointer shrink-0">
-              {profile.avatarUrl ? (
-                <img
-                  src={profile.avatarUrl}
-                  alt="Current Avatar"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full bg-surface-variant flex items-center justify-center text-on-surface-variant text-2xl font-bold">
-                  {profile.firstName[0]}
-                  {profile.lastName[0]}
-                </div>
-              )}
+              <div className="w-full h-full bg-surface-variant flex items-center justify-center text-on-surface-variant text-2xl font-bold">
+                {profile.name
+                  .split(' ')
+                  .map((n) => n[0])
+                  .join('')
+                  .toUpperCase()
+                  .slice(0, 2)}
+              </div>
               <div className="absolute inset-0 bg-on-surface/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
                 <Camera className="text-white size-5" />
               </div>
@@ -106,40 +103,24 @@ export default function SettingsProfileForm({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8">
+          <div className="grid grid-cols-1 gap-x-6 gap-y-8">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="name">Full Name</Label>
               <Input
-                id="firstName"
+                id="name"
                 type="text"
-                placeholder="e.g. Jane"
-                className={cn('h-12', errors.firstName && 'border-destructive')}
-                {...register('firstName')}
+                placeholder="e.g. Jane Doe"
+                className={cn('h-12', errors.name && 'border-destructive')}
+                {...register('name')}
               />
-              {errors.firstName && (
+              {errors.name && (
                 <p className="text-sm text-destructive mt-1">
-                  {errors.firstName.message}
+                  {errors.name.message}
                 </p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
-              <Input
-                id="lastName"
-                type="text"
-                placeholder="e.g. Doe"
-                className={cn('h-12', errors.lastName && 'border-destructive')}
-                {...register('lastName')}
-              />
-              {errors.lastName && (
-                <p className="text-sm text-destructive mt-1">
-                  {errors.lastName.message}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-2 md:col-span-2">
               <Label htmlFor="email">Email Address</Label>
               <Input
                 id="email"
@@ -157,7 +138,7 @@ export default function SettingsProfileForm({
               )}
             </div>
 
-            <div className="space-y-2 md:col-span-2">
+            <div className="space-y-2">
               <div className="flex justify-between items-end">
                 <Label htmlFor="bio">Professional Bio</Label>
                 <span className="text-xs text-on-surface-variant">
@@ -192,10 +173,10 @@ export default function SettingsProfileForm({
           </button>
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={updateMutation.isPending}
             className="bg-primary text-on-primary text-sm font-semibold px-6 py-2.5 rounded-lg hover:bg-primary/90 shadow-sm transition-colors disabled:opacity-50"
           >
-            {isSubmitting ? 'Saving...' : 'Save Profile'}
+            {updateMutation.isPending ? 'Saving...' : 'Save Profile'}
           </button>
         </div>
       </form>

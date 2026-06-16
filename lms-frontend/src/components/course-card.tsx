@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { Button } from '#/components/ui/button'
 import { Card, CardContent } from '#/components/ui/card'
-import CategoryBadge from '../features/landing/_components/category-badge'
+import CategoryBadge from '#/features/categories/_components/category-badge'
 import CourseInstructor from '../features/landing/_components/course-instructor'
 import CourseThumbnail from '../features/landing/_components/course-thumbnail'
 import PriceTag from '../features/landing/_components/price-tag'

@@ -15,5 +15,6 @@ import { StripeService } from './utils/stripe';
     imports: [EnrollmentsModule],
     controllers: [CheckoutController, PaymentsController],
     providers: [PaymentsService, CreateCheckoutService, HandleStripeWebhookService, GetPaymentByIdService, GetPaymentsByUserService, GetAllPaymentsService, RefundPaymentService, StripeService],
+    exports: [GetPaymentsByUserService],
 })
 export class PaymentsModule {}

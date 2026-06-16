@@ -16,12 +16,5 @@
   "routerOnly": false,
   "version": 1,
   "framework": "react",
-  "chosenAddOns": [
-    "eslint",
-    "prisma",
-    "strapi",
-    "compiler",
-    "shadcn",
-    "tanstack-query"
-  ]
+  "chosenAddOns": ["eslint", "prisma", "strapi", "compiler", "shadcn", "tanstack-query"]
 }

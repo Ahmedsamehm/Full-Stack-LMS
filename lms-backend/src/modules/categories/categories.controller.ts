@@ -22,8 +22,8 @@ export class CategoriesController {
     @Get()
     @Public()
     @ResponseMessage('Categories retrieved successfully')
-    findAll(@Query() pagination: PaginationDto) {
-        return this.categoriesService.findAll(pagination);
+    findAll(@Query() pagination: PaginationDto, @Query('name') name?: string, @Query('slug') slug?: string) {
+        return this.categoriesService.findAll(pagination, name, slug);
     }
 
     @Get(':id')

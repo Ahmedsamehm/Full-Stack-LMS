@@ -1,9 +1,10 @@
-import { useSettings } from '../_hooks/use-settings'
+import { useGetProfile } from '../_hooks/useGetProfile'
 import SettingsSidebar from './settings-sidebar'
 import SettingsProfileForm from './settings-profile-form'
 
 export default function SettingsProfilePage() {
-  const { data, isLoading } = useSettings()
+  const { data: profileData, isLoading } = useGetProfile()
+  const profile = profileData?.data
 
   return (
     <main className="flex-1 w-full px-4 md:px-8 py-6 lg:py-8 max-w-[1440px] mx-auto">
@@ -24,7 +25,7 @@ export default function SettingsProfilePage() {
 
         <div className="flex-1 w-full">
           <SettingsProfileForm
-            profile={data?.profile}
+            profile={profile}
             isLoading={isLoading}
           />
         </div>

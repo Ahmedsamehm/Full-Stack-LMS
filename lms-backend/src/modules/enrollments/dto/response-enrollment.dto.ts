@@ -8,7 +8,13 @@ export class EnrollmentResponseDto {
     expiresAt: Date | null;
     updatedAt: Date;
     user: { id: string; name: string; email: string };
-    course: { id: string; title: string; thumbnailUrl: string | null };
+    course: {
+        id: string;
+        title: string;
+        thumbnailUrl: string | null;
+        category?: { id: string; name: string; slug: string } | null;
+        teacher?: { id: string; name: string } | null;
+    };
 }
 
 export class EnrollmentDetailResponseDto extends EnrollmentResponseDto {

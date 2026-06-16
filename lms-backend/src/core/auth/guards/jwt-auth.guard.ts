@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { IS_PUBLIC_KEY } from 'src/common/decorators/public.decorator';
+import { IS_OPTIONAL_AUTH_KEY } from 'src/common/decorators/optional-auth.decorator';
 import { PrismaService } from 'src/core/database/prisma.service';
 import { hashToken } from '../utils/hashToken';
 
@@ -18,10 +19,14 @@ export class JwtAuthGuard implements CanActivate {
         const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [context.getHandler(), context.getClass()]);
         if (isPublic) return true;
 
+        const isOptionalAuth = this.reflector.getAllAndOverride<boolean>(IS_OPTIONAL_AUTH_KEY, [context.getHandler(), context.getClass()]);
+
         const request = context.switchToHttp().getRequest<Request>();
 
         const accessToken = this.extractTokenFromHeader(request);
+
         if (!accessToken) {
+            if (isOptionalAuth) return true;
             throw new UnauthorizedException('No token provided');
         }
 
@@ -31,6 +36,7 @@ export class JwtAuthGuard implements CanActivate {
                 secret: process.env.JWT_ACCESS_SECRET,
             });
         } catch {
+            if (isOptionalAuth) return true;
             throw new UnauthorizedException('Invalid or expired access token');
         }
 

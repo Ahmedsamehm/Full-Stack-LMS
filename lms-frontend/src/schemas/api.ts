@@ -1,5 +1,9 @@
 import { z } from 'zod'
 
+// ─── Common Schemas ────────────────────────────────────────────────────────────
+
+export const uuidSchema = z.string().uuid()
+
 // ─── Pagination ───────────────────────────────────────────────────────────────
 
 export const paginationParamsSchema = z.object({

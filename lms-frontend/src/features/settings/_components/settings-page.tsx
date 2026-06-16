@@ -1,41 +1,10 @@
-import { useSettings } from '../_hooks/use-settings'
-
-import type { SettingsTab } from '../_types/settings.types'
+import { useGetProfile } from '../_hooks/useGetProfile'
 import SettingsSidebar from './settings-sidebar'
 import SettingsProfileForm from './settings-profile-form'
-import SettingsNotificationsForm from './settings-notifications-form'
-import SettingsSecurityForm from './settings-security-form'
-import SettingsBillingForm from './settings-billing-form'
-
-const tabComponents: Record<
-  SettingsTab,
-  (props: {
-    data: ReturnType<typeof useSettings>['data']
-    isLoading: boolean
-  }) => React.ReactNode
-> = {
-  profile: ({ data, isLoading }) => (
-    <SettingsProfileForm profile={data?.profile} isLoading={isLoading} />
-  ),
-  notifications: ({ data, isLoading }) => (
-    <SettingsNotificationsForm
-      preferences={data?.notificationPreferences}
-      isLoading={isLoading}
-    />
-  ),
-  security: () => <SettingsSecurityForm />,
-  billing: ({ data, isLoading }) => (
-    <SettingsBillingForm
-      invoices={data?.billingHistory}
-      isLoading={isLoading}
-    />
-  ),
-}
 
 export default function SettingsPage() {
-  const { data, isLoading } = useSettings()
-  const activeTab = data?.activeTab ?? 'profile'
-  const ActiveComponent = tabComponents[activeTab]
+  const { data: profileData, isLoading } = useGetProfile()
+  const profile = profileData?.data
 
   return (
     <main className="flex-1 w-full px-4 md:px-8 py-6 lg:py-8 max-w-[1440px] mx-auto">
@@ -51,11 +20,14 @@ export default function SettingsPage() {
 
       <div className="flex flex-col md:flex-row gap-8 items-start">
         <aside className="w-full md:w-64 shrink-0">
-          <SettingsSidebar activeTab={activeTab} />
+          <SettingsSidebar activeTab="profile" />
         </aside>
 
         <div className="flex-1 w-full">
-          {ActiveComponent({ data, isLoading })}
+          <SettingsProfileForm
+            profile={profile}
+            isLoading={isLoading}
+          />
         </div>
       </div>
     </main>

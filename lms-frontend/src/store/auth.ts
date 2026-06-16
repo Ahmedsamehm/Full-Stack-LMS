@@ -1,13 +1,17 @@
 import { create } from 'zustand'
-
-export type Role = 'Teacher' | 'Student' | 'Admin'
+import type { Roles } from '#/schemas/enums'
+import type { User } from '#/schemas/user'
 
 interface AuthState {
-  role: Role
-  setRole: (role: Role) => void
+  user: User | null
+  role: Roles | null
+  setUser: (user: User) => void
+  clearUser: () => void
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  role: 'Teacher',
-  setRole: (role) => set({ role }),
+  user: null,
+  role: null,
+  setUser: (user) => set({ user, role: user.role }),
+  clearUser: () => set({ user: null, role: null }),
 }))

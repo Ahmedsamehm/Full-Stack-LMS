@@ -108,7 +108,7 @@ export class AuthController {
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
             path: '/', // Needs to be accessible by all API routes
-            maxAge: 15 * 60 * 1000, // 15 minutes, adjust to your JWT_ACCESS_EXPIRES_IN
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7day, adjust to your JWT_ACCESS_EXPIRES_IN
         });
     }
 }

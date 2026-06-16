@@ -1,10 +1,7 @@
-import { useSettings } from '../_hooks/use-settings'
 import SettingsSidebar from './settings-sidebar'
 import SettingsSecurityForm from './settings-security-form'
 
 export default function SettingsSecurityPage() {
-  const { data } = useSettings()
-
   return (
     <main className="flex-1 w-full px-4 md:px-8 py-6 lg:py-8 max-w-[1440px] mx-auto">
       <div className="mb-8">
@@ -19,7 +16,7 @@ export default function SettingsSecurityPage() {
 
       <div className="flex flex-col md:flex-row gap-8 items-start">
         <aside className="w-full md:w-64 shrink-0">
-          <SettingsSidebar activeTab={data?.activeTab ?? 'security'} />
+          <SettingsSidebar activeTab="security" />
         </aside>
 
         <div className="flex-1 w-full">

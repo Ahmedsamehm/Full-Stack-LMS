@@ -1,6 +1,8 @@
 import { Button } from '#/components/ui/button'
 
-import type { CourseMobileCtaProps } from '../../_types/courses.types'
+interface CourseMobileCtaProps {
+  price: number
+}
 
 export default function CourseMobileCta({ price }: CourseMobileCtaProps) {
   return (
@@ -8,10 +10,10 @@ export default function CourseMobileCta({ price }: CourseMobileCtaProps) {
       <div className="flex items-center justify-between max-w-[1440px] mx-auto">
         <span className="text-xl font-bold text-foreground">${price}</span>
         <div className="space-x-3">
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+          <Button className="bg-primary hover:bg-primary/90 text-white">
             Buy Now
           </Button>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+          <Button variant="outline">
             Add to Cart
           </Button>
         </div>

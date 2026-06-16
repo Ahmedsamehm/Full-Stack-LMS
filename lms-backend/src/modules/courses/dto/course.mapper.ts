@@ -6,6 +6,7 @@ export function toCourseResponse(course: any) {
         price: course.price,
         thumbnailUrl: course.thumbnailUrl,
         teacherId: course.teacherId,
+        categoryId: course.categoryId,
 
         status: course.status,
         timestamps: {

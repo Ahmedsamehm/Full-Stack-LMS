@@ -1,5 +1,6 @@
-import { IsOptional, IsInt, Min, Max } from 'class-validator';
+import { IsOptional, IsInt, Min, Max, IsEnum, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
+import { Roles } from '@prisma/client';
 
 export class PaginationDto {
     @IsOptional()
@@ -14,6 +15,19 @@ export class PaginationDto {
     @Min(1)
     @Max(100)
     limit: number = 10;
+}
+
+export class UserQueryDto extends PaginationDto {
+    @IsOptional()
+    @IsEnum(Roles)
+    role?: Roles;
+
+    @IsOptional()
+    @IsString()
+    search?: string;
+
+    @IsOptional()
+    teacherId?: string;
 }
 
 export interface PaginatedResult<T> {

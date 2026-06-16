@@ -29,28 +29,35 @@ export class CoursesService {
         return this.createCourseService.create(dto, teacherId);
     }
 
-    findAll(pagination: PaginationDto, categoryId?: string, search?: string, userRole?: Roles) {
-        return this.getAllPublishedCoursesService.findAll(pagination, categoryId, search, userRole);
+    findAll(pagination: PaginationDto, categoryId?: string, search?: string, teacherId?: string, userRole?: Roles, userId?: string, status?: CourseStatus) {
+        return this.getAllPublishedCoursesService.findAll(pagination, categoryId, search, teacherId, userRole, userId, status);
     }
 
-    findMyCourses(teacherId: string, pagination: PaginationDto) {
-        return this.getMyCoursesService.findMyCourses(teacherId, pagination);
+    findMyCourses(teacherId: string, pagination: PaginationDto, userRole?: Roles) {
+        return this.getMyCoursesService.findMyCourses(teacherId, pagination, userRole);
     }
 
     findOne(id: string) {
         return this.getCourseByIdService.findById(id);
     }
 
+    findOneWithAuth(id: string, userId?: string, userRole?: Roles) {
+        return this.getCourseByIdService.findByIdWithAuth(id, userId, userRole);
+    }
+
     findByTeacher(teacherId: string, pagination: PaginationDto) {
         return this.getCoursesByTeacherService.findByTeacher(teacherId, pagination);
     }
 
-    update(id: string, dto: UpdateCourseDto, teacherId: string) {
-        return this.updateCourseService.update(id, dto, teacherId);
+    update(id: string, dto: UpdateCourseDto, userId: string, userRole?: Roles) {
+        return this.updateCourseService.update(id, dto, userId, userRole);
     }
 
-    remove(id: string, teacherId: string) {
-        return this.deleteCourseService.delete(id, teacherId);
+    remove(id: string, userId: string, userRole: Roles) {
+        if (userRole === Roles.Super_Admin || userRole === Roles.Admin) {
+            return this.deleteCourseService.deleteAsAdmin(id);
+        }
+        return this.deleteCourseService.delete(id, userId);
     }
 
     changeStatus(courseId: string, newStatus: CourseStatus, userId: string, userRole: Roles) {

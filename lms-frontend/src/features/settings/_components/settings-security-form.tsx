@@ -8,17 +8,17 @@ import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { cn } from '#/lib/utils'
 
+import { useChangePassword } from '../_hooks/useChangePassword'
+
 const passwordSchema = z
   .object({
     currentPassword: z.string().min(1, 'Current password is required'),
     newPassword: z
       .string()
-      .min(8, 'Password must be at least 8 characters')
-      .regex(/[a-zA-Z]/, 'Password must include at least one letter')
-      .regex(/[0-9]/, 'Password must include at least one number'),
-    confirmPassword: z.string().min(1, 'Please confirm your password'),
+      .min(6, 'Password must be at least 6 characters'),
+    confirmNewPassword: z.string().min(1, 'Please confirm your password'),
   })
-  .refine((data) => data.newPassword === data.confirmPassword, {
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
     message: 'Passwords do not match',
     path: ['confirmPassword'],
   })
@@ -30,21 +30,28 @@ export default function SettingsSecurityForm() {
   const [showNew, setShowNew] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
 
+  const changePasswordMutation = useChangePassword()
+
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    reset,
+    formState: { errors },
   } = useForm<PasswordFormData>({
     resolver: zodResolver(passwordSchema),
     defaultValues: {
       currentPassword: '',
       newPassword: '',
-      confirmPassword: '',
+      confirmNewPassword: '',
     },
   })
 
   function onSubmit(data: PasswordFormData) {
-    console.log('Password change:', data)
+    changePasswordMutation.mutate(data, {
+      onSuccess: () => {
+        reset()
+      },
+    })
   }
 
   return (
@@ -136,18 +143,18 @@ export default function SettingsSecurityForm() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm New Password</Label>
+              <Label htmlFor="confirmNewPassword">Confirm New Password</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-on-surface-variant pointer-events-none" />
                 <Input
-                  id="confirmPassword"
+                  id="confirmNewPassword"
                   type={showConfirm ? 'text' : 'password'}
                   placeholder="Confirm new password"
                   className={cn(
                     'pl-10 pr-10 h-12',
-                    errors.confirmPassword && 'border-destructive',
+                    errors.confirmNewPassword && 'border-destructive',
                   )}
-                  {...register('confirmPassword')}
+                  {...register('confirmNewPassword')}
                 />
                 <button
                   type="button"
@@ -161,9 +168,9 @@ export default function SettingsSecurityForm() {
                   )}
                 </button>
               </div>
-              {errors.confirmPassword && (
+              {errors.confirmNewPassword && (
                 <p className="text-sm text-destructive mt-1">
-                  {errors.confirmPassword.message}
+                  {errors.confirmNewPassword.message}
                 </p>
               )}
             </div>
@@ -179,10 +186,10 @@ export default function SettingsSecurityForm() {
           </button>
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={changePasswordMutation.isPending}
             className="bg-primary text-on-primary text-sm font-semibold px-6 py-2.5 rounded-lg hover:bg-primary/90 shadow-sm transition-colors disabled:opacity-50"
           >
-            {isSubmitting ? 'Updating...' : 'Update Password'}
+            {changePasswordMutation.isPending ? 'Updating...' : 'Update Password'}
           </button>
         </div>
       </form>

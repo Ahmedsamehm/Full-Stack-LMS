@@ -1,3 +1,4 @@
+import SectionHeader from '#/components/section-header'
 import { useStudentDashboard } from '../../_hooks/use-student-dashboard'
 
 import ContinueLearningCard from './continue-learning'
@@ -10,9 +11,10 @@ export default function StudentDashboardPage() {
   return (
     <main className="flex-1 w-full px-4 md:px-8 py-6 lg:py-8 max-w-[1440px] mx-auto flex flex-col gap-6">
       <section>
-        <h2 className="text-2xl md:text-3xl font-bold text-on-surface mb-6">
-          Welcome back, Alex!
-        </h2>
+        <SectionHeader
+          title="Welcome back, Alex!"
+          viewAll={false}
+        />
         <ContinueLearningCard
           course={data?.continueLearning}
           isLoading={isLoading}
@@ -21,24 +23,19 @@ export default function StudentDashboardPage() {
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <section className="xl:col-span-2">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold text-on-surface">
-              My Courses
-            </h2>
-            <a
-              href="#"
-              className="text-sm font-medium text-primary hover:underline"
-            >
-              View All
-            </a>
-          </div>
+          <SectionHeader
+            title="My Courses"
+            viewAll
+            viewAllLink="#"
+          />
           <MyCourses courses={data?.courses} isLoading={isLoading} />
         </section>
 
         <section className="xl:col-span-1">
-          <h2 className="text-lg font-semibold text-on-surface mb-4">
-            Recommended for You
-          </h2>
+          <SectionHeader
+            title="Recommended for You"
+            viewAll={false}
+          />
           <RecommendedCourses
             courses={data?.recommended}
             isLoading={isLoading}

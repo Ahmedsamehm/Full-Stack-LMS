@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/core/database/prisma.service';
 import { PaginationDto, PaginatedResult } from 'src/common/dto/pagination.dto';
 import { CourseWithCategoryResponseDto } from '../dto/response-course.dto';
@@ -10,21 +10,40 @@ import { toCourseWithCategoryResponse } from '../dto/course.mapper';
 export class GetAllPublishedCoursesService {
     constructor(private readonly prisma: PrismaService) {}
 
-    async findAll(pagination: PaginationDto, categoryId?: string, search?: string, userRole?: Roles): Promise<PaginatedResult<CourseWithCategoryResponseDto>> {
+    async findAll(
+        pagination: PaginationDto,
+        categoryId?: string,
+        search?: string,
+        teacherId?: string,
+        userRole?: Roles,
+        userId?: string,
+        status?: CourseStatus,
+    ): Promise<PaginatedResult<CourseWithCategoryResponseDto>> {
         const { page, limit } = pagination;
         const skip = (page - 1) * limit;
 
         const isAdmin = userRole === Roles.Super_Admin || userRole === Roles.Admin;
-
-        if (categoryId && !this.isValidUUID(categoryId)) {
-            throw new BadRequestException('Invalid categoryId format');
-        }
+        const isTeacher = userRole === Roles.Teacher;
 
         const where: Prisma.CourseWhereInput = {
-            ...(isAdmin ? {} : { status: CourseStatus.PUBLISHED }),
-            ...(categoryId ? { categoryId } : {}),
+            // Admins/Teachers can filter by status; public sees only PUBLISHED
+            ...(!isAdmin && !isTeacher ? { status: CourseStatus.PUBLISHED } : status ? { status } : {}),
+            // Teachers are automatically scoped to their own courses (backend-enforced)
+            ...(isTeacher && userId ? { teacherId: userId } : {}),
+            // Admins can optionally filter by a specific teacherId from query params
+            ...(isAdmin && teacherId ? { teacherId } : {}),
             ...(search ? { title: { contains: search, mode: 'insensitive' } } : {}),
         };
+
+        if (categoryId) {
+            if (this.isValidUUID(categoryId)) {
+                where.categoryId = categoryId;
+            } else {
+                where.category = {
+                    name: { contains: categoryId, mode: 'insensitive' },
+                };
+            }
+        }
 
         const [courses, total] = await Promise.all([
             this.prisma.course.findMany({

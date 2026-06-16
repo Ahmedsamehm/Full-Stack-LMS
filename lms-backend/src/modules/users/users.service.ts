@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { AdminCreateUserDto } from './dto/admin-create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ChangeRoleDto } from './dto/change-role.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { UserQueryDto } from 'src/common/dto/pagination.dto';
 import { GetAllUsersService } from './services/getAllUsers.service';
 import { FindUserByIdService } from './services/findUserById.service';
 import { CreateUserService } from './services/createUser.service';
@@ -10,6 +10,7 @@ import { UpdateUserService } from './services/updateUser.service';
 import { DeleteUserService } from './services/deleteUser.service';
 import { ChangeUserRoleService } from './services/changeUserRole.service';
 import { FindPublicUserByEmailService } from './services/findPublicUserByEmail.service';
+import { GetUserDetailsService } from './services/getUserDetails.service';
 
 @Injectable()
 export class UsersService {
@@ -21,14 +22,19 @@ export class UsersService {
         private readonly deleteUserService: DeleteUserService,
         private readonly changeUserRoleService: ChangeUserRoleService,
         private readonly FindUserByEmailService: FindPublicUserByEmailService,
+        private readonly getUserDetailsService: GetUserDetailsService,
     ) {}
 
-    async getAllUsers(pagination: PaginationDto) {
-        return await this.getAllUsersService.getAllUsers(pagination);
+    async getAllUsers(query: UserQueryDto, currentUserId: string, currentUserRole: string) {
+        return await this.getAllUsersService.getAllUsers(query, currentUserId, currentUserRole);
     }
 
     async findUserById(id: string) {
         return await this.findUserByIdService.findUserById(id);
+    }
+
+    async getUserDetails(id: string) {
+        return await this.getUserDetailsService.getUserDetails(id);
     }
 
     async findMe(currentUserId: string) {

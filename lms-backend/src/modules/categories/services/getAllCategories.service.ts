@@ -8,11 +8,14 @@ import { categorySelect } from 'src/common/selects/category.select';
 export class GetAllCategoriesService {
     constructor(private readonly prisma: PrismaService) {}
 
-    async findAll(pagination: PaginationDto): Promise<PaginatedResult<CategoryResponseDto>> {
+    async findAll(pagination: PaginationDto, name?: string, slug?: string): Promise<PaginatedResult<CategoryResponseDto>> {
         const { page, limit } = pagination;
         const skip = (page - 1) * limit;
 
-        const where = {};
+        const where = {
+            ...(name ? { name: { contains: name, mode: 'insensitive' as const } } : {}),
+            ...(slug ? { slug: { contains: slug, mode: 'insensitive' as const } } : {}),
+        };
 
         const [categories, total] = await Promise.all([
             this.prisma.category.findMany({

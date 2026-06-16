@@ -1,19 +1,45 @@
 import { z } from 'zod'
 import { enrollmentStatusEnum } from './enums'
+import { userSchema } from './user'
+import { courseSchema } from './course'
+import { paginationParamsSchema } from './api'
+
+export const enrollmentQuerySchema = paginationParamsSchema.extend({
+  search: z.string().optional(),
+  status: enrollmentStatusEnum.optional(),
+})
 
 // ─── Enrollment Schemas ───────────────────────────────────────────────────────
 
-export const enrollmentUserSchema = z.object({
-  id: z.string().uuid(),
-  name: z.string(),
-  email: z.string().email(),
+export const enrollmentUserSchema = userSchema.pick({
+  id: true,
+  name: true,
+  email: true,
 })
 
-export const enrollmentCourseSchema = z.object({
-  id: z.string().uuid(),
-  title: z.string(),
-  thumbnailUrl: z.string().nullable(),
-})
+export const enrollmentCourseSchema = courseSchema
+  .pick({
+    id: true,
+    title: true,
+    thumbnailUrl: true,
+  })
+  .extend({
+    category: z
+      .object({
+        id: z.string().uuid(),
+        name: z.string(),
+        slug: z.string(),
+      })
+      .optional()
+      .nullable(),
+    teacher: z
+      .object({
+        id: z.string().uuid(),
+        name: z.string(),
+      })
+      .optional()
+      .nullable(),
+  })
 
 export const enrollmentSchema = z.object({
   id: z.string().uuid(),
@@ -48,13 +74,15 @@ export const enrollmentDetailSchema = enrollmentSchema.extend({
   lessonProgress: lessonProgressItemSchema.array(),
 })
 
-export const createEnrollmentByTeacherSchema = z.object({
+export const createEnrollmentSchema = z.object({
   userId: z.string().uuid(),
   courseId: z.string().uuid(),
 })
 
-export const createEnrollmentByAdminSchema = z.object({
-  userId: z.string().uuid(),
+export const createEnrollmentByTeacherSchema = createEnrollmentSchema
+export const createEnrollmentByAdminSchema = createEnrollmentSchema
+
+export const createEnrollmentFreeSchema = z.object({
   courseId: z.string().uuid(),
 })
 
@@ -76,5 +104,36 @@ export type LessonProgressItem = z.infer<typeof lessonProgressItemSchema>
 export type EnrollmentDetail = z.infer<typeof enrollmentDetailSchema>
 export type CreateEnrollmentByTeacherRequest = z.infer<typeof createEnrollmentByTeacherSchema>
 export type CreateEnrollmentByAdminRequest = z.infer<typeof createEnrollmentByAdminSchema>
+export type CreateEnrollmentFreeRequest = z.infer<typeof createEnrollmentFreeSchema>
 export type UpdateEnrollmentStatusRequest = z.infer<typeof updateEnrollmentStatusSchema>
 export type CompleteLessonRequest = z.infer<typeof completeLessonSchema>
+export type CreateEnrollmentRequest = z.infer<typeof createEnrollmentSchema>
+
+export const enrollmentFormSchema = z
+  .object({
+    userId: z.string().optional().or(z.literal('')),
+    courseId: z.string().uuid({ message: 'Course is required' }),
+    isFreeCourse: z.boolean(),
+  })
+  .refine(
+    (data) => {
+      if (!data.isFreeCourse) {
+        return !!data.userId && data.userId.trim() !== ''
+      }
+      return true
+    },
+    {
+      message: 'Student is required',
+      path: ['userId'],
+    },
+  )
+
+export type EnrollmentFormValues = z.infer<typeof enrollmentFormSchema>
+
+export const getEnrollmentsByCourseSchema = z.object({
+  courseId: z.string().uuid(),
+  params: paginationParamsSchema,
+})
+
+export type GetEnrollmentsByCourseRequest = z.infer<typeof getEnrollmentsByCourseSchema>
+export type EnrollmentQuery = z.infer<typeof enrollmentQuerySchema>

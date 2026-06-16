@@ -1,3 +1,6 @@
+import type { ApprovalItem } from '#/schemas'
+import type { MonthlyRevenue } from '#/features/payments/_types/payment.types'
+
 export interface AdminStats {
   activeUsers: number
   totalTeachers: number
@@ -8,13 +11,11 @@ export interface AdminStats {
   revenueChange: string
 }
 
-export interface ApprovalItem {
-  id: string
-  courseTitle: string
-  instructorName: string
-  instructorInitials: string
-  category: string
-  submittedAgo: string
+export type { ApprovalItem, MonthlyRevenue }
+
+export interface TextPart {
+  text: string
+  bold?: boolean
 }
 
 export interface ActivityItem {
@@ -22,14 +23,9 @@ export interface ActivityItem {
   icon: 'school' | 'person_add' | 'payments' | 'report'
   iconBg: string
   iconColor: string
-  text: string
+  textParts: TextPart[]
   time: string
   isLast?: boolean
-}
-
-export interface MonthlyRevenue {
-  month: string
-  revenue: number
 }
 
 export interface AdminDashboardData {

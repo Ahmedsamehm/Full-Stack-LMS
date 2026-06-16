@@ -4,7 +4,11 @@ import { Users, Star } from 'lucide-react'
 import { Badge } from '#/components/ui/badge'
 import { Avatar, AvatarFallback } from '#/components/ui/avatar'
 
-import type { CourseHeroProps } from '../../_types/courses.types'
+import type { CourseDetailUIReady } from '#/schemas'
+
+interface CourseHeroProps {
+  course: CourseDetailUIReady
+}
 
 export default function CourseHero({ course }: CourseHeroProps) {
   return (
@@ -15,9 +19,7 @@ export default function CourseHero({ course }: CourseHeroProps) {
             Courses
           </Link>
           <span>/</span>
-          <span className="text-foreground font-medium truncate max-w-[300px]">
-            {course.title}
-          </span>
+          <span className="text-foreground font-medium truncate max-w-[300px]">{course.title}</span>
         </div>
 
         <div className="max-w-3xl space-y-6">
@@ -25,20 +27,14 @@ export default function CourseHero({ course }: CourseHeroProps) {
             {course.category}
           </Badge>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-            {course.title}
-          </h1>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-tight">{course.title}</h1>
 
-          <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl">
-            {course.description}
-          </p>
+          <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl">{course.description}</p>
 
           <div className="flex flex-wrap items-center gap-4 sm:gap-6">
             <div className="flex items-center gap-2.5">
               <Avatar className="size-9">
-                <AvatarFallback className="text-xs bg-primary/10 text-primary">
-                  {course.instructor.initials}
-                </AvatarFallback>
+                <AvatarFallback className="text-xs bg-primary/10 text-primary">{course.instructor.initials}</AvatarFallback>
               </Avatar>
               <span className="text-sm font-medium text-foreground">{course.instructor.name}</span>
             </div>
@@ -46,9 +42,7 @@ export default function CourseHero({ course }: CourseHeroProps) {
             <div className="flex items-center gap-1.5 text-sm">
               <Star className="size-4 fill-amber-400 text-amber-400" />
               <span className="font-medium text-foreground">{course.instructor.rating}</span>
-              <span className="text-muted-foreground">
-                ({course.instructor.reviewCount} reviews)
-              </span>
+              <span className="text-muted-foreground">({course.instructor.reviewCount} reviews)</span>
             </div>
 
             <div className="flex items-center gap-1.5 text-sm text-muted-foreground">

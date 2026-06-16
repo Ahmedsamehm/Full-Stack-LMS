@@ -10,15 +10,7 @@ import { ReorderLessonsService } from './services/reorderLessons.service';
 
 @Module({
     controllers: [LessonsController],
-    providers: [
-        LessonsService,
-        CreateLessonService,
-        GetLessonsByCourseService,
-        GetLessonByIdService,
-        UpdateLessonService,
-        DeleteLessonService,
-        ReorderLessonsService,
-    ],
+    providers: [LessonsService, CreateLessonService, GetLessonsByCourseService, GetLessonByIdService, UpdateLessonService, DeleteLessonService, ReorderLessonsService],
     exports: [GetLessonsByCourseService],
 })
 export class LessonsModule {}

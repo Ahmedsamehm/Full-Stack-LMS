@@ -1,4 +1,6 @@
-import type { CourseAboutProps } from '../../_types/courses.types'
+interface CourseAboutProps {
+  description: string
+}
 
 export default function CourseAbout({ description }: CourseAboutProps) {
   return (

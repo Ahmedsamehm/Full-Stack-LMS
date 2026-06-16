@@ -8,7 +8,15 @@ export const enrollmentSelect = {
     expiresAt: true,
     updatedAt: true,
     user: { select: { id: true, name: true, email: true } },
-    course: { select: { id: true, title: true, thumbnailUrl: true } },
+    course: {
+        select: {
+            id: true,
+            title: true,
+            thumbnailUrl: true,
+            category: { select: { id: true, name: true, slug: true } },
+            teacher: { select: { id: true, name: true } },
+        },
+    },
 } satisfies Prisma.EnrollmentSelect;
 
 export const enrollmentDetailSelect = {

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { EnrollmentStatus } from '@prisma/client';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { EnrollmentQueryDto } from './dto/enrollment-query.dto';
 import { CreateEnrollmentByTeacherDto } from './dto/create-enrollment-by-teacher.dto';
 import { CreateEnrollmentByAdminDto } from './dto/create-enrollment-by-admin.dto';
 import { EnrollFreeService } from './services/enrollFree.service';
@@ -59,8 +60,8 @@ export class EnrollmentsService {
         return this.getEnrollmentsByCourseService.findByCourseId(courseId, teacherId, pagination);
     }
 
-    findAll(pagination: PaginationDto) {
-        return this.getAllEnrollmentsService.findAll(pagination);
+    findAll(query: EnrollmentQueryDto) {
+        return this.getAllEnrollmentsService.findAll(query);
     }
 
     updateStatus(id: string, status: EnrollmentStatus) {

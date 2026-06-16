@@ -42,6 +42,15 @@ export class CreateLessonService {
         if (userRole === Roles.Super_Admin || userRole === Roles.Admin) {
             return this.prisma.course.findUnique({ where: { id: courseId } });
         }
-        return this.prisma.course.findFirst({ where: { id: courseId, teacherId: userId } });
+
+        // For Teacher: check course exists first, then verify ownership
+        const course = await this.prisma.course.findUnique({ where: { id: courseId } });
+        if (!course) return null; // triggers NotFoundException
+
+        if (course.teacherId !== userId) {
+            throw new ForbiddenException('You do not have permission to manage this course');
+        }
+
+        return course;
     }
 }

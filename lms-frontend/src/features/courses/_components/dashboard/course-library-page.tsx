@@ -1,148 +1,222 @@
-import { Link } from '@tanstack/react-router'
-import { Search, ArrowRight, Plus, Filter } from 'lucide-react'
+import { useState } from 'react'
+import { Plus } from 'lucide-react'
+import { toast } from 'sonner'
+import { useAuthStore } from '#/store/auth'
+import { useCreateCourse } from '../../_hooks/courses/useCreateCourse'
+import { useDeleteCourse } from '../../_hooks/courses/useDeleteCourse'
+import { useUpdateCourse } from '../../_hooks/courses/useUpdateCourse'
+import { useCourseFilters } from '../../_hooks/courses/useCourseFilters'
+import { CourseFormDialog } from './course-form-dialog'
+import { CourseCard } from './course-card'
+import { ConfirmDeleteDialog } from '#/components/confirm-delete-dialog'
+import SearchBar from '#/components/search-bar'
+import SectionHeader from '#/components/section-header'
+import { Pagination } from '#/components/pagination'
+import { EmptyState } from '#/components/empty-state'
+import { useGetCategories } from '#/features/categories/_hooks/useGetCategories'
+import { useGetUsers } from '#/features/users/_hooks/useGetUsers'
+import { Button } from '#/components/ui/button'
+import { canManageRole, isTeacherRole } from '#/lib/auth'
 
-import type { DashboardCourse } from '../../_types/dashboard-courses.types'
+import type { Category, DashboardCourse } from '#/schemas'
+import type { CreateCourseRequest } from '#/schemas/course'
 import { CourseGridSkeleton } from '#/components/loading-skeleton'
+import { rolesEnum } from '#/schemas'
+
+import { usePagination } from '#/hooks/usePagination'
 
 interface CourseLibraryPageProps {
   courses?: DashboardCourse[]
   isLoading?: boolean
+  meta?: {
+    totalPages?: number
+    page?: number
+    limit?: number
+    total?: number
+  }
 }
 
-const categoryBadgeClasses: Record<string, string> = {
-  Science: 'bg-primary-container text-on-primary-container',
-  Technology: 'bg-secondary-container text-on-secondary-container',
-  Languages: 'bg-tertiary-container text-on-tertiary-container',
-  Business: 'bg-surface-tint/20 text-surface-tint',
-}
+export default function CourseLibraryPage({ courses, isLoading, meta }: CourseLibraryPageProps) {
+  const { categoryId, teacherId, status, setFilter } = useCourseFilters()
+  const { currentPage, setPage, totalPages } = usePagination({
+    totalPages: meta?.totalPages,
+  })
 
-function CategoryBadge({ category }: { category: string }) {
-  const cls = 'bg-primary! text-white text-on-surface-variant '
-  return (
-    <span
-      className={`absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-md ${cls}`}
-    >
-      {category}
-    </span>
-  )
-}
+  const role = useAuthStore((s) => s.role)
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [deletingCourse, setDeletingCourse] = useState<DashboardCourse | null>(null)
+  const [editingCourse, setEditingCourse] = useState<DashboardCourse | null>(null)
 
-function CourseCard({ course }: { course: DashboardCourse }) {
-  return (
-    <Link to={`${course.id}`} className="no-underline!">
-      <div className="bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden flex flex-col shadow-[0_2px_4px_rgba(15,23,42,0.04)] hover:shadow-[0_4px_12px_rgba(15,23,42,0.08)] transition-shadow duration-300">
-        <div className="h-40 w-full relative">
-          <img
-            src={course.thumbnail}
-            alt={course.title}
-            className="w-full h-full object-cover"
-          />
-          <CategoryBadge category={course.category} />
-        </div>
+  const { mutateAsync: createCourse, isPending: isCreating } = useCreateCourse()
+  const deleteMutation = useDeleteCourse()
+  const updateMutation = useUpdateCourse()
 
-        <div className="p-6 flex flex-col flex-1">
-          <h3 className="text-lg font-semibold text-on-surface mb-2 line-clamp-2">
-            {course.title}
-          </h3>
+  const { data: categoriesData } = useGetCategories()
+  const categories = (categoriesData?.data || []) as import('#/schemas').Category[]
 
-          <div className="flex items-center gap-2 mb-4">
-            <div className="size-6 rounded-full bg-surface-variant overflow-hidden">
-              <img
-                src={course.instructorAvatar}
-                alt={course.instructorName}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <span className="text-sm text-on-surface-variant">
-              {course.instructorName}
-            </span>
-          </div>
+  const { data: instructorsData } = useGetUsers({ role: rolesEnum.enum.Teacher, limit: 10 })
+  const instructors = (instructorsData?.data || []) as import('#/schemas').User[]
 
-          <div className="flex justify-between items-center mt-auto pt-4 border-t border-outline-variant">
-            <div className="flex items-center gap-1 text-on-surface-variant">
-              <span className="material-symbols-outlined text-[18px]">
-                group
-              </span>
-              <span className="text-sm font-medium">
-                {course.enrolledCount} Enrolled
-              </span>
-            </div>
-            <div
-              className="text-sm font-medium text-primary hover:text-primary-container transition-colors flex items-center gap-1 no-underline!"
-            >
-              View Details
-              <ArrowRight className="size-4" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </Link>
-  )
-}
+  const canCreate = canManageRole(role)
+  const isTeacher = isTeacherRole(role)
 
-export default function CourseLibraryPage({
-  courses,
-  isLoading,
-}: CourseLibraryPageProps) {
+  const handleDeleteConfirm = () => {
+    if (!deletingCourse) return
+    deleteMutation.mutate(deletingCourse.id, {
+      onSuccess: () => {
+        toast.success('Course deleted successfully')
+        setDeletingCourse(null)
+      },
+      onError: (err: unknown) => {
+        const error = err as { response?: { data?: { message?: string | string[] } }; message?: string }
+        const errMsg = error.response?.data?.message || error.message || 'Failed to delete course'
+        toast.error(Array.isArray(errMsg) ? errMsg.join(', ') : errMsg)
+      },
+    })
+  }
+
+  const handleEditSubmit = (data: CreateCourseRequest) => {
+    if (!editingCourse) return
+    updateMutation.mutate(
+      { id: editingCourse.id, course: data },
+      {
+        onSuccess: () => {
+          toast.success('Course updated successfully')
+          setEditingCourse(null)
+        },
+        onError: (err: unknown) => {
+          const error = err as { response?: { data?: { message?: string | string[] } }; message?: string }
+          const errMsg = error.response?.data?.message || error.message || 'Failed to update course'
+          toast.error(Array.isArray(errMsg) ? errMsg.join(', ') : errMsg)
+        },
+      },
+    )
+  }
+
   return (
     <div className="flex-1 overflow-y-auto w-full">
       <div className="px-4 md:px-8 py-6 lg:py-8 max-w-[1440px] mx-auto flex flex-col gap-6">
         {/* Page Header & Actions */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-on-surface mb-1">
-              Course Library
-            </h1>
-            <p className="text-base text-on-surface-variant">
-              Manage, update, and monitor your academic offerings.
-            </p>
-          </div>
-          <button className="lg:hidden  flex items-center justify-center gap-2 bg-primary text-white text-sm font-medium py-3 px-5 rounded-lg hover:bg-primary/90 transition-colors w-full md:w-auto">
-            <Plus className="size-[18px]" />
-            Create New Course
-          </button>
-        </div>
+        <SectionHeader
+          title="Course Library"
+          description="Manage, update, and monitor your academic offerings."
+          viewAll={false}
+          action={
+            canCreate ? (
+              <Button onClick={() => setIsCreateModalOpen(true)} className="text-white gap-2">
+                <Plus className="size-[18px]" />
+                Create New Course
+              </Button>
+            ) : undefined
+          }
+        />
 
         {/* Filters Bar */}
         <div className="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant flex flex-col md:flex-row gap-4 items-center">
-          <div className="relative w-full md:w-1/3">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant size-4" />
-            <input
-              type="text"
-              placeholder="Find a course..."
-              className="w-full pl-10 pr-4 py-2.5 bg-background border border-outline-variant rounded-lg text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
-            />
-          </div>
+          <SearchBar />
           <div className="w-full md:w-auto flex flex-1 gap-4">
-            <select className="flex-1 md:w-48 py-2.5 px-4 bg-background border border-outline-variant rounded-lg text-sm text-on-surface focus:border-primary outline-none appearance-none cursor-pointer">
+            <select
+              value={categoryId}
+              onChange={(e) => setFilter('categoryId', e.target.value)}
+              className="flex-1 md:w-48 py-2.5 px-4 bg-background border border-outline-variant rounded-lg text-sm text-on-surface focus:border-primary outline-none appearance-none cursor-pointer"
+            >
               <option value="">All Categories</option>
-              <option value="science">Science</option>
-              <option value="languages">Languages</option>
-              <option value="tech">Technology</option>
+              {categories.map((cat: Category) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
             </select>
-            <select className="flex-1 md:w-48 py-2.5 px-4 bg-background border border-outline-variant rounded-lg text-sm text-on-surface focus:border-primary outline-none appearance-none cursor-pointer">
-              <option value="">All Instructors</option>
-              <option value="1">Dr. Sarah Jenkins</option>
-              <option value="2">Prof. Marcus Cole</option>
-            </select>
+            {role !== 'Student' && (
+              <select
+                value={status}
+                onChange={(e) => setFilter('status', e.target.value)}
+                className="flex-1 md:w-48 py-2.5 px-4 bg-background border border-outline-variant rounded-lg text-sm text-on-surface focus:border-primary outline-none appearance-none cursor-pointer"
+              >
+                <option value="">All Statuses</option>
+                <option value="PUBLISHED">Published</option>
+                <option value="DRAFT">Draft (On Holding)</option>
+              </select>
+            )}
+            {!isTeacher && (
+              <select
+                value={teacherId}
+                onChange={(e) => setFilter('teacherId', e.target.value)}
+                className="flex-1 md:w-48 py-2.5 px-4 bg-background border border-outline-variant rounded-lg text-sm text-on-surface focus:border-primary outline-none appearance-none cursor-pointer"
+              >
+                <option value="">All Instructors</option>
+                {instructors.map((inst) => (
+                  <option key={inst.id} value={inst.id}>
+                    {inst.name}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
-          <button className="w-full md:w-auto px-6 py-2.5 bg-surface-container text-on-surface text-sm font-medium rounded-lg hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2">
-            <Filter className="size-[18px]" />
-            More Filters
-          </button>
         </div>
 
         {/* Course Grid */}
         {isLoading ? (
           <CourseGridSkeleton />
+        ) : !courses || courses.length === 0 ? (
+          <EmptyState title="No courses found" message="We couldn't find any courses matching your search or filters." />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-4">
-            {courses?.map((course) => (
-              <CourseCard key={course.id} course={course} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-4">
+              {courses.map((course) => (
+                <CourseCard
+                  key={course.id}
+                  course={course}
+                  onDelete={canCreate ? () => setDeletingCourse(course) : undefined}
+                  onEdit={canCreate ? () => setEditingCourse(course) : undefined}
+                />
+              ))}
+            </div>
+            {meta && <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setPage} className="mt-8" />}
+          </>
         )}
       </div>
+
+      <CourseFormDialog
+        mode="create"
+        open={isCreateModalOpen}
+        onOpenChange={setIsCreateModalOpen}
+        onSubmit={async (data: CreateCourseRequest) => {
+          await createCourse(data)
+          setIsCreateModalOpen(false)
+        }}
+        isPending={isCreating}
+      />
+
+      {editingCourse && (
+        <CourseFormDialog
+          mode="edit"
+          open={!!editingCourse}
+          onOpenChange={(open) => {
+            if (!open) setEditingCourse(null)
+          }}
+          onSubmit={handleEditSubmit}
+          isPending={updateMutation.isPending}
+          course={{
+            id: editingCourse.id,
+            title: editingCourse.title,
+            description: editingCourse.description,
+            price: editingCourse.price,
+            categoryId: editingCourse.categoryId,
+            thumbnailUrl: editingCourse.thumbnailUrl,
+            status: editingCourse.status,
+          }}
+        />
+      )}
+
+      <ConfirmDeleteDialog
+        open={!!deletingCourse}
+        onOpenChange={(open) => !open && setDeletingCourse(null)}
+        title="Delete Course"
+        description={`Are you sure you want to delete "${deletingCourse?.title}"? This action cannot be undone.`}
+        onConfirm={handleDeleteConfirm}
+        isPending={deleteMutation.isPending}
+      />
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import type { StudentsPageData } from '../_types/student-management.types'
+import type { StudentsPageData } from '#/schemas/student'
 
 export const studentsPageData: StudentsPageData = {
   students: [

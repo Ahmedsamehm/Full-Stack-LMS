@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { toast } from 'sonner'; // Adjust to your toast library
+// import { toast } from 'sonner'; // Adjust to your toast library
 // import { useForgotPasswordMutation } from '@/hooks/auth/use-forgot-password'; // Adjust import path
 
 const forgotPasswordSchema = z.object({
@@ -27,13 +27,12 @@ export default function ForgotPasswordForm() {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<ForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: { email: '' },
   });
 
-  const onSubmit = async (data: ForgotPasswordFormData) => {
+  const onSubmit = async (_data: ForgotPasswordFormData) => {
     // try {
     //   await forgotPasswordMutation(data);
     //   setIsSuccess(true);

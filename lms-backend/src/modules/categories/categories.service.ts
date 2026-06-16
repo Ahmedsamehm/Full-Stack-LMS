@@ -22,8 +22,8 @@ export class CategoriesService {
         return this.createCategoryService.create(dto);
     }
 
-    findAll(pagination: PaginationDto) {
-        return this.getAllCategoriesService.findAll(pagination);
+    findAll(pagination: PaginationDto, name?: string, slug?: string) {
+        return this.getAllCategoriesService.findAll(pagination, name, slug);
     }
 
     findOne(id: string) {

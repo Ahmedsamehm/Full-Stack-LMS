@@ -27,8 +27,14 @@ export const updateCategorySchema = z.object({
     .optional(),
 })
 
+export const updateCategoryParamsSchema = z.object({
+  id: z.string().uuid(),
+  category: updateCategorySchema,
+})
+
 // ─── Inferred Types ───────────────────────────────────────────────────────────
 
 export type Category = z.infer<typeof categorySchema>
 export type CreateCategoryRequest = z.infer<typeof createCategorySchema>
 export type UpdateCategoryRequest = z.infer<typeof updateCategorySchema>
+export type UpdateCategoryParams = z.infer<typeof updateCategoryParamsSchema>

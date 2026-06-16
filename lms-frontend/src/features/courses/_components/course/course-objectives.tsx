@@ -1,6 +1,8 @@
 import { CheckCircle2 } from 'lucide-react'
 
-import type { CourseObjectivesProps } from '../../_types/courses.types'
+interface CourseObjectivesProps {
+  objectives: string[]
+}
 
 export default function CourseObjectives({ objectives }: CourseObjectivesProps) {
   return (

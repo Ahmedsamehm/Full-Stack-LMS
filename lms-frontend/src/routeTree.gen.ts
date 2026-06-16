@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AboutRouteImport } from './routes/about'
 import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -21,9 +20,12 @@ import { Route as PublicAuthRegisterRouteImport } from './routes/_public/_auth/r
 import { Route as PublicAuthLoginRouteImport } from './routes/_public/_auth/login'
 import { Route as PublicAuthForgotPasswordRouteImport } from './routes/_public/_auth/forgotPassword'
 import { Route as ProtectedDashboardCoursesRouteRouteImport } from './routes/_protected/dashboard/courses/route'
+import { Route as ProtectedDashboardUsersIndexRouteImport } from './routes/_protected/dashboard/users/index'
 import { Route as ProtectedDashboardStudentsIndexRouteImport } from './routes/_protected/dashboard/students/index'
 import { Route as ProtectedDashboardSettingsIndexRouteImport } from './routes/_protected/dashboard/settings/index'
+import { Route as ProtectedDashboardEnrollmentsIndexRouteImport } from './routes/_protected/dashboard/enrollments/index'
 import { Route as ProtectedDashboardCoursesIndexRouteImport } from './routes/_protected/dashboard/courses/index'
+import { Route as ProtectedDashboardBuyCoursesIndexRouteImport } from './routes/_protected/dashboard/buy-courses/index'
 import { Route as ProtectedDashboardCoursesIdRouteImport } from './routes/_protected/dashboard/courses/$id'
 import { Route as ProtectedDashboardSettingsSecurityIndexRouteImport } from './routes/_protected/dashboard/settings/security/index'
 import { Route as ProtectedDashboardSettingsProfileIndexRouteImport } from './routes/_protected/dashboard/settings/profile/index'
@@ -31,11 +33,6 @@ import { Route as ProtectedDashboardSettingsNotificationsIndexRouteImport } from
 import { Route as ProtectedDashboardSettingsBillingIndexRouteImport } from './routes/_protected/dashboard/settings/billing/index'
 import { Route as PublicCoursesIdCoursesIdRouteImport } from './routes/_public/_courses/_id/courses.$id'
 
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PublicRouteRoute = PublicRouteRouteImport.update({
   id: '/_public',
   getParentRoute: () => rootRouteImport,
@@ -90,6 +87,12 @@ const ProtectedDashboardCoursesRouteRoute =
     path: '/courses',
     getParentRoute: () => ProtectedDashboardRouteRoute,
   } as any)
+const ProtectedDashboardUsersIndexRoute =
+  ProtectedDashboardUsersIndexRouteImport.update({
+    id: '/users/',
+    path: '/users/',
+    getParentRoute: () => ProtectedDashboardRouteRoute,
+  } as any)
 const ProtectedDashboardStudentsIndexRoute =
   ProtectedDashboardStudentsIndexRouteImport.update({
     id: '/students/',
@@ -102,11 +105,23 @@ const ProtectedDashboardSettingsIndexRoute =
     path: '/settings/',
     getParentRoute: () => ProtectedDashboardRouteRoute,
   } as any)
+const ProtectedDashboardEnrollmentsIndexRoute =
+  ProtectedDashboardEnrollmentsIndexRouteImport.update({
+    id: '/enrollments/',
+    path: '/enrollments/',
+    getParentRoute: () => ProtectedDashboardRouteRoute,
+  } as any)
 const ProtectedDashboardCoursesIndexRoute =
   ProtectedDashboardCoursesIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => ProtectedDashboardCoursesRouteRoute,
+  } as any)
+const ProtectedDashboardBuyCoursesIndexRoute =
+  ProtectedDashboardBuyCoursesIndexRouteImport.update({
+    id: '/buy-courses/',
+    path: '/buy-courses/',
+    getParentRoute: () => ProtectedDashboardRouteRoute,
   } as any)
 const ProtectedDashboardCoursesIdRoute =
   ProtectedDashboardCoursesIdRouteImport.update({
@@ -147,7 +162,6 @@ const PublicCoursesIdCoursesIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/dashboard': typeof ProtectedDashboardRouteRouteWithChildren
   '/dashboard/courses': typeof ProtectedDashboardCoursesRouteRouteWithChildren
   '/forgotPassword': typeof PublicAuthForgotPasswordRoute
@@ -156,9 +170,12 @@ export interface FileRoutesByFullPath {
   '/courses': typeof PublicCoursesCoursesRoute
   '/dashboard/': typeof ProtectedDashboardIndexRoute
   '/dashboard/courses/$id': typeof ProtectedDashboardCoursesIdRoute
+  '/dashboard/buy-courses/': typeof ProtectedDashboardBuyCoursesIndexRoute
   '/dashboard/courses/': typeof ProtectedDashboardCoursesIndexRoute
+  '/dashboard/enrollments/': typeof ProtectedDashboardEnrollmentsIndexRoute
   '/dashboard/settings/': typeof ProtectedDashboardSettingsIndexRoute
   '/dashboard/students/': typeof ProtectedDashboardStudentsIndexRoute
+  '/dashboard/users/': typeof ProtectedDashboardUsersIndexRoute
   '/courses/$id': typeof PublicCoursesIdCoursesIdRoute
   '/dashboard/settings/billing/': typeof ProtectedDashboardSettingsBillingIndexRoute
   '/dashboard/settings/notifications/': typeof ProtectedDashboardSettingsNotificationsIndexRoute
@@ -167,16 +184,18 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/forgotPassword': typeof PublicAuthForgotPasswordRoute
   '/login': typeof PublicAuthLoginRoute
   '/register': typeof PublicAuthRegisterRoute
   '/courses': typeof PublicCoursesCoursesRoute
   '/dashboard': typeof ProtectedDashboardIndexRoute
   '/dashboard/courses/$id': typeof ProtectedDashboardCoursesIdRoute
+  '/dashboard/buy-courses': typeof ProtectedDashboardBuyCoursesIndexRoute
   '/dashboard/courses': typeof ProtectedDashboardCoursesIndexRoute
+  '/dashboard/enrollments': typeof ProtectedDashboardEnrollmentsIndexRoute
   '/dashboard/settings': typeof ProtectedDashboardSettingsIndexRoute
   '/dashboard/students': typeof ProtectedDashboardStudentsIndexRoute
+  '/dashboard/users': typeof ProtectedDashboardUsersIndexRoute
   '/courses/$id': typeof PublicCoursesIdCoursesIdRoute
   '/dashboard/settings/billing': typeof ProtectedDashboardSettingsBillingIndexRoute
   '/dashboard/settings/notifications': typeof ProtectedDashboardSettingsNotificationsIndexRoute
@@ -188,7 +207,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_protected': typeof ProtectedRouteRouteWithChildren
   '/_public': typeof PublicRouteRouteWithChildren
-  '/about': typeof AboutRoute
   '/_protected/dashboard': typeof ProtectedDashboardRouteRouteWithChildren
   '/_public/_auth': typeof PublicAuthRouteRouteWithChildren
   '/_protected/dashboard/courses': typeof ProtectedDashboardCoursesRouteRouteWithChildren
@@ -198,9 +216,12 @@ export interface FileRoutesById {
   '/_public/_courses/courses': typeof PublicCoursesCoursesRoute
   '/_protected/dashboard/': typeof ProtectedDashboardIndexRoute
   '/_protected/dashboard/courses/$id': typeof ProtectedDashboardCoursesIdRoute
+  '/_protected/dashboard/buy-courses/': typeof ProtectedDashboardBuyCoursesIndexRoute
   '/_protected/dashboard/courses/': typeof ProtectedDashboardCoursesIndexRoute
+  '/_protected/dashboard/enrollments/': typeof ProtectedDashboardEnrollmentsIndexRoute
   '/_protected/dashboard/settings/': typeof ProtectedDashboardSettingsIndexRoute
   '/_protected/dashboard/students/': typeof ProtectedDashboardStudentsIndexRoute
+  '/_protected/dashboard/users/': typeof ProtectedDashboardUsersIndexRoute
   '/_public/_courses/_id/courses/$id': typeof PublicCoursesIdCoursesIdRoute
   '/_protected/dashboard/settings/billing/': typeof ProtectedDashboardSettingsBillingIndexRoute
   '/_protected/dashboard/settings/notifications/': typeof ProtectedDashboardSettingsNotificationsIndexRoute
@@ -211,7 +232,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/about'
     | '/dashboard'
     | '/dashboard/courses'
     | '/forgotPassword'
@@ -220,9 +240,12 @@ export interface FileRouteTypes {
     | '/courses'
     | '/dashboard/'
     | '/dashboard/courses/$id'
+    | '/dashboard/buy-courses/'
     | '/dashboard/courses/'
+    | '/dashboard/enrollments/'
     | '/dashboard/settings/'
     | '/dashboard/students/'
+    | '/dashboard/users/'
     | '/courses/$id'
     | '/dashboard/settings/billing/'
     | '/dashboard/settings/notifications/'
@@ -231,16 +254,18 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/about'
     | '/forgotPassword'
     | '/login'
     | '/register'
     | '/courses'
     | '/dashboard'
     | '/dashboard/courses/$id'
+    | '/dashboard/buy-courses'
     | '/dashboard/courses'
+    | '/dashboard/enrollments'
     | '/dashboard/settings'
     | '/dashboard/students'
+    | '/dashboard/users'
     | '/courses/$id'
     | '/dashboard/settings/billing'
     | '/dashboard/settings/notifications'
@@ -251,7 +276,6 @@ export interface FileRouteTypes {
     | '/'
     | '/_protected'
     | '/_public'
-    | '/about'
     | '/_protected/dashboard'
     | '/_public/_auth'
     | '/_protected/dashboard/courses'
@@ -261,9 +285,12 @@ export interface FileRouteTypes {
     | '/_public/_courses/courses'
     | '/_protected/dashboard/'
     | '/_protected/dashboard/courses/$id'
+    | '/_protected/dashboard/buy-courses/'
     | '/_protected/dashboard/courses/'
+    | '/_protected/dashboard/enrollments/'
     | '/_protected/dashboard/settings/'
     | '/_protected/dashboard/students/'
+    | '/_protected/dashboard/users/'
     | '/_public/_courses/_id/courses/$id'
     | '/_protected/dashboard/settings/billing/'
     | '/_protected/dashboard/settings/notifications/'
@@ -275,18 +302,10 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProtectedRouteRoute: typeof ProtectedRouteRouteWithChildren
   PublicRouteRoute: typeof PublicRouteRouteWithChildren
-  AboutRoute: typeof AboutRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_public': {
       id: '/_public'
       path: ''
@@ -364,6 +383,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDashboardCoursesRouteRouteImport
       parentRoute: typeof ProtectedDashboardRouteRoute
     }
+    '/_protected/dashboard/users/': {
+      id: '/_protected/dashboard/users/'
+      path: '/users'
+      fullPath: '/dashboard/users/'
+      preLoaderRoute: typeof ProtectedDashboardUsersIndexRouteImport
+      parentRoute: typeof ProtectedDashboardRouteRoute
+    }
     '/_protected/dashboard/students/': {
       id: '/_protected/dashboard/students/'
       path: '/students'
@@ -378,12 +404,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDashboardSettingsIndexRouteImport
       parentRoute: typeof ProtectedDashboardRouteRoute
     }
+    '/_protected/dashboard/enrollments/': {
+      id: '/_protected/dashboard/enrollments/'
+      path: '/enrollments'
+      fullPath: '/dashboard/enrollments/'
+      preLoaderRoute: typeof ProtectedDashboardEnrollmentsIndexRouteImport
+      parentRoute: typeof ProtectedDashboardRouteRoute
+    }
     '/_protected/dashboard/courses/': {
       id: '/_protected/dashboard/courses/'
       path: '/'
       fullPath: '/dashboard/courses/'
       preLoaderRoute: typeof ProtectedDashboardCoursesIndexRouteImport
       parentRoute: typeof ProtectedDashboardCoursesRouteRoute
+    }
+    '/_protected/dashboard/buy-courses/': {
+      id: '/_protected/dashboard/buy-courses/'
+      path: '/buy-courses'
+      fullPath: '/dashboard/buy-courses/'
+      preLoaderRoute: typeof ProtectedDashboardBuyCoursesIndexRouteImport
+      parentRoute: typeof ProtectedDashboardRouteRoute
     }
     '/_protected/dashboard/courses/$id': {
       id: '/_protected/dashboard/courses/$id'
@@ -449,8 +489,11 @@ const ProtectedDashboardCoursesRouteRouteWithChildren =
 interface ProtectedDashboardRouteRouteChildren {
   ProtectedDashboardCoursesRouteRoute: typeof ProtectedDashboardCoursesRouteRouteWithChildren
   ProtectedDashboardIndexRoute: typeof ProtectedDashboardIndexRoute
+  ProtectedDashboardBuyCoursesIndexRoute: typeof ProtectedDashboardBuyCoursesIndexRoute
+  ProtectedDashboardEnrollmentsIndexRoute: typeof ProtectedDashboardEnrollmentsIndexRoute
   ProtectedDashboardSettingsIndexRoute: typeof ProtectedDashboardSettingsIndexRoute
   ProtectedDashboardStudentsIndexRoute: typeof ProtectedDashboardStudentsIndexRoute
+  ProtectedDashboardUsersIndexRoute: typeof ProtectedDashboardUsersIndexRoute
   ProtectedDashboardSettingsBillingIndexRoute: typeof ProtectedDashboardSettingsBillingIndexRoute
   ProtectedDashboardSettingsNotificationsIndexRoute: typeof ProtectedDashboardSettingsNotificationsIndexRoute
   ProtectedDashboardSettingsProfileIndexRoute: typeof ProtectedDashboardSettingsProfileIndexRoute
@@ -462,8 +505,13 @@ const ProtectedDashboardRouteRouteChildren: ProtectedDashboardRouteRouteChildren
     ProtectedDashboardCoursesRouteRoute:
       ProtectedDashboardCoursesRouteRouteWithChildren,
     ProtectedDashboardIndexRoute: ProtectedDashboardIndexRoute,
+    ProtectedDashboardBuyCoursesIndexRoute:
+      ProtectedDashboardBuyCoursesIndexRoute,
+    ProtectedDashboardEnrollmentsIndexRoute:
+      ProtectedDashboardEnrollmentsIndexRoute,
     ProtectedDashboardSettingsIndexRoute: ProtectedDashboardSettingsIndexRoute,
     ProtectedDashboardStudentsIndexRoute: ProtectedDashboardStudentsIndexRoute,
+    ProtectedDashboardUsersIndexRoute: ProtectedDashboardUsersIndexRoute,
     ProtectedDashboardSettingsBillingIndexRoute:
       ProtectedDashboardSettingsBillingIndexRoute,
     ProtectedDashboardSettingsNotificationsIndexRoute:
@@ -527,7 +575,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProtectedRouteRoute: ProtectedRouteRouteWithChildren,
   PublicRouteRoute: PublicRouteRouteWithChildren,
-  AboutRoute: AboutRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

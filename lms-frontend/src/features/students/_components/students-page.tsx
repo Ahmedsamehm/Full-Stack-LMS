@@ -1,60 +1,70 @@
-import { Download, UserPlus } from 'lucide-react'
+import * as React from 'react'
 
-import { Button } from '#/components/ui/button'
 import { Pagination } from '#/components/pagination'
-import { useAuthStore, type Role } from '#/store/auth'
+import SectionHeader from '#/components/section-header'
+import { EmptyState } from '#/components/empty-state'
+import { useAuthStore } from '#/store/auth'
+import { isTeacherRole, isAdminRole } from '#/lib/auth'
 
+import { usePagination } from '#/hooks/usePagination'
+import { useGetMyCourses } from '#/features/courses/_hooks/courses/useGetMyCourses'
 import { useStudentManagement } from '../_hooks/use-student-management'
+import { useStudentFilters } from '../_hooks/useStudentFilters'
 
 import StudentsFilterBar from './students-filter-bar'
 import StudentsTable from './students-table'
+import { TableSkeleton } from '#/components/loading-skeleton'
+import { PAGINATION } from '#/lib/constants'
 
-const allowedRoles: Role[] = ['Admin', 'Teacher']
+interface StudentsPageProps {
+  initialData?: unknown
+}
 
-export default function StudentsPage() {
+export default function StudentsPage({ initialData }: StudentsPageProps = {}) {
   const role = useAuthStore((s) => s.role)
-  const { data, isLoading } = useStudentManagement()
+  const isTeacher = isTeacherRole(role)
 
-  if (!allowedRoles.includes(role)) {
-    return (
-      <main className="flex-1 w-full px-4 md:px-8 py-6 lg:py-8 max-w-[1440px] mx-auto">
-        <div className="flex flex-col items-center justify-center py-20">
-          <p className="text-lg font-medium text-on-surface-variant">
-            You do not have access to this page.
-          </p>
-        </div>
-      </main>
-    )
-  }
+  const { search, page } = useStudentFilters()
+
+  const queryParams = React.useMemo(() => {
+    return { page, search: search || undefined }
+  }, [page, search])
+
+  const { data, isPending, isLoading } = useStudentManagement(queryParams, isTeacher, { initialData })
+
+  const { data: coursesData } = useGetMyCourses({ limit: PAGINATION.DEFAULT_LIMIT })
+
+  const courses = (coursesData?.data ?? []) as { id: string; title: string }[]
+
+  const { currentPage, setPage, totalPages } = usePagination({
+    totalPages: data?.totalCount ? Math.ceil(data.totalCount / PAGINATION.DEFAULT_LIMIT) : undefined,
+  })
+
+  const isAdminView = isAdminRole(role)
+  const title = isAdminView ? 'Users Directory' : 'Students Directory'
+  const description = isAdminView ? 'Manage and monitor all platform users.' : 'Manage and monitor student enrollments and progress.'
+  const hasActiveSearch = search.trim().length > 0
+  const students = data?.students ?? []
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const isEmptyAfterSearch = hasActiveSearch && !isPending && data?.students.length === 0
 
   return (
     <main className="flex-1 w-full px-4 md:px-8 py-6 lg:py-8 max-w-[1440px] mx-auto flex flex-col gap-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-on-surface mb-1">
-            Students Directory
-          </h1>
-          <p className="text-base text-on-surface-variant">
-            Manage and monitor student enrollments and progress.
-          </p>
-        </div>
-        <div className="flex items-center gap-3 w-full sm:w-auto">
-          <Button variant="outline" className="gap-2">
-            <Download className="size-4" />
-            Export
-          </Button>
-          <Button className="gap-2 text-white!">
-            <UserPlus className="size-4" />
-            Add Student
-          </Button>
-        </div>
-      </div>
+      <SectionHeader title={title} description={description} viewAll={false} />
+      <StudentsFilterBar courses={courses} />
+      {isPending ? (
+        <TableSkeleton />
+      ) : (
+        <>
+          {isEmptyAfterSearch ? (
+            <EmptyState title="No results found" message={`No students match "${search}". Try a different search term.`} />
+          ) : (
+            <StudentsTable students={students} isLoading={isLoading} />
+          )}
+        </>
+      )}
 
-      <StudentsFilterBar />
-
-      <StudentsTable students={data?.students} isLoading={isLoading} />
-
-      <Pagination pageCount={Math.ceil((data?.totalCount ?? 0) / 10)} />
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setPage} />
     </main>
   )
 }
