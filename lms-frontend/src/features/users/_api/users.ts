@@ -16,7 +16,8 @@ export const getUser = createServerFn({ method: 'GET' }).handler(async () => {
       headers: getAuthHeaders(),
     })
     return data
-  } catch {
+  } catch (error: any) {
+    console.error('getUser error in SSR:', error?.message, error?.response?.data, error?.config?.url);
     // 401 / any error → user is not authenticated
     return null
   }

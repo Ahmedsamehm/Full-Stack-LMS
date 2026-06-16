@@ -1,11 +1,11 @@
 import axios, {
   AxiosError,
-  type  InternalAxiosRequestConfig,
+  type InternalAxiosRequestConfig,
 } from 'axios'
 
-const apiUrl =
-  import.meta.env.VITE_API_URL ||
-  'http://localhost:3000/api'
+// We don't use getRequest here to avoid context errors outside of SSR requests,
+// Instead, we will intercept the request and prepend the URL if we are on the server.
+const apiUrl = import.meta.env.VITE_API_URL || '/api';
 
 const api = axios.create({
   baseURL: apiUrl,
@@ -14,6 +14,19 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 })
+
+// Intercept request to handle SSR relative URLs
+api.interceptors.request.use((config) => {
+  if (typeof window === 'undefined' && config.baseURL && config.baseURL.startsWith('/')) {
+    // We are on the server, and the baseURL is relative.
+    // In Vercel, VERCEL_URL is provided for the current deployment.
+    // Fallback to localhost if not found.
+    const host = process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL || 'localhost:3000';
+    const protocol = host.includes('localhost') ? 'http' : 'https';
+    config.baseURL = `${protocol}://${host}${config.baseURL}`;
+  }
+  return config;
+});
 
 api.interceptors.response.use(
   (response) => response,
