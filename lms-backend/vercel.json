@@ -1,12 +1,12 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npx prisma generate && nest build",
-  "outputDirectory": "dist",
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "api/index.ts",
-      "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"]
-    }
-  ]
+    "$schema": "https://openapi.vercel.sh/vercel.json",
+    "buildCommand": "npx prisma generate && nest build",
+    "outputDirectory": "dist",
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "api/index.ts",
+            "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"]
+        }
+    ]
 }
