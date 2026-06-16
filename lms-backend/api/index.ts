@@ -9,7 +9,11 @@ import cookieParser from 'cookie-parser';
 import express from 'express';
 
 const server = express();
-
+export const config = {
+    api: {
+        bodyParser: false,
+    },
+};
 async function createApp() {
     const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
 
