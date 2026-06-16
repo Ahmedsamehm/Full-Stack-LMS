@@ -27,10 +27,12 @@ export class AuthController {
     async login(@Body() loginAuthDto: LoginAuthDto, @Res({ passthrough: true }) res: Response) {
         const result = await this.authService.login(loginAuthDto);
         this.setRefreshTokenCookie(res, result.refreshToken);
-        return { accessToken: result.accessToken, user: result.user };
+        this.setAccessTokenCookie(res, result.accessToken);
+        return { user: result.user };
     }
 
     @Post('refresh')
+    @Public()
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Token refreshed successfully')
     async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
@@ -40,23 +42,38 @@ export class AuthController {
         }
         const result = await this.authService.refresh(refreshToken);
         this.setRefreshTokenCookie(res, result.refreshToken);
-        return { accessToken: result.accessToken };
+        this.setAccessTokenCookie(res, result.accessToken);
+        return { success: true };
     }
+
+    // auth.controller.ts
 
     @Post('logout')
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Logged out successfully')
     async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-        const refreshToken = req.cookies?.refreshToken;
+        const refreshToken = req.cookies?.['refreshToken'];
+        const userId = (req as any).user?.id;
+
         if (refreshToken) {
-            await this.authService.logout(refreshToken);
+            await this.authService.logout(refreshToken, userId);
         }
+
         res.clearCookie('refreshToken', {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
             path: '/api/auth',
         });
+
+        res.clearCookie('accessToken', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/',
+        });
+
+        return { success: true };
     }
 
     @Post('forgot-password')
@@ -82,6 +99,16 @@ export class AuthController {
             sameSite: 'strict',
             path: '/api/auth',
             maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+    }
+
+    private setAccessTokenCookie(res: Response, token: string) {
+        res.cookie('accessToken', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/', // Needs to be accessible by all API routes
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7day, adjust to your JWT_ACCESS_EXPIRES_IN
         });
     }
 }

@@ -4,26 +4,37 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-
 }
 
 model User {
-  id            String         @id @default(uuid())
-  name          String
-  email         String         @unique
-  passwordHash  String
-  role          Roles          @default(STUDENT)
-  status        UserStatus     @default(ACTIVE)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  courses       Course[]
-  enrollments   Enrollment[]
-  payments      Payment[]
-  requests      Request[]      @relation("UserRequests")
-  refreshTokens RefreshToken[]
+  id                  String               @id @default(uuid())
+  name                String
+  email               String               @unique
+  passwordHash        String
+  bio                 String?
+  role                Roles                @default(Student)
+  status              UserStatus           @default(ACTIVE)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  courses             Course[]
+  enrollments         Enrollment[]
+  payments            Payment[]
+  requests            Request[]            @relation("UserRequests")
+  refreshTokens       RefreshToken[]
   passwordResetTokens PasswordResetToken[]
 
   @@map("users")
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  courses   Course[]
+
+  @@map("categories")
 }
 
 model RefreshToken {
@@ -37,7 +48,6 @@ model RefreshToken {
   @@map("refresh_tokens")
 }
 
-
 model PasswordResetToken {
   id        String   @id @default(uuid())
   tokenHash String   @unique
@@ -47,7 +57,9 @@ model PasswordResetToken {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("password_reset_tokens")
-}model Course {
+}
+
+model Course {
   id           String       @id @default(uuid())
   title        String
   description  String?
@@ -59,39 +71,68 @@ model PasswordResetToken {
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   teacher      User         @relation(fields: [teacherId], references: [id])
+  category     Category     @relation(fields: [categoryId], references: [id])
   enrollments  Enrollment[]
   lessons      Lesson[]
   payments     Payment[]
   requests     Request[]
 
+  @@index([teacherId])
+  @@index([categoryId])
+  @@index([status])
+  @@index([teacherId, status])
   @@map("courses")
 }
 
 model Lesson {
-  id         String   @id @default(uuid())
-  courseId   String
-  title      String
-  duration   Int
-  content    String?
-  videoUrl   String?
-  orderIndex Int
-  createdAt  DateTime @default(now())
-  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  id             String           @id @default(uuid())
+  courseId       String
+  title          String
+  duration       Int
+  content        String?
+  videoUrl       String?
+  orderIndex     Int
+  createdAt      DateTime         @default(now())
+  course         Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessonProgress LessonProgress[]
 
+  @@index([courseId])
   @@map("lessons")
 }
 
 model Enrollment {
-  id        String           @id @default(uuid())
-  userId    String
-  courseId  String
-  status    EnrollmentStatus @default(PENDING)
-  progress  Int              @default(0)
-  createdAt DateTime         @default(now())
-  course    Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String           @id @default(uuid())
+  userId         String
+  courseId       String
+  status         EnrollmentStatus @default(ACTIVE)
+  progress       Int              @default(0)
+  enrolledAt     DateTime         @default(now())
+  expiresAt      DateTime?
+  updatedAt      DateTime         @updatedAt
+  course         Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonProgress LessonProgress[]
 
+  @@unique([userId, courseId])
+  @@index([userId])
+  @@index([courseId])
   @@map("enrollments")
+}
+
+model LessonProgress {
+  id           String     @id @default(uuid())
+  enrollmentId String
+  lessonId     String
+  completed    Boolean    @default(false)
+  completedAt  DateTime?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  lesson       Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([enrollmentId, lessonId])
+  @@index([enrollmentId])
+  @@map("lesson_progress")
 }
 
 model Payment {
@@ -99,14 +140,18 @@ model Payment {
   userId        String
   courseId      String
   amount        Float
-  currency      String
-  status        PaymentStatus
-  provider      PaymentProvider
+  currency      String          @default("egp")
+  status        PaymentStatus   @default(PENDING)
+  provider      PaymentProvider @default(STRIPE)
   transactionId String          @unique
   createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  metadata      Json?
   course        Course          @relation(fields: [courseId], references: [id])
   user          User            @relation(fields: [userId], references: [id])
 
+  @@index([userId])
+  @@index([courseId])
   @@map("payments")
 }
 
@@ -124,10 +169,10 @@ model Request {
 }
 
 enum Roles {
-  SUPER_ADMIN
-  ADMIN
-  TEACHER
-  STUDENT
+  Super_Admin
+  Admin
+  Teacher
+  Student
 }
 
 enum UserStatus {
@@ -147,6 +192,7 @@ enum EnrollmentStatus {
   ACTIVE
   REJECTED
   EXPIRED
+  FAILED
 }
 
 enum PaymentStatus {
@@ -158,7 +204,6 @@ enum PaymentStatus {
 
 enum PaymentProvider {
   STRIPE
-  PAYMOB
 }
 
 enum RequestType {
@@ -171,5 +216,3 @@ enum RequestStatus {
   APPROVED
   REJECTED
 }
-
-

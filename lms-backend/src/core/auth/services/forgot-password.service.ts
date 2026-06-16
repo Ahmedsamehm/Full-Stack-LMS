@@ -7,27 +7,27 @@ import { findUserByEmailService } from 'src/modules/users/services/findUserByEma
 
 @Injectable()
 export class ForgotPasswordService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly mailService: MailService,
-    private readonly findUserByEmailService: findUserByEmailService,
-  ) {}
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly mailService: MailService,
+        private readonly findUserByEmailService: findUserByEmailService,
+    ) {}
 
-  async forgotPassword(email: string) {
-    const user = await this.findUserByEmailService.findUserByEmail(email);
+    async forgotPassword(email: string) {
+        const user = await this.findUserByEmailService.findUserByEmail(email);
 
-    const token = generateToken();
-    const tokenHash = hashToken(token);
-    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+        const token = generateToken();
+        const tokenHash = hashToken(token);
+        const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
-    await this.prisma.passwordResetToken.create({
-      data: {
-        tokenHash,
-        userId: user.id,
-        expiresAt,
-      },
-    });
+        await this.prisma.passwordResetToken.create({
+            data: {
+                tokenHash,
+                userId: user.id,
+                expiresAt,
+            },
+        });
 
-    await this.mailService.sendPasswordResetEmail(user.email, token);
-  }
+        await this.mailService.sendPasswordResetEmail(user.email, token);
+    }
 }

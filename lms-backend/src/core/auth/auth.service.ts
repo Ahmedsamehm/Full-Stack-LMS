@@ -31,8 +31,8 @@ export class AuthService {
         return this.RefreshTokenService.refresh(refreshToken);
     }
 
-    logout(refreshToken: string) {
-        return this.LogoutService.logout(refreshToken);
+    logout(refreshToken: string, userId: string) {
+        return this.LogoutService.logout(refreshToken, userId);
     }
 
     forgotPassword(email: string) {

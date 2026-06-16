@@ -1,0 +1,38 @@
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/core/database/prisma.service';
+import { PaginationDto, PaginatedResult } from 'src/common/dto/pagination.dto';
+import { paymentSelect } from 'src/common/selects/payment.select';
+import { PaymentResponseDto } from '../dto/response-payment.dto';
+
+@Injectable()
+export class GetAllPaymentsService {
+    constructor(private readonly prisma: PrismaService) {}
+
+    async findAll(pagination: PaginationDto): Promise<PaginatedResult<PaymentResponseDto>> {
+        const { page, limit } = pagination;
+        const skip = (page - 1) * limit;
+
+        const where = {};
+
+        const [payments, total] = await Promise.all([
+            this.prisma.payment.findMany({
+                where,
+                skip,
+                take: limit,
+                orderBy: { createdAt: 'desc' },
+                select: paymentSelect,
+            }),
+            this.prisma.payment.count({ where }),
+        ]);
+
+        return {
+            data: payments,
+            meta: {
+                total,
+                page,
+                limit,
+                totalPages: Math.ceil(total / limit),
+            },
+        };
+    }
+}

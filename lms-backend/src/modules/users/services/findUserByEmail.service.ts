@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/core/database/prisma.service';
 
+// this for auth module don't use out side auth
 @Injectable()
 export class findUserByEmailService {
     constructor(private readonly prisma: PrismaService) {}

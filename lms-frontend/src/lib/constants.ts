@@ -1,0 +1,6 @@
+export const PAGINATION = {
+  DEFAULT_PAGE: 1,
+  DEFAULT_LIMIT: 10,
+  COURSES_GRID_LIMIT: 9,
+  MAX_LIMIT: 30,
+} as const

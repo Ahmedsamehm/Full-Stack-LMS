@@ -1,34 +1,84 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, ParseUUIDPipe, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { AdminCreateUserDto } from './dto/admin-create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ChangeRoleDto } from './dto/change-role.dto';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { AdminOnly, TeacherOnly } from 'src/common/decorators/role.decorator';
+import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+import { UserQueryDto } from 'src/common/dto/pagination.dto';
+import { UserResponseDto } from 'src/core/auth/dto/response-auth.dto';
 
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
-    @Post()
-    create(@Body() createUserDto: CreateUserDto) {
-        return this.usersService.create(createUserDto);
+    @Get()
+    @TeacherOnly()
+    @ResponseMessage('Users fetched successfully')
+    @HttpCode(HttpStatus.OK)
+    findAll(@Query() query: UserQueryDto, @CurrentUser() user: UserResponseDto) {
+        return this.usersService.getAllUsers(query, user.id, user.role);
     }
 
-    @Get()
-    findAll() {
-        return this.usersService.findAll();
+    @Get('me')
+    @ResponseMessage('Profile fetched successfully')
+    @HttpCode(HttpStatus.OK)
+    findMe(@CurrentUser() user: UserResponseDto) {
+        return this.usersService.findMe(user.id);
+    }
+
+    @Get('email')
+    @TeacherOnly()
+    @ResponseMessage('User fetched successfully')
+    @HttpCode(HttpStatus.OK)
+    findOneByEmail(@Query('email') email: string) {
+        return this.usersService.findUserByEmail(email);
+    }
+
+    @Get(':id/details')
+    @AdminOnly()
+    @ResponseMessage('User details fetched successfully')
+    @HttpCode(HttpStatus.OK)
+    findUserDetails(@Param('id', ParseUUIDPipe) id: string) {
+        return this.usersService.getUserDetails(id);
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.usersService.findOne(+id);
+    @ResponseMessage('User fetched successfully')
+    @HttpCode(HttpStatus.OK)
+    findOne(@Param('id', ParseUUIDPipe) id: string) {
+        return this.usersService.findUserById(id);
+    }
+
+    @Post()
+    @AdminOnly()
+    @ResponseMessage('User created successfully')
+    @HttpCode(HttpStatus.CREATED)
+    create(@Body() dto: AdminCreateUserDto, @CurrentUser() user: UserResponseDto) {
+        return this.usersService.create(dto, user.role);
     }
 
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-        return this.usersService.update(+id, updateUserDto);
+    @ResponseMessage('User updated successfully')
+    @HttpCode(HttpStatus.OK)
+    update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateUserDto, @CurrentUser() user: UserResponseDto) {
+        return this.usersService.update(id, dto, user.id, user.role);
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.usersService.remove(+id);
+    @AdminOnly()
+    @ResponseMessage('User deleted successfully')
+    @HttpCode(HttpStatus.OK)
+    remove(@Param('id', ParseUUIDPipe) id: string) {
+        return this.usersService.delete(id);
+    }
+
+    @Patch(':id/role')
+    @AdminOnly()
+    @ResponseMessage('User role updated successfully')
+    @HttpCode(HttpStatus.OK)
+    changeRole(@Param('id', ParseUUIDPipe) id: string, @Body() dto: ChangeRoleDto, @CurrentUser() user: UserResponseDto) {
+        return this.usersService.changeRole(id, dto, user.role);
     }
 }
