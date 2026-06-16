@@ -1,8 +1,8 @@
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/core/database/prisma.service';
+import { PrismaService } from '../../database/prisma.service';
 import { CreateAuthDto } from '../dto/create-auth.dto';
 import { hashPassword } from '../utils/hashPassword';
-import { userRegisterSelect } from 'src/common/selects/user.select';
+import { userRegisterSelect } from '../../../common/selects/user.select';
 
 @Injectable()
 export class RegisterService {

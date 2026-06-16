@@ -3,11 +3,11 @@ import { UsersService } from './users.service';
 import { AdminCreateUserDto } from './dto/admin-create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ChangeRoleDto } from './dto/change-role.dto';
-import { CurrentUser } from 'src/common/decorators/current-user.decorator';
-import { AdminOnly, TeacherOnly } from 'src/common/decorators/role.decorator';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
-import { UserQueryDto } from 'src/common/dto/pagination.dto';
-import { UserResponseDto } from 'src/core/auth/dto/response-auth.dto';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { AdminOnly, TeacherOnly } from '../../common/decorators/role.decorator';
+import { ResponseMessage } from '../../common/decorators/response-message.decorator';
+import { UserQueryDto } from '../../common/dto/pagination.dto';
+import { UserResponseDto } from '../../core/auth/dto/response-auth.dto';
 
 @Controller('users')
 export class UsersController {

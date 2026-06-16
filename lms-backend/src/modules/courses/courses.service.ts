@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CourseStatus, Roles } from '@prisma/client';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from '../../common/dto/pagination.dto';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { CreateCourseService } from './services/createCourse.service';

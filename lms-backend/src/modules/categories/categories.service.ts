@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from '../../common/dto/pagination.dto';
 import { CreateCategoryService } from './services/createCategory.service';
 import { GetAllCategoriesService } from './services/getAllCategories.service';
 import { GetCategoryByIdService } from './services/getCategoryById.service';

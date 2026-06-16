@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/core/database/prisma.service';
+import { PrismaService } from '../../../core/database/prisma.service';
 import { UsersResponseDto } from '../dto/response-user.dto';
-import { userSelect } from 'src/common/selects/user.select';
+import { userSelect } from '../../../common/selects/user.select';
 
 @Injectable()
 export class FindUserByIdService {

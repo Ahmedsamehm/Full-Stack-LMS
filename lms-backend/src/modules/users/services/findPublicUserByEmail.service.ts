@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { UserResponseDto } from 'src/core/auth/dto/response-auth.dto';
-import { PrismaService } from 'src/core/database/prisma.service';
-import { userSelect } from 'src/common/selects/user.select';
+import { UserResponseDto } from '../../../core/auth/dto/response-auth.dto';
+import { PrismaService } from '../../../core/database/prisma.service';
+import { userSelect } from '../../../common/selects/user.select';
 
 @Injectable()
 export class FindPublicUserByEmailService {

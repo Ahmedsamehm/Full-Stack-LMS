@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/core/database/prisma.service';
+import { PrismaService } from '../../../core/database/prisma.service';
 import { CourseDetailResponseDto } from '../dto/response-course.dto';
-import { courseDetailSelect } from 'src/common/selects/course.select';
+import { courseDetailSelect } from '../../../common/selects/course.select';
 import { toCourseDetailResponse } from '../dto/course.mapper';
 import { CourseStatus, Roles } from '@prisma/client';
 

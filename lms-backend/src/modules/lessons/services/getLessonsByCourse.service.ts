@@ -1,8 +1,8 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/core/database/prisma.service';
+import { PrismaService } from '../../../core/database/prisma.service';
 import { LessonResponseDto } from '../dto/response-lesson.dto';
 import { Roles } from '@prisma/client';
-import { lessonSelect } from 'src/common/selects/lesson.select';
+import { lessonSelect } from '../../../common/selects/lesson.select';
 
 @Injectable()
 export class GetLessonsByCourseService {

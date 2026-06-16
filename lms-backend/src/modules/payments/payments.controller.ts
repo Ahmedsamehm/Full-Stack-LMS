@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Param, Query, ParseUUIDPipe } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
-import { AdminOnly } from 'src/common/decorators/role.decorator';
+import { PaginationDto } from '../../common/dto/pagination.dto';
+import { ResponseMessage } from '../../common/decorators/response-message.decorator';
+import { AdminOnly } from '../../common/decorators/role.decorator';
 
 @Controller('internal/payments')
 export class PaymentsController {

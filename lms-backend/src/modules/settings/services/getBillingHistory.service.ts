@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PaginationDto, PaginatedResult } from 'src/common/dto/pagination.dto';
-import { PaymentResponseDto } from 'src/modules/payments/dto/response-payment.dto';
-import { GetPaymentsByUserService } from 'src/modules/payments/services/getPaymentsByUser.service';
+import { PaginationDto, PaginatedResult } from '../../../common/dto/pagination.dto';
+import { PaymentResponseDto } from '../../payments/dto/response-payment.dto';
+import { GetPaymentsByUserService } from '../../payments/services/getPaymentsByUser.service';
 
 @Injectable()
 export class GetBillingHistoryService {

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/core/database/prisma.service';
-import { UserQueryDto, PaginatedResult } from 'src/common/dto/pagination.dto';
+import { PrismaService } from '../../../core/database/prisma.service';
+import { UserQueryDto, PaginatedResult } from '../../../common/dto/pagination.dto';
 import { UsersResponseDto } from '../dto/response-user.dto';
-import { userSelect } from 'src/common/selects/user.select';
+import { userSelect } from '../../../common/selects/user.select';
 import { Roles } from '@prisma/client';
 
 @Injectable()

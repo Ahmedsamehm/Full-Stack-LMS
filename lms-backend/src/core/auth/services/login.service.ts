@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { PrismaService } from 'src/core/database/prisma.service';
+import { PrismaService } from '../../database/prisma.service';
 import { LoginAuthDto } from '../dto/login-auth.dto';
-import { findUserByEmailService } from 'src/modules/users/services/findUserByEmail.service';
+import { findUserByEmailService } from '../../../modules/users/services/findUserByEmail.service';
 import { comparePassword } from '../utils/comparePassword';
 import { hashToken } from '../utils/hashToken';
 import { JwtService } from '@nestjs/jwt';

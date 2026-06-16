@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/core/database/prisma.service';
-import { PaginationDto, PaginatedResult } from 'src/common/dto/pagination.dto';
+import { PrismaService } from '../../../core/database/prisma.service';
+import { PaginationDto, PaginatedResult } from '../../../common/dto/pagination.dto';
 import { CourseWithCategoryResponseDto } from '../dto/response-course.dto';
-import { courseWithCategorySelect } from 'src/common/selects/course.select';
+import { courseWithCategorySelect } from '../../../common/selects/course.select';
 import { toCourseWithCategoryResponse } from '../dto/course.mapper';
 
 @Injectable()

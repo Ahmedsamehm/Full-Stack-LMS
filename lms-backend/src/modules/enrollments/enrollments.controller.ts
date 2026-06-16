@@ -4,12 +4,12 @@ import { CreateEnrollmentByTeacherDto } from './dto/create-enrollment-by-teacher
 import { CreateEnrollmentByAdminDto } from './dto/create-enrollment-by-admin.dto';
 import { UpdateEnrollmentStatusDto } from './dto/update-enrollment-status.dto';
 import { CompleteLessonDto } from './dto/complete-lesson.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from '../../common/dto/pagination.dto';
 import { EnrollmentQueryDto } from './dto/enrollment-query.dto';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
-import { CurrentUser } from 'src/common/decorators/current-user.decorator';
-import { Public } from 'src/common/decorators/public.decorator';
-import { StudentOnly, TeacherOnly, AdminOnly } from 'src/common/decorators/role.decorator';
+import { ResponseMessage } from '../../common/decorators/response-message.decorator';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Public } from '../../common/decorators/public.decorator';
+import { StudentOnly, TeacherOnly, AdminOnly } from '../../common/decorators/role.decorator';
 
 @Controller('enrollments')
 export class EnrollmentsController {

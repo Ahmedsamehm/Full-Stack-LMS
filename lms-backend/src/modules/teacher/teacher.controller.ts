@@ -1,10 +1,10 @@
 import { Controller, Get, Query, HttpCode, HttpStatus } from '@nestjs/common';
-import { TeacherOnly } from 'src/common/decorators/role.decorator';
-import { CurrentUser } from 'src/common/decorators/current-user.decorator';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { TeacherOnly } from '../../common/decorators/role.decorator';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { ResponseMessage } from '../../common/decorators/response-message.decorator';
+import { PaginationDto } from '../../common/dto/pagination.dto';
 import { GetMyStudentsService } from './services/getMyStudents.service';
-import { UserResponseDto } from 'src/core/auth/dto/response-auth.dto';
+import { UserResponseDto } from '../../core/auth/dto/response-auth.dto';
 
 @Controller('teacher')
 export class TeacherController {

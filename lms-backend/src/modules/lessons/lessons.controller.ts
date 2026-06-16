@@ -3,10 +3,10 @@ import { LessonsService } from './lessons.service';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { ReorderLessonsDto } from './dto/reorder-lesson.dto';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
-import { CurrentUser } from 'src/common/decorators/current-user.decorator';
-import { TeacherOnly } from 'src/common/decorators/role.decorator';
-import { UserResponseDto } from 'src/core/auth/dto/response-auth.dto';
+import { ResponseMessage } from '../../common/decorators/response-message.decorator';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { TeacherOnly } from '../../common/decorators/role.decorator';
+import { UserResponseDto } from '../../core/auth/dto/response-auth.dto';
 
 @Controller('courses/:courseId/lessons')
 export class LessonsController {

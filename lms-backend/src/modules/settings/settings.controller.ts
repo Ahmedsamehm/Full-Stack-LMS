@@ -2,10 +2,10 @@ import { Controller, Get, Post, Patch, Body, HttpCode, HttpStatus, Query } from 
 import { SettingsService } from './settings.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { CurrentUser } from 'src/common/decorators/current-user.decorator';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
-import { UserResponseDto } from 'src/core/auth/dto/response-auth.dto';
+import { PaginationDto } from '../../common/dto/pagination.dto';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { ResponseMessage } from '../../common/decorators/response-message.decorator';
+import { UserResponseDto } from '../../core/auth/dto/response-auth.dto';
 
 @Controller('settings')
 export class SettingsController {

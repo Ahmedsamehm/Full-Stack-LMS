@@ -1,8 +1,8 @@
 import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/core/database/prisma.service';
-import { userSelect } from 'src/common/selects/user.select';
+import { PrismaService } from '../../../core/database/prisma.service';
+import { userSelect } from '../../../common/selects/user.select';
 import { UpdateProfileDto } from '../dto/update-profile.dto';
-import { UsersResponseDto } from 'src/modules/users/dto/response-user.dto';
+import { UsersResponseDto } from '../../users/dto/response-user.dto';
 
 @Injectable()
 export class UpdateProfileService {

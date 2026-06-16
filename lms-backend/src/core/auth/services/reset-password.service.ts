@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { PrismaService } from 'src/core/database/prisma.service';
+import { PrismaService } from '../../database/prisma.service';
 import { hashToken } from '../utils/hashToken';
 import { hashPassword } from '../utils/hashPassword';
 

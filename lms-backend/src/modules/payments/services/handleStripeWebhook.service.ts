@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/core/database/prisma.service';
-import { EnrollByPaymentService } from 'src/modules/enrollments/services/enrollByPayment.service';
+import { PrismaService } from '../../../core/database/prisma.service';
+import { EnrollByPaymentService } from '../../enrollments/services/enrollByPayment.service';
 import { StripeService } from '../utils/stripe';
 import { PaymentStatus } from '@prisma/client';
 

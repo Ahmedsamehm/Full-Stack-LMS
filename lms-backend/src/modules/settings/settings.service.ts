@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PaginationDto, PaginatedResult } from 'src/common/dto/pagination.dto';
-import { PaymentResponseDto } from 'src/modules/payments/dto/response-payment.dto';
-import { UsersResponseDto } from 'src/modules/users/dto/response-user.dto';
+import { PaginationDto, PaginatedResult } from '../../common/dto/pagination.dto';
+import { PaymentResponseDto } from '../payments/dto/response-payment.dto';
+import { UsersResponseDto } from '../users/dto/response-user.dto';
 import { GetProfileService } from './services/getProfile.service';
 import { UpdateProfileService } from './services/updateProfile.service';
 import { ChangePasswordService } from './services/changePassword.service';

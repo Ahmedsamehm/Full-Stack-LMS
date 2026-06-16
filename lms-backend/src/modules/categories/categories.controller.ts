@@ -2,10 +2,10 @@ import { Controller, Get, Post, Patch, Delete, Body, Param, HttpCode, HttpStatus
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
-import { Public } from 'src/common/decorators/public.decorator';
-import { AdminOnly } from 'src/common/decorators/role.decorator';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { ResponseMessage } from '../../common/decorators/response-message.decorator';
+import { Public } from '../../common/decorators/public.decorator';
+import { AdminOnly } from '../../common/decorators/role.decorator';
+import { PaginationDto } from '../../common/dto/pagination.dto';
 
 @Controller('categories')
 export class CategoriesController {

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/core/database/prisma.service';
-import { paymentSelect } from 'src/common/selects/payment.select';
+import { PrismaService } from '../../../core/database/prisma.service';
+import { paymentSelect } from '../../../common/selects/payment.select';
 import { PaymentResponseDto } from '../dto/response-payment.dto';
 
 @Injectable()

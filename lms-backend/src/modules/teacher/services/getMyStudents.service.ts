@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/core/database/prisma.service';
-import { PaginationDto, PaginatedResult } from 'src/common/dto/pagination.dto';
+import { PrismaService } from '../../../core/database/prisma.service';
+import { PaginationDto, PaginatedResult } from '../../../common/dto/pagination.dto';
 
 @Injectable()
 export class GetMyStudentsService {

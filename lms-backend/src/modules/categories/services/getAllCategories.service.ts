@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/core/database/prisma.service';
-import { PaginationDto, PaginatedResult } from 'src/common/dto/pagination.dto';
+import { PrismaService } from '../../../core/database/prisma.service';
+import { PaginationDto, PaginatedResult } from '../../../common/dto/pagination.dto';
 import { CategoryResponseDto } from '../dto/response-category.dto';
-import { categorySelect } from 'src/common/selects/category.select';
+import { categorySelect } from '../../../common/selects/category.select';
 
 @Injectable()
 export class GetAllCategoriesService {

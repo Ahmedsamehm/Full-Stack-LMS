@@ -1,10 +1,10 @@
 import { ConflictException, ForbiddenException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/core/database/prisma.service';
+import { PrismaService } from '../../../core/database/prisma.service';
 import { AdminCreateUserDto } from '../dto/admin-create-user.dto';
-import { hashPassword } from 'src/core/auth/utils/hashPassword';
+import { hashPassword } from '../../../core/auth/utils/hashPassword';
 import { Roles } from '@prisma/client';
 import { UsersResponseDto } from '../dto/response-user.dto';
-import { userSelect } from 'src/common/selects/user.select';
+import { userSelect } from '../../../common/selects/user.select';
 
 @Injectable()
 export class CreateUserService {

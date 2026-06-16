@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from '../../common/dto/pagination.dto';
 import { CreateCheckoutDto } from './dto/create-checkout.dto';
 import { CreateCheckoutService } from './services/createCheckout.service';
 import { HandleStripeWebhookService } from './services/handleStripeWebhook.service';

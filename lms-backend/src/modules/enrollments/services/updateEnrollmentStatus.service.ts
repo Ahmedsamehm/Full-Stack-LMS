@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/core/database/prisma.service';
+import { PrismaService } from '../../../core/database/prisma.service';
 import { EnrollmentStatus } from '@prisma/client';
-import { enrollmentSelect } from 'src/common/selects/enrollment.select';
+import { enrollmentSelect } from '../../../common/selects/enrollment.select';
 import { EnrollmentResponseDto } from '../dto/response-enrollment.dto';
 
 @Injectable()

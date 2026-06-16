@@ -2,13 +2,13 @@ import { Controller, Get, Post, Patch, Delete, Body, Param, Query, HttpCode, Htt
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
-import { Public } from 'src/common/decorators/public.decorator';
-import { OptionalAuth } from 'src/common/decorators/optional-auth.decorator';
-import { CurrentUser } from 'src/common/decorators/current-user.decorator';
-import { TeacherOnly, AdminOnly, StudentOnly } from 'src/common/decorators/role.decorator';
-import { UserResponseDto } from 'src/core/auth/dto/response-auth.dto';
+import { PaginationDto } from '../../common/dto/pagination.dto';
+import { ResponseMessage } from '../../common/decorators/response-message.decorator';
+import { Public } from '../../common/decorators/public.decorator';
+import { OptionalAuth } from '../../common/decorators/optional-auth.decorator';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { TeacherOnly, AdminOnly, StudentOnly } from '../../common/decorators/role.decorator';
+import { UserResponseDto } from '../../core/auth/dto/response-auth.dto';
 import { CourseQueryDto } from './dto/course-query.dto';
 
 @Controller('courses')

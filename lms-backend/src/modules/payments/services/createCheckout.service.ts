@@ -1,5 +1,5 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/core/database/prisma.service';
+import { PrismaService } from '../../../core/database/prisma.service';
 import { CreateCheckoutDto } from '../dto/create-checkout.dto';
 import { CheckoutResponseDto } from '../dto/response-checkout.dto';
 import { StripeService } from '../utils/stripe';

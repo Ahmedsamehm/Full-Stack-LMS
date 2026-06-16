@@ -2,9 +2,9 @@ import { Injectable, ExecutionContext, UnauthorizedException, CanActivate } from
 import { JwtService } from '@nestjs/jwt';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
-import { IS_PUBLIC_KEY } from 'src/common/decorators/public.decorator';
-import { IS_OPTIONAL_AUTH_KEY } from 'src/common/decorators/optional-auth.decorator';
-import { PrismaService } from 'src/core/database/prisma.service';
+import { IS_PUBLIC_KEY } from '../../../common/decorators/public.decorator';
+import { IS_OPTIONAL_AUTH_KEY } from '../../../common/decorators/optional-auth.decorator';
+import { PrismaService } from '../../database/prisma.service';
 import { hashToken } from '../utils/hashToken';
 
 @Injectable()

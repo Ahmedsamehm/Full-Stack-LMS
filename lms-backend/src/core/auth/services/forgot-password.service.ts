@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/core/database/prisma.service';
-import { MailService } from 'src/core/mail/mail.service';
+import { PrismaService } from '../../database/prisma.service';
+import { MailService } from '../../mail/mail.service';
 import { generateToken } from '../utils/generateToken';
 import { hashToken } from '../utils/hashToken';
-import { findUserByEmailService } from 'src/modules/users/services/findUserByEmail.service';
+import { findUserByEmailService } from '../../../modules/users/services/findUserByEmail.service';
 
 @Injectable()
 export class ForgotPasswordService {

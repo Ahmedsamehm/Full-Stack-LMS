@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from 'src/core/database/prisma.service';
+import { PrismaService } from '../../database/prisma.service';
 import { hashToken } from '../utils/hashToken';
-import { userAuthSelect } from 'src/common/selects/user.select';
+import { userAuthSelect } from '../../../common/selects/user.select';
 
 @Injectable()
 export class RefreshTokenService {

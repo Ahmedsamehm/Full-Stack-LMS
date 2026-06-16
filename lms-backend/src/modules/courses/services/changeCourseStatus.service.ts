@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { PrismaService } from 'src/core/database/prisma.service';
+import { PrismaService } from '../../../core/database/prisma.service';
 import { CourseStatus, Roles } from '@prisma/client';
 import { CourseResponseDto } from '../dto/response-course.dto';
-import { courseBaseSelect } from 'src/common/selects/course.select';
+import { courseBaseSelect } from '../../../common/selects/course.select';
 import { toCourseResponse } from '../dto/course.mapper';
 
 @Injectable()

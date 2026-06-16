@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { PrismaService } from 'src/core/database/prisma.service';
-import { comparePassword } from 'src/core/auth/utils/comparePassword';
-import { hashPassword } from 'src/core/auth/utils/hashPassword';
+import { PrismaService } from '../../../core/database/prisma.service';
+import { comparePassword } from '../../../core/auth/utils/comparePassword';
+import { hashPassword } from '../../../core/auth/utils/hashPassword';
 import { ChangePasswordDto } from '../dto/change-password.dto';
 
 @Injectable()

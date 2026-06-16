@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EnrollmentStatus } from '@prisma/client';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from '../../common/dto/pagination.dto';
 import { EnrollmentQueryDto } from './dto/enrollment-query.dto';
 import { CreateEnrollmentByTeacherDto } from './dto/create-enrollment-by-teacher.dto';
 import { CreateEnrollmentByAdminDto } from './dto/create-enrollment-by-admin.dto';

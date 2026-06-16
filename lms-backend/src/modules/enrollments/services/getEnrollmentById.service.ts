@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/core/database/prisma.service';
-import { enrollmentDetailSelect } from 'src/common/selects/enrollment.select';
+import { PrismaService } from '../../../core/database/prisma.service';
+import { enrollmentDetailSelect } from '../../../common/selects/enrollment.select';
 import { EnrollmentDetailResponseDto } from '../dto/response-enrollment.dto';
 
 @Injectable()
