@@ -19,7 +19,10 @@ import { RolesGuard } from './common/guards/roles.guard';
 
 @Module({
     imports: [
-        ConfigModule.forRoot({ isGlobal: true }),
+        ConfigModule.forRoot({
+            isGlobal: true,
+            envFilePath: process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development',
+        }),
         DatabaseModule,
         AuthModule,
         UsersModule,

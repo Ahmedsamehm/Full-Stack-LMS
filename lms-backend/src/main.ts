@@ -12,9 +12,7 @@ async function bootstrap() {
     app.use(cookieParser());
     app.use(helmet());
 
-    const corsOrigins = process.env.FRONTEND_URL
-        ? process.env.FRONTEND_URL.split(',').map(o => o.trim())
-        : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173'];
+    const corsOrigins = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',').map((o) => o.trim()) : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173'];
 
     app.enableCors({
         origin: corsOrigins,
