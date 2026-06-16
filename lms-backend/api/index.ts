@@ -1,23 +1,26 @@
-import { NestFactory, Reflector } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { NestFactory } from '@nestjs/core';
+import { ExpressAdapter } from '@nestjs/platform-express';
+import { AppModule } from '../src/app.module';
+import { ValidationPipe } from '@nestjs/common';
+import { TransformInterceptor } from '../src/common/interceptors/transform.interceptor';
+import { Reflector } from '@nestjs/core';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
-import { ValidationPipe } from '@nestjs/common';
-import { TransformInterceptor } from './common/interceptors/transform.interceptor';
-import { NestExpressApplication } from '@nestjs/platform-express';
 import express from 'express';
 
-async function bootstrap() {
-    const app = await NestFactory.create<NestExpressApplication>(AppModule);
+const server = express();
+
+async function createApp() {
+    const app = await NestFactory.create(
+        AppModule,
+        new ExpressAdapter(server),
+    );
+
     app.use(cookieParser());
     app.use(helmet());
 
-    const corsOrigins = process.env.FRONTEND_URL
-        ? process.env.FRONTEND_URL.split(',').map(o => o.trim())
-        : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173'];
-
     app.enableCors({
-        origin: corsOrigins,
+        origin: process.env.FRONTEND_URL,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
         allowedHeaders: ['Authorization', 'Content-Type', 'Accept', 'x-lang', 'accept-language', 'stripe-signature'],
         credentials: true,
@@ -47,6 +50,15 @@ async function bootstrap() {
         }),
     );
 
-    await app.listen(process.env.PORT ?? 3000);
+    await app.init();
+    return app;
 }
-bootstrap();
+
+let cachedApp: Awaited<ReturnType<typeof createApp>> | null = null;
+
+export default async function handler(req: any, res: any) {
+    if (!cachedApp) {
+        cachedApp = await createApp();
+    }
+    server(req, res);
+}
