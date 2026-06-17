@@ -4,6 +4,7 @@ import { CreateCheckoutDto } from '../dto/create-checkout.dto';
 import { CheckoutResponseDto } from '../dto/response-checkout.dto';
 import { StripeService } from '../utils/stripe';
 import { PaymentStatus, PaymentProvider } from '@prisma/client';
+import { env } from '../../../core/config/env';
 
 @Injectable()
 export class CreateCheckoutService {
@@ -73,8 +74,8 @@ export class CreateCheckoutService {
                 },
             ],
             mode: 'payment',
-            success_url: `${process.env.FRONTEND_URL}/dashboard/courses/${course.id}?payment=success`,
-            cancel_url: `${process.env.FRONTEND_URL}/dashboard/buy-courses?payment=failed&courseId=${course.id}`,
+            success_url: `${env.FRONTEND_URL}/dashboard/courses/${course.id}?payment=success`,
+            cancel_url: `${env.FRONTEND_URL}/dashboard/buy-courses?payment=failed&courseId=${course.id}`,
             customer_email: user?.email,
             metadata: {
                 userId,

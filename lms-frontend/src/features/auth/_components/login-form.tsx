@@ -37,51 +37,39 @@ export default function LoginForm() {
   return (
     <div className="grid min-h-dvh lg:grid-cols-2">
       {/* Left Side - Image & Testimonial */}
-     <div className="hidden items-center justify-center bg-muted p-8 xl:p-12 lg:flex">
-  <div className="flex w-full max-w-2xl flex-col gap-6">
-    {/* Image Container */}
-    <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-low">
-      <img
-        src="/Auth/screen3.webp"  
-        alt="Login illustration"
-        className="size-auto object-cover"
-      />
-    </div>
-
-    {/* Testimonial Card - Positioned below image with negative margin overlap */}
-    <div className="relative mx-auto w-[90%] -mt-16 z-10">
-      <div className="rounded-2xl border border-border bg-card p-6 shadow-lg">
-        <p className="mb-4 text-sm leading-relaxed text-muted-foreground italic">
-          "EduPro has completely transformed how our faculty manages curriculum. 
-          The interface is invisible, allowing us to focus entirely on the students."
-        </p>
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
-            SJ
+      <div className="hidden items-center justify-center bg-muted p-8 xl:p-12 lg:flex">
+        <div className="flex w-full max-w-2xl flex-col gap-6">
+          {/* Image Container */}
+          <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-low">
+            <img src="/Auth/screen3.webp" alt="Login illustration" className="size-auto object-cover" />
           </div>
-          <div className="min-w-0">
-            <p className="text-sm font-semibold text-foreground truncate">
-              Dr. Sarah Jenkins
-            </p>
-            <p className="text-xs text-muted-foreground truncate">
-              Dean of Academics
-            </p>
+
+          {/* Testimonial Card - Positioned below image with negative margin overlap */}
+          <div className="relative mx-auto w-[90%] -mt-16 z-10">
+            <div className="rounded-2xl border border-border bg-card p-6 shadow-lg">
+              <p className="mb-4 text-sm leading-relaxed text-muted-foreground italic">
+                "EduPro has completely transformed how our faculty manages curriculum. The interface is invisible, allowing us to focus entirely on
+                the students."
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
+                  SJ
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-foreground truncate">Dr. Sarah Jenkins</p>
+                  <p className="text-xs text-muted-foreground truncate">Dean of Academics</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
 
       {/* Right Side - Form */}
       <div className="flex items-center justify-center  px-6 py-12 sm:px-10 sm:py-16 lg:px-14 xl:px-20">
-        
         <div className="w-full">
           <div className="flex justify-end ">
-            <Link 
-              to="/" 
-              className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-            >
+            <Link to="/" className="flex items-center gap-2 text-sm font-medium text-primary hover:underline">
               <ArrowLeft className="h-4 w-4" />
               Back to Home
             </Link>
@@ -93,12 +81,8 @@ export default function LoginForm() {
           </div>
 
           {/* Heading */}
-          <h1 className="mb-2 text-3xl font-bold tracking-tight text-foreground">
-            Welcome Back
-          </h1>
-          <p className="mb-10 text-muted-foreground">
-            Please enter your details to sign in to your account.
-          </p>
+          <h1 className="mb-2 text-3xl font-bold tracking-tight text-foreground">Welcome Back</h1>
+          <p className="mb-10 text-muted-foreground">Please enter your details to sign in to your account.</p>
 
           {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -114,9 +98,7 @@ export default function LoginForm() {
                 className={cn('h-12', errors.email && 'border-destructive')}
                 {...register('email')}
               />
-              {errors.email && (
-                <p className="text-sm text-destructive mt-1">{errors.email.message}</p>
-              )}
+              {errors.email && <p className="text-sm text-destructive mt-1">{errors.email.message}</p>}
             </div>
 
             {/* Password */}
@@ -125,10 +107,7 @@ export default function LoginForm() {
                 <Label htmlFor="password" className="text-sm font-medium">
                   Password
                 </Label>
-                <Link
-                  to="/forgotPassword"
-                  className="text-sm font-medium text-primary hover:underline"
-                >
+                <Link to="/forgotPassword" className="text-sm font-medium text-primary hover:underline">
                   Forgot Password?
                 </Link>
               </div>
@@ -146,37 +125,19 @@ export default function LoginForm() {
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-              {errors.password && (
-                <p className="text-sm text-destructive mt-1">{errors.password.message}</p>
-              )}
+              {errors.password && <p className="text-sm text-destructive mt-1">{errors.password.message}</p>}
             </div>
 
             {/* Submit */}
-            <Button
-              type="submit"
-              size="lg"
-              className="h-12 w-full text-base text-white"
-              disabled={isPending}
-            >
+            <Button type="submit" size="lg" className="h-12 w-full text-base text-white" disabled={isPending}>
               {isSubmitting || isPending ? 'Signing In...' : 'Sign In'}
             </Button>
-            {error && (
-              <p className="text-sm text-destructive">
-                {getAuthErrorMessage(
-                  error,
-                  'Login failed. Please check your email and password.',
-                )}
-              </p>
-            )}
+            {error && <p className="text-sm text-destructive">{getAuthErrorMessage(error, 'Login failed. Please check your email and password.')}</p>}
           </form>
-  <Separator className="flex-1" />
+          <Separator className="flex-1" />
           {/* Divider */}
           {/* <div className="my-8 flex items-center gap-4">
             <Separator className="flex-1" />

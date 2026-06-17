@@ -3,6 +3,7 @@ import { PrismaService } from '../../../core/database/prisma.service';
 import { EnrollByPaymentService } from '../../enrollments/services/enrollByPayment.service';
 import { StripeService } from '../utils/stripe';
 import { PaymentStatus } from '@prisma/client';
+import { env } from '../../../core/config/env';
 
 @Injectable()
 export class HandleStripeWebhookService {
@@ -22,7 +23,7 @@ export class HandleStripeWebhookService {
         let event: any;
 
         try {
-            event = this.stripeService.stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!);
+            event = this.stripeService.stripe.webhooks.constructEvent(body, signature, env.STRIPE_WEBHOOK_SECRET);
         } catch (err) {
             this.logger.error(`Webhook signature verification failed: ${err}`);
             throw new BadRequestException('Invalid webhook signature');

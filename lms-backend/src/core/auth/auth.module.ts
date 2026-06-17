@@ -9,6 +9,7 @@ import { ForgotPasswordService } from './services/forgot-password.service';
 import { ResetPasswordService } from './services/reset-password.service';
 import { JwtModule } from '@nestjs/jwt';
 import { logoutService } from './services/logout.service';
+import { TokenService } from './services/token.service';
 import { MailModule } from '../mail/mail.module';
 import { PrismaService } from '../database/prisma.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -16,7 +17,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 @Module({
     imports: [UsersModule, MailModule, JwtModule.register({ global: true })],
     controllers: [AuthController],
-    providers: [AuthService, RegisterService, LoginService, RefreshTokenService, logoutService, ForgotPasswordService, ResetPasswordService, PrismaService, JwtAuthGuard],
+    providers: [AuthService, RegisterService, LoginService, RefreshTokenService, logoutService, ForgotPasswordService, ResetPasswordService, TokenService, PrismaService, JwtAuthGuard],
     exports: [JwtAuthGuard],
 })
 export class AuthModule {}

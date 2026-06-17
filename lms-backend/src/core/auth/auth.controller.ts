@@ -8,6 +8,7 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 import type { Request, Response } from 'express';
 import { Public } from '../../common/decorators/public.decorator';
 import { OptionalAuth } from '../../common/decorators/optional-auth.decorator';
+import { env, isProduction } from '../../core/config/env';
 
 @Controller('auth')
 export class AuthController {
@@ -63,14 +64,14 @@ export class AuthController {
 
         res.clearCookie('refreshToken', {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            path: '/api/auth',
+            secure: isProduction(),
+            sameSite: 'lax',
+            path: '/',
         });
 
         res.clearCookie('accessToken', {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: isProduction(),
             sameSite: 'lax',
             path: '/',
         });
@@ -97,23 +98,20 @@ export class AuthController {
     private setRefreshTokenCookie(res: Response, token: string) {
         res.cookie('refreshToken', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            path: '/api/auth',
-            maxAge: 7 * 24 * 60 * 60 * 1000,
+            secure: isProduction(),
+            sameSite: 'lax',
+            path: '/',
+            maxAge: env.JWT_REFRESH_COOKIE_MAX_AGE,
         });
     }
 
     private setAccessTokenCookie(res: Response, token: string) {
-        // maxAge must match JWT_EXPIRES_IN so the cookie auto-clears when the token expires.
-        // The refresh token cookie keeps the session alive via silent rotation.
-        const maxAge = parseInt(process.env.JWT_ACCESS_COOKIE_MAX_AGE ?? String(15 * 60 * 1000), 10);
         res.cookie('accessToken', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: isProduction(),
             sameSite: 'lax',
             path: '/',
-            maxAge,
+            maxAge: env.JWT_ACCESS_COOKIE_MAX_AGE,
         });
     }
 }

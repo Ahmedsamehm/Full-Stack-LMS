@@ -11,14 +11,7 @@ import { nitro } from 'nitro/vite'
 
 const config = defineConfig({
   resolve: { tsconfigPaths: true },
-  plugins: [
-    devtools(),
-    tailwindcss(),
-    tanstackStart(),
-    nitro(),
-    viteReact(),
-    babel({ presets: [reactCompilerPreset()] }),
-  ],
+  plugins: [devtools(), tailwindcss(), tanstackStart(), nitro(), viteReact(), babel({ presets: [reactCompilerPreset()] })],
 })
 
 export default config

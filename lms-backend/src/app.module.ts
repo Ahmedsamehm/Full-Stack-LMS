@@ -16,12 +16,13 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { JwtAuthGuard } from './core/auth/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
+import { env } from './core/config/env';
 
 @Module({
     imports: [
         ConfigModule.forRoot({
             isGlobal: true,
-            envFilePath: process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development',
+            envFilePath: env.NODE_ENV === 'production' ? '.env.production' : '.env.development',
         }),
         DatabaseModule,
         AuthModule,

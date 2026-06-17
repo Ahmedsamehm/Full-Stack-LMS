@@ -6,16 +6,15 @@ import { ValidationPipe } from '@nestjs/common';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import express from 'express';
+import { env, corsOrigins } from './core/config/env';
 
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
     app.use(cookieParser());
     app.use(helmet());
 
-    const corsOrigins = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',').map((o) => o.trim()) : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173'];
-
     app.enableCors({
-        origin: corsOrigins,
+        origin: corsOrigins(),
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
         allowedHeaders: ['Authorization', 'Content-Type', 'Accept', 'x-lang', 'accept-language', 'stripe-signature', 'x-refresh-token'],
         credentials: true,
@@ -45,6 +44,6 @@ async function bootstrap() {
         }),
     );
 
-    await app.listen(process.env.PORT ?? 3000);
+    await app.listen(env.PORT);
 }
 bootstrap();

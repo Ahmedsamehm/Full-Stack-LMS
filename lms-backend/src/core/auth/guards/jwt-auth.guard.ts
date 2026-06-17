@@ -4,15 +4,13 @@ import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { IS_PUBLIC_KEY } from '../../../common/decorators/public.decorator';
 import { IS_OPTIONAL_AUTH_KEY } from '../../../common/decorators/optional-auth.decorator';
-import { PrismaService } from '../../database/prisma.service';
-import { hashToken } from '../utils/hashToken';
+import { env } from '../../../core/config/env';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
     constructor(
         private readonly jwtService: JwtService,
         private readonly reflector: Reflector,
-        private readonly prisma: PrismaService,
     ) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -33,7 +31,7 @@ export class JwtAuthGuard implements CanActivate {
         let payload: any;
         try {
             payload = await this.jwtService.verifyAsync(accessToken, {
-                secret: process.env.JWT_ACCESS_SECRET,
+                secret: env.JWT_ACCESS_SECRET,
             });
         } catch {
             if (isOptionalAuth) return true;

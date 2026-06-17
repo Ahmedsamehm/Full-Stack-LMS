@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import { env } from '../../core/config/env';
 
 @Injectable()
 export class MailService {
@@ -7,12 +8,12 @@ export class MailService {
 
     constructor() {
         this.transporter = nodemailer.createTransport({
-            host: process.env.MAIL_HOST,
-            port: Number(process.env.MAIL_PORT),
-            secure: process.env.MAIL_SECURE === 'true',
+            host: env.MAIL_HOST,
+            port: env.MAIL_PORT,
+            secure: env.MAIL_SECURE,
             auth: {
-                user: process.env.MAIL_USER,
-                pass: process.env.MAIL_PASSWORD,
+                user: env.MAIL_USER,
+                pass: env.MAIL_PASSWORD,
             },
         });
     }
@@ -26,7 +27,7 @@ export class MailService {
     `;
 
         await this.transporter.sendMail({
-            from: `"${process.env.MAIL_FROM_NAME}" <${process.env.MAIL_FROM_EMAIL}>`,
+            from: `"${env.MAIL_FROM_NAME}" <${env.MAIL_FROM_EMAIL}>`,
             to,
             subject: 'Password Reset Request',
             html,
