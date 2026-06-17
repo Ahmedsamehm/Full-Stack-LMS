@@ -1,3 +1,10 @@
+import { config } from 'dotenv';
+import { resolve } from 'path';
+
+const nodeEnv = process.env.NODE_ENV ?? 'development';
+const envFile = nodeEnv === 'production' ? '.env.production' : '.env.development';
+config({ path: resolve(process.cwd(), envFile) });
+
 export const env = {
     NODE_ENV: process.env.NODE_ENV ?? 'development',
     PORT: parseInt(process.env.PORT ?? '3000', 10),

@@ -13,7 +13,6 @@ export function getRouter() {
     defaultPreload: 'viewport',
     defaultPreloadStaleTime: 0,
     defaultNotFoundComponent: () => <div>404 - Page not found</div>,
-  
   })
 
   setupRouterSsrQueryIntegration({ router, queryClient: context.queryClient })

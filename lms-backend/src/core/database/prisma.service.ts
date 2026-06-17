@@ -15,9 +15,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     constructor() {
         super({
             adapter: new PrismaPg(globalPool),
-            log: env.NODE_ENV === 'development'
-                ? ['query', 'error', 'warn']
-                : ['error'],
+            log: ['error'],
         });
     }
 

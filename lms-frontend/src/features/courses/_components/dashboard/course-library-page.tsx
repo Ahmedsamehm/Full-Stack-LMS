@@ -14,8 +14,11 @@ import SectionHeader from '#/components/section-header'
 import { Pagination } from '#/components/pagination'
 import { EmptyState } from '#/components/empty-state'
 import { useGetCategories } from '#/features/categories/_hooks/useGetCategories'
+import { useCreateCategory } from '#/features/categories/_hooks/useCreateCategory'
 import { useGetUsers } from '#/features/users/_hooks/useGetUsers'
 import { Button } from '#/components/ui/button'
+import { Input } from '#/components/ui/input'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '#/components/ui/dialog'
 import { canManageRole, isTeacherRole } from '#/lib/auth'
 
 import type { Category, DashboardCourse } from '#/schemas'
@@ -50,6 +53,10 @@ export default function CourseLibraryPage({ courses, isLoading, meta }: CourseLi
   const { mutateAsync: createCourse, isPending: isCreating } = useCreateCourse()
   const deleteMutation = useDeleteCourse()
   const updateMutation = useUpdateCourse()
+
+  const { mutateAsync: createCategory, isPending: isCreatingCategory } = useCreateCategory()
+  const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false)
+  const [categoryName, setCategoryName] = useState('')
 
   const { data: categoriesData } = useGetCategories()
   const categories = (categoriesData?.data || []) as import('#/schemas').Category[]
@@ -93,6 +100,30 @@ export default function CourseLibraryPage({ courses, isLoading, meta }: CourseLi
     )
   }
 
+  const handleCreateCategory = () => {
+    const name = categoryName.trim()
+    if (!name) return
+    const slug = name
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '')
+    createCategory(
+      { name, slug },
+      {
+        onSuccess: () => {
+          toast.success('Category created successfully')
+          setCategoryName('')
+          setIsCategoryDialogOpen(false)
+        },
+        onError: (err: unknown) => {
+          const error = err as { response?: { data?: { message?: string | string[] } }; message?: string }
+          const errMsg = error.response?.data?.message || error.message || 'Failed to create category'
+          toast.error(Array.isArray(errMsg) ? errMsg.join(', ') : errMsg)
+        },
+      },
+    )
+  }
+
   return (
     <div className="flex-1 overflow-y-auto w-full">
       <div className="px-4 md:px-8 py-6 lg:py-8 max-w-[1440px] mx-auto flex flex-col gap-6">
@@ -103,10 +134,17 @@ export default function CourseLibraryPage({ courses, isLoading, meta }: CourseLi
           viewAll={false}
           action={
             canCreate ? (
-              <Button onClick={() => setIsCreateModalOpen(true)} className="text-white gap-2">
-                <Plus className="size-[18px]" />
-                Create New Course
-              </Button>
+              <>
+                <Button onClick={() => setIsCreateModalOpen(true)} className="text-white gap-2">
+                  <Plus className="size-4" />
+                  Create New Course
+                </Button>
+
+                <Button type="button" variant="outline" onClick={() => setIsCategoryDialogOpen(true)} className=" gap-1.5">
+                  <Plus className="size-4" />
+                  Add Category
+                </Button>
+              </>
             ) : undefined
           }
         />
@@ -114,7 +152,7 @@ export default function CourseLibraryPage({ courses, isLoading, meta }: CourseLi
         {/* Filters Bar */}
         <div className="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant flex flex-col md:flex-row gap-4 items-center">
           <SearchBar />
-          <div className="w-full md:w-auto flex flex-1 gap-4">
+          <div className="w-full md:w-auto flex flex-1 gap-4 items-center">
             <select
               value={categoryId}
               onChange={(e) => setFilter('categoryId', e.target.value)}
@@ -127,6 +165,7 @@ export default function CourseLibraryPage({ courses, isLoading, meta }: CourseLi
                 </option>
               ))}
             </select>
+
             {role !== 'Student' && (
               <select
                 value={status}
@@ -217,6 +256,30 @@ export default function CourseLibraryPage({ courses, isLoading, meta }: CourseLi
         onConfirm={handleDeleteConfirm}
         isPending={deleteMutation.isPending}
       />
+
+      <Dialog open={isCategoryDialogOpen} onOpenChange={setIsCategoryDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Add Category</DialogTitle>
+          </DialogHeader>
+          <Input
+            placeholder="Category name"
+            value={categoryName}
+            onChange={(e) => setCategoryName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleCreateCategory()
+            }}
+          />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsCategoryDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button className="text-white" onClick={handleCreateCategory} disabled={!categoryName.trim() || isCreatingCategory}>
+              {isCreatingCategory ? 'Creating...' : 'Create'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
