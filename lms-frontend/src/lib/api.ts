@@ -1,8 +1,7 @@
-export function getAuthHeaders(request?: Request) {
-  if (request) {
-    const cookieHeader = request.headers.get("cookie") ?? "";
-    return { Cookie: cookieHeader };
-  }
-  // Fallback for client side, though client side axios withCredentials handles it.
-  return {};
+import { getRequest } from '@tanstack/react-start/server'
+
+export function getAuthHeaders() {
+  const request = getRequest()
+  const cookieHeader = request?.headers.get('cookie') ?? ''
+  return { Cookie: cookieHeader }
 }

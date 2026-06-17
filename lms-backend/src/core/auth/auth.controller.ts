@@ -7,6 +7,7 @@ import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import type { Request, Response } from 'express';
 import { Public } from '../../common/decorators/public.decorator';
+import { OptionalAuth } from '../../common/decorators/optional-auth.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -49,6 +50,7 @@ export class AuthController {
     // auth.controller.ts
 
     @Post('logout')
+    @OptionalAuth()
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Logged out successfully')
     async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
@@ -103,12 +105,15 @@ export class AuthController {
     }
 
     private setAccessTokenCookie(res: Response, token: string) {
+        // maxAge must match JWT_EXPIRES_IN so the cookie auto-clears when the token expires.
+        // The refresh token cookie keeps the session alive via silent rotation.
+        const maxAge = parseInt(process.env.JWT_ACCESS_COOKIE_MAX_AGE ?? String(15 * 60 * 1000), 10);
         res.cookie('accessToken', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
-            path: '/', // Needs to be accessible by all API routes
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7day, adjust to your JWT_ACCESS_EXPIRES_IN
+            path: '/',
+            maxAge,
         });
     }
 }
