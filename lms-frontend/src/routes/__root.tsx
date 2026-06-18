@@ -13,6 +13,12 @@ interface MyRouterContext {
 }
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   beforeLoad: async () => {
+    // Skip getUser() during SSR: Vercel serverless functions cannot forward
+    // cross-domain HttpOnly cookies to the backend (different domain).
+    // The client will hydrate and call getUser() again with real browser cookies.
+    if (typeof window === 'undefined') {
+      return { user: null }
+    }
     try {
       const user = await getUser()
       return { user }
