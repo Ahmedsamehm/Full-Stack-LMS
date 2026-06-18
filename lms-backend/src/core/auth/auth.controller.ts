@@ -64,15 +64,15 @@ export class AuthController {
 
         res.clearCookie('refreshToken', {
             httpOnly: true,
-            secure: isProduction(),
-            sameSite: 'lax',
+            secure: true,
+            sameSite: 'none',
             path: '/',
         });
 
         res.clearCookie('accessToken', {
             httpOnly: true,
-            secure: isProduction(),
-            sameSite: 'lax',
+            secure: true,
+            sameSite: 'none',
             path: '/',
         });
 
@@ -98,8 +98,8 @@ export class AuthController {
     private setRefreshTokenCookie(res: Response, token: string) {
         res.cookie('refreshToken', token, {
             httpOnly: true,
-            secure: isProduction(),
-            sameSite: 'lax',
+            secure: true,
+            sameSite: 'none',
             path: '/',
             maxAge: env.JWT_REFRESH_COOKIE_MAX_AGE,
         });
@@ -108,8 +108,8 @@ export class AuthController {
     private setAccessTokenCookie(res: Response, token: string) {
         res.cookie('accessToken', token, {
             httpOnly: true,
-            secure: isProduction(),
-            sameSite: 'lax',
+            secure: true,
+            sameSite: 'none',
             path: '/',
             maxAge: env.JWT_ACCESS_COOKIE_MAX_AGE,
         });

@@ -47,7 +47,7 @@ export const Route = createFileRoute('/_protected/dashboard')({
 
 function RouteComponent() {
   const { user } = Route.useRouteContext()
-  const role = user.data.role || null
+  const role = user.data.role
   // Fall back to Admin nav while role is loading (null)
   const activeRole: Roles = role ?? rolesEnum.enum.Student
 
