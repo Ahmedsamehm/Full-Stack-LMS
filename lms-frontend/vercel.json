@@ -4,7 +4,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://edulms-backend-beta.vercel.app/api/:path*"
+      "destination": "https://backend-full-stack-lms.vercel.app/api/:path*"
     }
   ]
 }

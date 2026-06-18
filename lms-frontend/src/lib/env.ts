@@ -5,5 +5,5 @@ export const env = {
     return this.VITE_API_URL
   },
 
-  SSR_API_URL: 'https://edulms-backend-beta.vercel.app/api',
+  SSR_API_URL: 'https://backend-full-stack-lms.vercel.app/api',
 }
