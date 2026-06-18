@@ -9,16 +9,15 @@ import {
   changeUserRoleParamsSchema,
 } from '#/schemas'
 
-export const getUser = createServerFn({ method: 'GET' }).handler(async () => {
+export async function getUser() {
   try {
     const { data } = await api.get('/users/me')
     return data
   } catch (error: any) {
-    console.error('getUser error in SSR:', error?.message, error?.response?.data, error?.config?.url)
-    // 401 / any error → user is not authenticated
+    console.error('getUser error:', error?.response?.data, error?.config?.url)
     return null
   }
-})
+}
 
 export const getUsers = createServerFn({ method: 'GET' })
   .inputValidator(getUsersParamsSchema)
