@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Plus } from 'lucide-react'
 import { toast } from 'sonner'
-import { useAuthStore } from '#/store/auth'
 import { useCreateCourse } from '../../_hooks/courses/useCreateCourse'
 import { useDeleteCourse } from '../../_hooks/courses/useDeleteCourse'
 import { useUpdateCourse } from '../../_hooks/courses/useUpdateCourse'
@@ -23,6 +22,7 @@ import { canManageRole, isTeacherRole } from '#/lib/auth'
 
 import type { Category, DashboardCourse } from '#/schemas'
 import type { CreateCourseRequest } from '#/schemas/course'
+import type { Roles } from '#/schemas/enums'
 import { CourseGridSkeleton } from '#/components/loading-skeleton'
 import { rolesEnum } from '#/schemas'
 
@@ -37,15 +37,14 @@ interface CourseLibraryPageProps {
     limit?: number
     total?: number
   }
+  role?: Roles | null
 }
 
-export default function CourseLibraryPage({ courses, isLoading, meta }: CourseLibraryPageProps) {
+export default function CourseLibraryPage({ courses, isLoading, meta, role }: CourseLibraryPageProps) {
   const { categoryId, teacherId, status, setFilter } = useCourseFilters()
   const { currentPage, setPage, totalPages } = usePagination({
     totalPages: meta?.totalPages,
   })
-
-  const role = useAuthStore((s) => s.role)
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [deletingCourse, setDeletingCourse] = useState<DashboardCourse | null>(null)
   const [editingCourse, setEditingCourse] = useState<DashboardCourse | null>(null)

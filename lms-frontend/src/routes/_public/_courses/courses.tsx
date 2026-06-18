@@ -31,7 +31,12 @@ function RouteComponent() {
   const categoryId = searchParams.categoryId
   const search = searchParams.search
 
-  const { data: coursesData, isLoading, isError, error } = useGetCourses({
+  const {
+    data: coursesData,
+    isLoading,
+    isError,
+    error,
+  } = useGetCourses({
     page,
     limit,
     categoryId,
@@ -45,13 +50,7 @@ function RouteComponent() {
     ? categoriesList.find((cat) => cat.id === categoryId || cat.name.toLowerCase() === categoryId.toLowerCase())
     : null
 
-  const pageTitle = activeCategory
-    ? activeCategory.name
-    : categoryId
-    ? categoryId
-    : search
-    ? `Results for "${search}"`
-    : 'All Courses'
+  const pageTitle = activeCategory ? activeCategory.name : categoryId ? categoryId : search ? `Results for "${search}"` : 'All Courses'
 
   const rawCourses = coursesData?.data ?? []
   const courses = rawCourses.map(transformCourseListItem)

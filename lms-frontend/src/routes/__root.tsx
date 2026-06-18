@@ -6,11 +6,20 @@ import TanStackQueryDevtools from '../lib/devtools'
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
+import { getUser } from '#/features/users/_api/users'
 
 interface MyRouterContext {
   queryClient: QueryClient
 }
 export const Route = createRootRouteWithContext<MyRouterContext>()({
+  beforeLoad: async () => {
+    try {
+      const user = await getUser()
+      return { user }
+    } catch {
+      return { user: null }
+    }
+  },
   head: () => ({
     meta: [
       {

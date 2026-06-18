@@ -4,6 +4,7 @@ import { GetAllEnrollments } from '#/features/enrollments/_api/enrollments'
 import { transformEnrollment } from '#/features/enrollments/_services/enrollment-transformer'
 import { enrollmentsSearchSchema, createSearchValidator } from '#/lib/search'
 import type { EnrollmentsSearchParams } from '#/lib/search'
+import type { Roles } from '#/schemas'
 
 export const Route = createFileRoute('/_protected/dashboard/enrollments/')({
   validateSearch: createSearchValidator(enrollmentsSearchSchema),
@@ -34,7 +35,9 @@ export const Route = createFileRoute('/_protected/dashboard/enrollments/')({
 
 function RouteComponent() {
   const loaderData = Route.useLoaderData()
+  const { user } = Route.useRouteContext()
+  const role: Roles = user.data.role
   const displayEnrollments = (loaderData?.data ?? []).map(transformEnrollment)
 
-  return <EnrollmentsPage initialData={loaderData} initialEnrollments={displayEnrollments} />
+  return <EnrollmentsPage initialData={loaderData} initialEnrollments={displayEnrollments} role={role} />
 }

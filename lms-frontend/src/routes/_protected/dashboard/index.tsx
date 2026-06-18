@@ -3,7 +3,6 @@ import TeacherDashboardPage from '#/features/teacher/_components/teacher-dashboa
 import StudentDashboardPage from '#/features/dashboard/_components/student/student-dashboard-page'
 import AdminDashboardPage from '#/features/dashboard/_components/admin/admin-dashboard-page'
 import { DashboardSkeleton } from '#/components/loading-skeleton'
-import { useAuthStore } from '#/store/auth'
 import type { Roles } from '#/schemas/enums'
 
 const dashboardPages: Record<Roles, () => React.ReactNode> = {
@@ -26,8 +25,8 @@ export const Route = createFileRoute('/_protected/dashboard/')({
 })
 
 function RouteComponent() {
-  const role = useAuthStore((s) => s.role)
-
+  const { user } = Route.useRouteContext()
+  const role: Roles = user.data.role || null
   if (!role) return <DashboardSkeleton />
 
   const Page = dashboardPages[role]

@@ -3,8 +3,8 @@ import * as React from 'react'
 import { Pagination } from '#/components/pagination'
 import SectionHeader from '#/components/section-header'
 import { EmptyState } from '#/components/empty-state'
-import { useAuthStore } from '#/store/auth'
 import { isTeacherRole, isAdminRole } from '#/lib/auth'
+import type { Roles } from '#/schemas/enums'
 
 import { usePagination } from '#/hooks/usePagination'
 import { useGetMyCourses } from '#/features/courses/_hooks/courses/useGetMyCourses'
@@ -18,10 +18,10 @@ import { PAGINATION } from '#/lib/constants'
 
 interface StudentsPageProps {
   initialData?: unknown
+  role?: Roles | null
 }
 
-export default function StudentsPage({ initialData }: StudentsPageProps = {}) {
-  const role = useAuthStore((s) => s.role)
+export default function StudentsPage({ initialData, role }: StudentsPageProps = {}) {
   const isTeacher = isTeacherRole(role)
 
   const { search, page } = useStudentFilters()

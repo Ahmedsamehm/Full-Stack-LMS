@@ -16,16 +16,17 @@ import EnrollmentsFilterBar from './enrollments-filter-bar'
 import EnrollmentsTable from './enrollments-table'
 import EnrollmentForm from './enrollment-form'
 import type { DisplayEnrollment } from '../_types/enrollment.types'
-import type { EnrollmentStatus } from '#/schemas/enums'
+import type { EnrollmentStatus, Roles } from '#/schemas/enums'
 import { usePagination } from '#/hooks/usePagination'
 import { transformEnrollment } from '../_services/enrollment-transformer'
 
 interface EnrollmentsPageProps {
   initialData?: any
   initialEnrollments?: DisplayEnrollment[]
+  role: Roles
 }
 
-export default function EnrollmentsPage({ initialData, initialEnrollments }: EnrollmentsPageProps = {}) {
+export default function EnrollmentsPage({ initialData, initialEnrollments, role }: EnrollmentsPageProps) {
   const { status, search, page, setFilter, clearFilters } = useEnrollmentFilters()
   const [isEnrollDialogOpen, setIsEnrollDialogOpen] = useState(false)
   const [enrollmentToDelete, setEnrollmentToDelete] = useState<string | null>(null)
@@ -45,9 +46,7 @@ export default function EnrollmentsPage({ initialData, initialEnrollments }: Enr
   const deleteMutation = useDeleteEnrollment()
   const updateStatusMutation = useUpdateEnrollmentStatus()
 
-  const displayEnrollments: DisplayEnrollment[] = data?.data
-    ? data.data.map(transformEnrollment)
-    : initialEnrollments ?? []
+  const displayEnrollments: DisplayEnrollment[] = data?.data ? data.data.map(transformEnrollment) : (initialEnrollments ?? [])
 
   const handleUpdateStatus = (id: string, nextStatus: EnrollmentStatus) => {
     updateStatusMutation.mutate({ id, status: nextStatus })
@@ -66,11 +65,7 @@ export default function EnrollmentsPage({ initialData, initialEnrollments }: Enr
   if (isError) {
     return (
       <main className="flex-1 w-full px-4 md:px-8 py-6 lg:py-8 max-w-[1440px] mx-auto flex flex-col gap-6">
-        <ErrorState
-          title="Error Loading Enrollments"
-          message="We couldn't retrieve the student enrollments. Please try again."
-          onRetry={refetch}
-        />
+        <ErrorState title="Error Loading Enrollments" message="We couldn't retrieve the student enrollments. Please try again." onRetry={refetch} />
       </main>
     )
   }
@@ -104,7 +99,7 @@ export default function EnrollmentsPage({ initialData, initialEnrollments }: Enr
       {/* Enroll Student Dialog */}
       <Dialog open={isEnrollDialogOpen} onOpenChange={setIsEnrollDialogOpen}>
         <DialogContent className="sm:max-w-2xl p-0 overflow-hidden bg-transparent border-none ">
-          <EnrollmentForm onSuccess={() => setIsEnrollDialogOpen(false)} />
+          <EnrollmentForm onSuccess={() => setIsEnrollDialogOpen(false)} role={role} />
         </DialogContent>
       </Dialog>
 

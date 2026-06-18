@@ -3,6 +3,7 @@ import UsersPage from '#/features/users/_components/users-page'
 import { getUsers } from '#/features/users/_api/users'
 import { usersSearchSchema, createSearchValidator } from '#/lib/search'
 import type { UsersSearchParams } from '#/lib/search'
+import type { Roles } from '#/schemas/enums'
 
 export const Route = createFileRoute('/_protected/dashboard/users/')({
   validateSearch: createSearchValidator(usersSearchSchema),
@@ -33,5 +34,7 @@ export const Route = createFileRoute('/_protected/dashboard/users/')({
 
 function RouteComponent() {
   const loaderData = Route.useLoaderData()
-  return <UsersPage initialData={loaderData} />
+  const { user } = Route.useRouteContext()
+  const role = user.data.role as Roles
+  return <UsersPage initialData={loaderData} Role={role} />
 }

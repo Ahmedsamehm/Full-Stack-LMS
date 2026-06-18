@@ -1,22 +1,21 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
-import { useAuthStore } from '#/store/auth'
 import { getUsers } from '#/features/users/_api/users'
 import { getMyStudents } from '#/features/teacher/_api/teacher'
 import { getCourses, getMyCourses } from '#/features/courses/_api/courses'
 import { useEnrollByAdmin } from './useEnrollByAdmin'
 import { useEnrollByTeacher } from './useEnrollByTeacher'
 import { useEnrollFree } from './useEnrollFree'
-import { enrollmentFormSchema, type EnrollmentFormValues } from '#/schemas'
+import { enrollmentFormSchema, type EnrollmentFormValues, type Roles } from '#/schemas'
 import { isAdminRole } from '#/lib/auth'
 
 interface UseEnrollmentFormProps {
   onSuccess?: () => void
+  role: Roles
 }
 
-export function useEnrollmentForm({ onSuccess }: UseEnrollmentFormProps = {}) {
-  const { role } = useAuthStore()
+export function useEnrollmentForm({ onSuccess, role }: UseEnrollmentFormProps) {
   const isAdmin = isAdminRole(role)
 
   const enrollByAdmin = useEnrollByAdmin()

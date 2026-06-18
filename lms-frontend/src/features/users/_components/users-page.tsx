@@ -12,12 +12,14 @@ import UsersTable from './users-table'
 import UsersFilterBar from './users-filter-bar'
 import UserForm from './user-form'
 import UserDetailsDialog from './user-details-dialog'
+import type { Roles } from '#/schemas/enums'
 
 interface UsersPageProps {
   initialData?: any
+  Role: Roles
 }
 
-export default function UsersPage({ initialData }: UsersPageProps = {}) {
+export default function UsersPage({ initialData, Role }: UsersPageProps) {
   const { role, search, page, setFilter, clearFilters } = useUserFilters()
   const [isUserFormOpen, setIsUserFormOpen] = useState(false)
   const [selectedUserForEdit, setSelectedUserForEdit] = useState<any>(null)
@@ -102,7 +104,7 @@ export default function UsersPage({ initialData }: UsersPageProps = {}) {
       {/* Create/Edit User Modal */}
       <Dialog open={isUserFormOpen} onOpenChange={setIsUserFormOpen}>
         <DialogContent className="sm:max-w-2xl p-0 border-none bg-transparent" showCloseButton={false}>
-          <UserForm onSuccess={() => setIsUserFormOpen(false)} initialData={selectedUserForEdit} />
+          <UserForm onSuccess={() => setIsUserFormOpen(false)} initialData={selectedUserForEdit} currentRole={Role} />
         </DialogContent>
       </Dialog>
 

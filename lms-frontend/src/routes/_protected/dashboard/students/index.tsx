@@ -3,6 +3,7 @@ import StudentsPage from '#/features/students/_components/students-page'
 import { getStudents } from '#/features/students/_api/students'
 import { studentsSearchSchema, createSearchValidator } from '#/lib/search'
 import type { StudentsSearchParams } from '#/lib/search'
+import type { Roles } from '#/schemas/enums'
 
 export const Route = createFileRoute('/_protected/dashboard/students/')({
   validateSearch: createSearchValidator(studentsSearchSchema),
@@ -29,5 +30,7 @@ export const Route = createFileRoute('/_protected/dashboard/students/')({
 
 function RouteComponent() {
   const loaderData = Route.useLoaderData()
-  return <StudentsPage initialData={loaderData} />
+  const { user } = Route.useRouteContext()
+  const role = user.data.role as Roles | null
+  return <StudentsPage initialData={loaderData} role={role} />
 }

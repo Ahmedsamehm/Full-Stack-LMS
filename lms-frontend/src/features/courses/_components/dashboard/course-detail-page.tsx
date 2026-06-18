@@ -1,5 +1,4 @@
 import { CourseDetailSkeleton } from '#/components/loading-skeleton'
-import { useAuthStore } from '#/store/auth'
 import { canManageRole } from '#/lib/auth'
 import { ConfirmDeleteDialog } from '#/components/confirm-delete-dialog'
 
@@ -12,15 +11,15 @@ import { CourseBreadcrumbs } from './courseDetails/course-breadcrumbs'
 import { CourseHeader } from './courseDetails/course-header'
 import { CreateLessonDialog } from '#/features/lessons/_components/create-lesson-dialog'
 import { useLessonActions } from '#/features/lessons/_hooks/useLessonActions'
-import type { DashboardCourseDetail } from '#/schemas'
+import type { DashboardCourseDetail, Roles } from '#/schemas'
 
 interface CourseDetailPageProps {
   course?: DashboardCourseDetail
   isLoading?: boolean
+  role: Roles
 }
 
-export default function CourseDetailPage({ course, isLoading }: CourseDetailPageProps) {
-  const role = useAuthStore((s) => s.role)
+export default function CourseDetailPage({ course, isLoading, role }: CourseDetailPageProps) {
   const canManage = canManageRole(role)
 
   const {

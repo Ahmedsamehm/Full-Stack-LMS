@@ -11,12 +11,14 @@ import { env, corsOrigins } from './core/config/env';
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
     app.use(cookieParser());
-    app.use(helmet());
+
+    // Fix for cross-origin cookies locally
+    app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 
     app.enableCors({
         origin: corsOrigins(),
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-        allowedHeaders: ['Authorization', 'Content-Type', 'Accept', 'x-lang', 'accept-language', 'stripe-signature', 'accessToken', 'refreshToken'],
+        allowedHeaders: ['Authorization', 'Content-Type', 'Accept', 'x-lang', 'accept-language', 'stripe-signature'],
         credentials: true,
     });
 
@@ -24,7 +26,7 @@ async function bootstrap() {
 
     app.use(
         express.json({
-            verify: (req: any, res, buf) => {
+            verify: (req: any, buf) => {
                 req.rawBody = buf;
             },
         }),

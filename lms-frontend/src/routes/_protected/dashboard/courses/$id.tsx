@@ -5,6 +5,7 @@ import { getCourseById } from '#/features/courses/_api/courses'
 import { useGetCourseById } from '#/features/courses/_hooks/courses/useGetCourseById'
 import { courseKeys } from '#/features/courses/_hooks/query-keys'
 import { z } from 'zod'
+import type { Roles } from '#/schemas/enums'
 
 const courseDetailSearchSchema = z.object({
   payment: z.string().optional(),
@@ -40,9 +41,10 @@ export const Route = createFileRoute('/_protected/dashboard/courses/$id')({
 
 function RouteComponent() {
   const { id } = Route.useLoaderData()
+  const { user } = Route.useRouteContext()
+  const role = user.data.role as Roles
   const { data: courseData, isLoading } = useGetCourseById(id)
   const mappedCourse = transformDashboardCourseDetail(courseData?.data)
 
-  return <CourseDetailPage course={mappedCourse} isLoading={isLoading} />
+  return <CourseDetailPage course={mappedCourse} isLoading={isLoading} role={role} />
 }
-

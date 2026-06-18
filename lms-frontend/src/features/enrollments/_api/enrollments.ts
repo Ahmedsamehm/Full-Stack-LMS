@@ -1,6 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
 import api from '#/lib/axios'
-import { getAuthHeaders } from '#/lib/api'
 import { z } from 'zod'
 import {
   createEnrollmentByAdminSchema,
@@ -19,7 +18,6 @@ export const GetAllEnrollments = createServerFn({ method: 'GET' })
   .inputValidator(enrollmentQuerySchema)
   .handler(async ({ data: params }) => {
     const { data } = await api.get('/enrollments', {
-      headers: getAuthHeaders(),
       params,
     })
     return data
@@ -28,18 +26,14 @@ export const GetAllEnrollments = createServerFn({ method: 'GET' })
 export const enrollByAdmin = createServerFn({ method: 'POST' })
   .inputValidator(createEnrollmentByAdminSchema)
   .handler(async ({ data }) => {
-    const { data: result } = await api.post('/enrollments/by-admin', data, {
-      headers: getAuthHeaders(),
-    })
+    const { data: result } = await api.post('/enrollments/by-admin', data)
     return result
   })
 
 export const deleteEnrollment = createServerFn({ method: 'POST' })
   .inputValidator(uuidSchema)
   .handler(async ({ data: id }) => {
-    const { data } = await api.delete(`/enrollments/${id}`, {
-      headers: getAuthHeaders(),
-    })
+    const { data } = await api.delete(`/enrollments/${id}`)
     return data
   })
 
@@ -48,9 +42,7 @@ export const deleteEnrollment = createServerFn({ method: 'POST' })
 export const enrollByTeacher = createServerFn({ method: 'POST' })
   .inputValidator(createEnrollmentByTeacherSchema)
   .handler(async ({ data }) => {
-    const { data: result } = await api.post('/enrollments/by-teacher', data, {
-      headers: getAuthHeaders(),
-    })
+    const { data: result } = await api.post('/enrollments/by-teacher', data)
     return result
   })
 
@@ -58,7 +50,6 @@ export const getEnrollmentsByCourse = createServerFn({ method: 'GET' })
   .inputValidator(getEnrollmentsByCourseSchema)
   .handler(async ({ data: { courseId, params } }) => {
     const { data } = await api.get(`/enrollments/course/${courseId}`, {
-      headers: getAuthHeaders(),
       params,
     })
     return data
@@ -71,9 +62,6 @@ export const enrollFree = createServerFn({ method: 'POST' })
     const { data: result } = await api.post(
       `/enrollments/free/${data.courseId}`,
       {},
-      {
-        headers: getAuthHeaders(),
-      },
     )
     return result
   })
@@ -84,7 +72,6 @@ export const getMyEnrollments = createServerFn({ method: 'GET' })
   .inputValidator(paginationParamsSchema)
   .handler(async ({ data: params }) => {
     const { data } = await api.get('/enrollments/me', {
-      headers: getAuthHeaders(),
       params,
     })
     return data
@@ -93,9 +80,7 @@ export const getMyEnrollments = createServerFn({ method: 'GET' })
 export const getEnrollmentById = createServerFn({ method: 'GET' })
   .inputValidator(uuidSchema)
   .handler(async ({ data: id }) => {
-    const { data } = await api.get(`/enrollments/${id}`, {
-      headers: getAuthHeaders(),
-    })
+    const { data } = await api.get(`/enrollments/${id}`)
     return data
   })
 
@@ -107,8 +92,6 @@ export const updateEnrollmentStatus = createServerFn({ method: 'POST' })
     }),
   )
   .handler(async ({ data: { id, data } }) => {
-    const { data: result } = await api.patch(`/enrollments/${id}/status`, data, {
-      headers: getAuthHeaders(),
-    })
+    const { data: result } = await api.patch(`/enrollments/${id}/status`, data)
     return result
   })

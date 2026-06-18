@@ -9,9 +9,9 @@ import { Label } from '#/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '#/components/ui/select'
 import { DialogHeader, DialogTitle, DialogDescription } from '#/components/ui/dialog'
 import { rolesEnum } from '#/schemas/enums'
+import type { Roles } from '#/schemas/enums'
 import { useCreateUser } from '../_hooks/useCreateUser'
 import { useUpdateUser } from '../_hooks/useUpdateUser'
-import { useAuthStore } from '#/store/auth'
 
 const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -30,14 +30,14 @@ interface UserFormProps {
     email: string
     role: string
   } | null
+  currentRole?: Roles | null
 }
 
-export default function UserForm({ onSuccess, initialData }: UserFormProps) {
+export default function UserForm({ onSuccess, initialData, currentRole }: UserFormProps) {
   const isEditing = !!initialData
   const createMutation = useCreateUser()
   const updateMutation = useUpdateUser()
   const isPending = createMutation.isPending || updateMutation.isPending
-  const currentRole = useAuthStore((s) => s.role)
 
   const getErrorMessage = () => {
     const error = (createMutation.error || updateMutation.error) as any

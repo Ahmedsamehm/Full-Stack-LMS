@@ -7,13 +7,7 @@ import Footer from '#/components/Footer'
 export default function LandingPage() {
   return (
     <>
-      <Header />
-      <main>
-        <LandingHero />
-        <PopularCourses />
-        <AboutSection />
-      </main>
-      <Footer />
+     
     </>
   )
 }

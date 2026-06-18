@@ -1,6 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
 import api from '#/lib/axios'
-import { getAuthHeaders } from '#/lib/api'
 import { createCheckoutSessionSchema, uuidSchema } from '#/schemas'
 
 // ─── Checkout ──────────────────────────────────────────────────────────────────
@@ -8,13 +7,7 @@ import { createCheckoutSessionSchema, uuidSchema } from '#/schemas'
 export const createCheckoutSession = createServerFn({ method: 'POST' })
   .inputValidator(createCheckoutSessionSchema)
   .handler(async ({ data: { courseId } }) => {
-    const { data } = await api.post(
-      '/checkout',
-      { courseId },
-      {
-        headers: getAuthHeaders(),
-      },
-    )
+    const { data } = await api.post('/checkout', { courseId })
     return data
   })
 
@@ -23,12 +16,6 @@ export const createCheckoutSession = createServerFn({ method: 'POST' })
 export const enrollFreeCourse = createServerFn({ method: 'POST' })
   .inputValidator(uuidSchema)
   .handler(async ({ data: courseId }) => {
-    const { data } = await api.post(
-      `/enrollments/free/${courseId}`,
-      {},
-      {
-        headers: getAuthHeaders(),
-      },
-    )
+    const { data } = await api.post(`/enrollments/free/${courseId}`, {})
     return data
   })

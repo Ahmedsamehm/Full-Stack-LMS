@@ -3,7 +3,6 @@ import { LayoutDashboard, GraduationCap, Users, ShoppingBag, ClipboardList } fro
 import DashboardTopbar from '#/features/dashboard/_components/shared/dashboard-topbar'
 import DashboardMobileTabNav from '#/features/dashboard/_components/shared/dashboard-mobile-tab-nav'
 import type { DashboardConfig, NavItem } from '#/features/dashboard/_types/dashboard.types'
-import { useAuthStore } from '#/store/auth'
 import { rolesEnum } from '#/schemas/enums'
 import type { Roles } from '#/schemas/enums'
 import { DashboardSidebar } from '#/features/dashboard/_components/shared/dashboard-sidebar'
@@ -47,8 +46,8 @@ export const Route = createFileRoute('/_protected/dashboard')({
 })
 
 function RouteComponent() {
-  const role = useAuthStore((s) => s.role)
-
+  const { user } = Route.useRouteContext()
+  const role = user.data.role || null
   // Fall back to Admin nav while role is loading (null)
   const activeRole: Roles = role ?? rolesEnum.enum.Student
 

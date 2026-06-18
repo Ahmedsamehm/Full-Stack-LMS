@@ -6,6 +6,7 @@ const envFile = nodeEnv === 'production' ? '.env.production' : '.env.development
 config({ path: resolve(__dirname, envFile) });
 
 import { defineConfig } from 'prisma/config';
+import { env } from 'src/core/config/env';
 
 export default defineConfig({
     schema: 'prisma/schema.prisma',
@@ -13,6 +14,6 @@ export default defineConfig({
         path: 'prisma/migrations',
     },
     datasource: {
-        url: process.env['DATABASE_URL'],
+        url: env.DATABASE_URL,
     },
 });
