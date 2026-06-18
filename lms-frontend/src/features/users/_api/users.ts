@@ -1,6 +1,6 @@
-import { createServerFn } from '@tanstack/react-start'
 import api from '#/lib/axios'
-import {
+import type { z } from 'zod'
+import type {
   adminCreateUserSchema,
   uuidSchema,
   getUsersParamsSchema,
@@ -19,62 +19,42 @@ export async function getUser() {
   }
 }
 
-export const getUsers = createServerFn({ method: 'GET' })
-  .inputValidator(getUsersParamsSchema)
-  .handler(async ({ data: params }) => {
-    const { data } = await api.get('/users', {
-      params,
-    })
-    return data
-  })
+export async function getUsers({ data: params }: { data: z.infer<typeof getUsersParamsSchema> }) {
+  const { data } = await api.get('/users', { params })
+  return data
+}
 
-export const getUserByEmail = createServerFn({ method: 'GET' })
-  .inputValidator(getUserByEmailParamsSchema)
-  .handler(async ({ data: { email } }) => {
-    const { data } = await api.get('/users/email', {
-      params: { email },
-    })
-    return data
-  })
+export async function getUserByEmail({ data: { email } }: { data: z.infer<typeof getUserByEmailParamsSchema> }) {
+  const { data } = await api.get('/users/email', { params: { email } })
+  return data
+}
 
-export const getUserById = createServerFn({ method: 'GET' })
-  .inputValidator(uuidSchema)
-  .handler(async ({ data: id }) => {
-    const { data } = await api.get(`/users/${id}`)
-    return data
-  })
+export async function getUserById({ data: id }: { data: z.infer<typeof uuidSchema> }) {
+  const { data } = await api.get(`/users/${id}`)
+  return data
+}
 
-export const getUserDetails = createServerFn({ method: 'GET' })
-  .inputValidator(uuidSchema)
-  .handler(async ({ data: id }) => {
-    const { data } = await api.get(`/users/${id}/details`)
-    return data
-  })
+export async function getUserDetails({ data: id }: { data: z.infer<typeof uuidSchema> }) {
+  const { data } = await api.get(`/users/${id}/details`)
+  return data
+}
 
-export const createUser = createServerFn({ method: 'POST' })
-  .inputValidator(adminCreateUserSchema)
-  .handler(async ({ data: user }) => {
-    const { data } = await api.post('/users', user)
-    return data
-  })
+export async function createUser({ data: user }: { data: z.infer<typeof adminCreateUserSchema> }) {
+  const { data } = await api.post('/users', user)
+  return data
+}
 
-export const updateUser = createServerFn({ method: 'POST' })
-  .inputValidator(updateUserParamsSchema)
-  .handler(async ({ data: { id, user } }) => {
-    const { data } = await api.patch(`/users/${id}`, user)
-    return data
-  })
+export async function updateUser({ data: { id, user } }: { data: z.infer<typeof updateUserParamsSchema> }) {
+  const { data } = await api.patch(`/users/${id}`, user)
+  return data
+}
 
-export const changeUserRole = createServerFn({ method: 'POST' })
-  .inputValidator(changeUserRoleParamsSchema)
-  .handler(async ({ data: { id, role } }) => {
-    const { data } = await api.patch(`/users/${id}/role`, role)
-    return data
-  })
+export async function changeUserRole({ data: { id, role } }: { data: z.infer<typeof changeUserRoleParamsSchema> }) {
+  const { data } = await api.patch(`/users/${id}/role`, role)
+  return data
+}
 
-export const deleteUser = createServerFn({ method: 'POST' })
-  .inputValidator(uuidSchema)
-  .handler(async ({ data: id }) => {
-    const { data } = await api.delete(`/users/${id}`)
-    return data
-  })
+export async function deleteUser({ data: id }: { data: z.infer<typeof uuidSchema> }) {
+  const { data } = await api.delete(`/users/${id}`)
+  return data
+}

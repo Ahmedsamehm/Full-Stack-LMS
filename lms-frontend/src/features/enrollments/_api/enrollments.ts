@@ -1,7 +1,6 @@
-import { createServerFn } from '@tanstack/react-start'
 import api from '#/lib/axios'
-import { z } from 'zod'
-import {
+import type { z } from 'zod'
+import type {
   createEnrollmentByAdminSchema,
   createEnrollmentByTeacherSchema,
   createEnrollmentFreeSchema,
@@ -14,84 +13,53 @@ import {
 
 // ─── Admin Enrollment ─────────────────────────────────────────────────────────
 
-export const GetAllEnrollments = createServerFn({ method: 'GET' })
-  .inputValidator(enrollmentQuerySchema)
-  .handler(async ({ data: params }) => {
-    const { data } = await api.get('/enrollments', {
-      params,
-    })
-    return data
-  })
+export async function GetAllEnrollments({ data: params }: { data: z.infer<typeof enrollmentQuerySchema> }) {
+  const { data } = await api.get('/enrollments', { params })
+  return data
+}
 
-export const enrollByAdmin = createServerFn({ method: 'POST' })
-  .inputValidator(createEnrollmentByAdminSchema)
-  .handler(async ({ data }) => {
-    const { data: result } = await api.post('/enrollments/by-admin', data)
-    return result
-  })
+export async function enrollByAdmin({ data }: { data: z.infer<typeof createEnrollmentByAdminSchema> }) {
+  const { data: result } = await api.post('/enrollments/by-admin', data)
+  return result
+}
 
-export const deleteEnrollment = createServerFn({ method: 'POST' })
-  .inputValidator(uuidSchema)
-  .handler(async ({ data: id }) => {
-    const { data } = await api.delete(`/enrollments/${id}`)
-    return data
-  })
+export async function deleteEnrollment({ data: id }: { data: z.infer<typeof uuidSchema> }) {
+  const { data } = await api.delete(`/enrollments/${id}`)
+  return data
+}
 
 // ─── Teacher Enrollment ───────────────────────────────────────────────────────
 
-export const enrollByTeacher = createServerFn({ method: 'POST' })
-  .inputValidator(createEnrollmentByTeacherSchema)
-  .handler(async ({ data }) => {
-    const { data: result } = await api.post('/enrollments/by-teacher', data)
-    return result
-  })
+export async function enrollByTeacher({ data }: { data: z.infer<typeof createEnrollmentByTeacherSchema> }) {
+  const { data: result } = await api.post('/enrollments/by-teacher', data)
+  return result
+}
 
-export const getEnrollmentsByCourse = createServerFn({ method: 'GET' })
-  .inputValidator(getEnrollmentsByCourseSchema)
-  .handler(async ({ data: { courseId, params } }) => {
-    const { data } = await api.get(`/enrollments/course/${courseId}`, {
-      params,
-    })
-    return data
-  })
+export async function getEnrollmentsByCourse({ data: { courseId, params } }: { data: z.infer<typeof getEnrollmentsByCourseSchema> }) {
+  const { data } = await api.get(`/enrollments/course/${courseId}`, { params })
+  return data
+}
+
 // ─── Free Enrollment ─────────────────────────────────────────────────────────
 
-export const enrollFree = createServerFn({ method: 'POST' })
-  .inputValidator(createEnrollmentFreeSchema)
-  .handler(async ({ data }) => {
-    const { data: result } = await api.post(
-      `/enrollments/free/${data.courseId}`,
-      {},
-    )
-    return result
-  })
+export async function enrollFree({ data }: { data: z.infer<typeof createEnrollmentFreeSchema> }) {
+  const { data: result } = await api.post(`/enrollments/free/${data.courseId}`, {})
+  return result
+}
 
 // ─── Student Enrollments ───────────────────────────────────────────────────────
 
-export const getMyEnrollments = createServerFn({ method: 'GET' })
-  .inputValidator(paginationParamsSchema)
-  .handler(async ({ data: params }) => {
-    const { data } = await api.get('/enrollments/me', {
-      params,
-    })
-    return data
-  })
+export async function getMyEnrollments({ data: params }: { data: z.infer<typeof paginationParamsSchema> }) {
+  const { data } = await api.get('/enrollments/me', { params })
+  return data
+}
 
-export const getEnrollmentById = createServerFn({ method: 'GET' })
-  .inputValidator(uuidSchema)
-  .handler(async ({ data: id }) => {
-    const { data } = await api.get(`/enrollments/${id}`)
-    return data
-  })
+export async function getEnrollmentById({ data: id }: { data: z.infer<typeof uuidSchema> }) {
+  const { data } = await api.get(`/enrollments/${id}`)
+  return data
+}
 
-export const updateEnrollmentStatus = createServerFn({ method: 'POST' })
-  .inputValidator(
-    z.object({
-      id: uuidSchema,
-      data: updateEnrollmentStatusSchema,
-    }),
-  )
-  .handler(async ({ data: { id, data } }) => {
-    const { data: result } = await api.patch(`/enrollments/${id}/status`, data)
-    return result
-  })
+export async function updateEnrollmentStatus({ data: { id, data: statusData } }: { data: { id: z.infer<typeof uuidSchema>; data: z.infer<typeof updateEnrollmentStatusSchema> } }) {
+  const { data: result } = await api.patch(`/enrollments/${id}/status`, statusData)
+  return result
+}

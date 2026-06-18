@@ -1,40 +1,28 @@
-import { createServerFn } from '@tanstack/react-start'
 import api from '#/lib/axios'
-import { paginationParamsSchema, createCategorySchema, updateCategoryParamsSchema, uuidSchema } from '#/schemas'
+import type { z } from 'zod'
+import type { paginationParamsSchema, uuidSchema } from '#/schemas'
 
-export const getCategories = createServerFn({ method: 'GET' })
-  .inputValidator(paginationParamsSchema)
-  .handler(async ({ data: params }) => {
-    const { data } = await api.get('/categories', {
-      params,
-    })
-    return data
-  })
+export async function getCategories({ data: params }: { data: z.infer<typeof paginationParamsSchema> }) {
+  const { data } = await api.get('/categories', { params })
+  return data
+}
 
-export const getCategoryById = createServerFn({ method: 'GET' })
-  .inputValidator(uuidSchema)
-  .handler(async ({ data: id }) => {
-    const { data } = await api.get(`/categories/${id}`)
-    return data
-  })
+export async function getCategoryById({ data: id }: { data: z.infer<typeof uuidSchema> }) {
+  const { data } = await api.get(`/categories/${id}`)
+  return data
+}
 
-export const createCategory = createServerFn({ method: 'POST' })
-  .inputValidator(createCategorySchema)
-  .handler(async ({ data: category }) => {
-    const { data } = await api.post('/categories', category)
-    return data
-  })
+export async function createCategory({ data: category }: { data: z.infer<typeof import('#/schemas').createCategorySchema> }) {
+  const { data } = await api.post('/categories', category)
+  return data
+}
 
-export const updateCategory = createServerFn({ method: 'POST' })
-  .inputValidator(updateCategoryParamsSchema)
-  .handler(async ({ data: { id, category } }) => {
-    const { data } = await api.patch(`/categories/${id}`, category)
-    return data
-  })
+export async function updateCategory({ data: { id, category } }: { data: z.infer<typeof import('#/schemas').updateCategoryParamsSchema> }) {
+  const { data } = await api.patch(`/categories/${id}`, category)
+  return data
+}
 
-export const deleteCategory = createServerFn({ method: 'POST' })
-  .inputValidator(uuidSchema)
-  .handler(async ({ data: id }) => {
-    const { data } = await api.delete(`/categories/${id}`)
-    return data
-  })
+export async function deleteCategory({ data: id }: { data: z.infer<typeof uuidSchema> }) {
+  const { data } = await api.delete(`/categories/${id}`)
+  return data
+}

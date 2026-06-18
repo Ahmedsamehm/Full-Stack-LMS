@@ -1,28 +1,18 @@
-import { createServerFn } from '@tanstack/react-start'
 import api from '#/lib/axios'
-import { paginationParamsSchema, getUsersParamsSchema, uuidSchema } from '#/schemas'
+import type { z } from 'zod'
+import type { paginationParamsSchema, getUsersParamsSchema, uuidSchema } from '#/schemas'
 
-export const getStudents = createServerFn({ method: 'GET' })
-  .inputValidator(getUsersParamsSchema)
-  .handler(async ({ data: params }) => {
-    const { data } = await api.get('/users', {
-      params,
-    })
-    return data
-  })
+export async function getStudents({ data: params }: { data: z.infer<typeof getUsersParamsSchema> }) {
+  const { data } = await api.get('/users', { params })
+  return data
+}
 
-export const getTeacherStudents = createServerFn({ method: 'GET' })
-  .inputValidator(paginationParamsSchema)
-  .handler(async ({ data: params }) => {
-    const { data } = await api.get('/teacher/my-students', {
-      params,
-    })
-    return data
-  })
+export async function getTeacherStudents({ data: params }: { data: z.infer<typeof paginationParamsSchema> }) {
+  const { data } = await api.get('/teacher/my-students', { params })
+  return data
+}
 
-export const getStudentById = createServerFn({ method: 'GET' })
-  .inputValidator(uuidSchema)
-  .handler(async ({ data: id }) => {
-    const { data } = await api.get(`/users/${id}`)
-    return data
-  })
+export async function getStudentById({ data: id }: { data: z.infer<typeof uuidSchema> }) {
+  const { data } = await api.get(`/users/${id}`)
+  return data
+}

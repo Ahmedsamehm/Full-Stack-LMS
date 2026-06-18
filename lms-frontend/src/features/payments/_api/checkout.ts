@@ -1,21 +1,17 @@
-import { createServerFn } from '@tanstack/react-start'
 import api from '#/lib/axios'
-import { createCheckoutSessionSchema, uuidSchema } from '#/schemas'
+import type { z } from 'zod'
+import type { createCheckoutSessionSchema, uuidSchema } from '#/schemas'
 
 // ─── Checkout ──────────────────────────────────────────────────────────────────
 
-export const createCheckoutSession = createServerFn({ method: 'POST' })
-  .inputValidator(createCheckoutSessionSchema)
-  .handler(async ({ data: { courseId } }) => {
-    const { data } = await api.post('/checkout', { courseId })
-    return data
-  })
+export async function createCheckoutSession({ data: { courseId } }: { data: z.infer<typeof createCheckoutSessionSchema> }) {
+  const { data } = await api.post('/checkout', { courseId })
+  return data
+}
 
 // ─── Free Enrollment ───────────────────────────────────────────────────────────
 
-export const enrollFreeCourse = createServerFn({ method: 'POST' })
-  .inputValidator(uuidSchema)
-  .handler(async ({ data: courseId }) => {
-    const { data } = await api.post(`/enrollments/free/${courseId}`, {})
-    return data
-  })
+export async function enrollFreeCourse({ data: courseId }: { data: z.infer<typeof uuidSchema> }) {
+  const { data } = await api.post(`/enrollments/free/${courseId}`, {})
+  return data
+}

@@ -1,21 +1,13 @@
-import { createServerFn } from '@tanstack/react-start'
 import api from '#/lib/axios'
-import { paginationParamsSchema, getCoursesByTeacherSchema } from '#/schemas'
+import type { z } from 'zod'
+import type { paginationParamsSchema, getCoursesByTeacherSchema } from '#/schemas'
 
-export const getMyStudents = createServerFn({ method: 'GET' })
-  .inputValidator(paginationParamsSchema)
-  .handler(async ({ data: params }) => {
-    const { data } = await api.get('/teacher/my-students', {
-      params,
-    })
-    return data
-  })
+export async function getMyStudents({ data: params }: { data: z.infer<typeof paginationParamsSchema> }) {
+  const { data } = await api.get('/teacher/my-students', { params })
+  return data
+}
 
-export const getCoursesByTeacher = createServerFn({ method: 'GET' })
-  .inputValidator(getCoursesByTeacherSchema)
-  .handler(async ({ data: { teacherId, params } }) => {
-    const { data } = await api.get(`/courses/teacher/${teacherId}`, {
-      params,
-    })
-    return data
-  })
+export async function getCoursesByTeacher({ data: { teacherId, params } }: { data: z.infer<typeof getCoursesByTeacherSchema> }) {
+  const { data } = await api.get(`/courses/teacher/${teacherId}`, { params })
+  return data
+}
