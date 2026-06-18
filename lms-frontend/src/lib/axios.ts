@@ -1,6 +1,7 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios'
+import { createIsomorphicFn } from '@tanstack/react-start'
 import { env } from './env'
-import { getRequest } from '@tanstack/react-start/server'
+
 const apiUrl = env.VITE_API_URL
 
 const api = axios.create({
@@ -12,9 +13,29 @@ const api = axios.create({
 })
 
 // ─────────────────────────────────────────────────────────────────────────────
+// SSR Cookie Forwarding:Dynamic Import Build
+// ─────────────────────────────────────────────────────────────────────────────
+const getForwardedHeaders = createIsomorphicFn()
+  .server(async (): Promise<{ Cookie?: string }> => {
+    try {
+      const { getRequest } = await import('@tanstack/react-start/server')
+      const request = getRequest()
+      const cookieHeader = request?.headers.get('cookie') ?? ''
+      if (cookieHeader) {
+        return { Cookie: cookieHeader }
+      }
+    } catch (e) {
+      console.warn('SSR: Could not get request headers to forward cookies.')
+    }
+    return {}
+  })
+
+  .client((): { Cookie?: string } => ({}))
+
+// ─────────────────────────────────────────────────────────────────────────────
 // REQUEST INTERCEPTOR: Handles SSR Base URL and SSR Cookie forwarding
 // ─────────────────────────────────────────────────────────────────────────────
-api.interceptors.request.use((config) => {
+api.interceptors.request.use(async (config) => {
   // CLIENT SIDE: Browser automatically attaches HttpOnly cookies. Do nothing.
   if (typeof window !== 'undefined') {
     return config
@@ -27,15 +48,9 @@ api.interceptors.request.use((config) => {
   }
 
   // 2. Extract cookies from the incoming browser request and forward them
-  try {
-    const request = getRequest()
-    const cookieHeader = request?.headers.get('cookie') ?? ''
-
-    if (cookieHeader) {
-      config.headers.Cookie = cookieHeader
-    }
-  } catch (e) {
-    console.warn('SSR: Could not get request headers to forward cookies.')
+  const forwardedHeaders = await getForwardedHeaders()
+  if (forwardedHeaders.Cookie) {
+    config.headers.Cookie = forwardedHeaders.Cookie
   }
 
   return config
@@ -59,7 +74,7 @@ const processQueue = (error: unknown) => {
 }
 
 api.interceptors.response.use(
-  (response) => response, // Pass through successful responses
+  (response) => response,
 
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & {
@@ -67,8 +82,6 @@ api.interceptors.response.use(
     }
 
     // ── SSR Guard ─────────────────────────────────────────────────────────────
-    // On the server, we cannot refresh tokens silently (no browser cookie jar).
-    // Just reject the error and let the server function (e.g., getUser) handle it.
     if (typeof window === 'undefined') {
       return Promise.reject(error)
     }
@@ -107,11 +120,10 @@ api.interceptors.response.use(
         // If refresh fails, reject all queued requests
         processQueue(refreshError)
 
-        // Redirect to login if we aren't already on an auth page
-        const authPages = ['/login', '/register']
-        if (!authPages.includes(window.location.pathname)) {
-          window.location.href = '/login'
-        }
+        // const authPages = ['/login', '/register']
+        // if (!authPages.includes(window.location.pathname)) {
+        //   window.location.href = '/login'
+        // }
 
         if (refreshError && typeof refreshError === 'object') {
           refreshError.message = getErrorMessage(refreshError)
