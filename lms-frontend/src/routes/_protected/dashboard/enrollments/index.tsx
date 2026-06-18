@@ -36,6 +36,7 @@ export const Route = createFileRoute('/_protected/dashboard/enrollments/')({
 function RouteComponent() {
   const loaderData = Route.useLoaderData()
   const { user } = Route.useRouteContext()
+  if (!user) return null
   const role: Roles = user.data.role
   const displayEnrollments = (loaderData?.data ?? []).map(transformEnrollment)
 

@@ -26,6 +26,7 @@ export const Route = createFileRoute('/_protected/dashboard/')({
 
 function RouteComponent() {
   const { user } = Route.useRouteContext()
+  if (!user) return <DashboardSkeleton />
   const role: Roles = user.data.role
   if (!role) return <DashboardSkeleton />
 

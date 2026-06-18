@@ -35,6 +35,7 @@ export const Route = createFileRoute('/_protected/dashboard/users/')({
 function RouteComponent() {
   const loaderData = Route.useLoaderData()
   const { user } = Route.useRouteContext()
+  if (!user) return null
   const role = user.data.role as Roles
   return <UsersPage initialData={loaderData} Role={role} />
 }

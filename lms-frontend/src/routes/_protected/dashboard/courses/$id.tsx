@@ -42,6 +42,7 @@ export const Route = createFileRoute('/_protected/dashboard/courses/$id')({
 function RouteComponent() {
   const { id } = Route.useLoaderData()
   const { user } = Route.useRouteContext()
+  if (!user) return null
   const role = user.data.role as Roles
   const { data: courseData, isLoading } = useGetCourseById(id)
   const mappedCourse = transformDashboardCourseDetail(courseData?.data)
