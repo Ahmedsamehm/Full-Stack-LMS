@@ -6,7 +6,6 @@ import type { DashboardConfig, NavItem } from '#/features/dashboard/_types/dashb
 import { rolesEnum } from '#/schemas/enums'
 import type { Roles } from '#/schemas/enums'
 import { DashboardSidebar } from '#/features/dashboard/_components/shared/dashboard-sidebar'
-import { DashboardSkeleton } from '#/components/loading-skeleton'
 
 // ── Brand subtitle per role ────────────────────────────────────────────────
 const brandSubtitle: Record<Roles, string> = {
@@ -48,7 +47,7 @@ export const Route = createFileRoute('/_protected/dashboard')({
 
 function RouteComponent() {
   const { user } = Route.useRouteContext()
-  if (!user) return <DashboardSkeleton />
+  if (!user) return null
   const role = user.data.role
   // Fall back to Student nav while role is loading
   const activeRole: Roles = role ?? rolesEnum.enum.Student
