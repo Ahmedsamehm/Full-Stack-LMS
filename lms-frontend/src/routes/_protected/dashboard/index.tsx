@@ -4,6 +4,7 @@ import StudentDashboardPage from '#/features/dashboard/_components/student/stude
 import AdminDashboardPage from '#/features/dashboard/_components/admin/admin-dashboard-page'
 import { DashboardSkeleton } from '#/components/loading-skeleton'
 import type { Roles } from '#/schemas/enums'
+import { useGetUser } from '#/features/users/_hooks/useGetUser'
 
 const dashboardPages: Record<Roles, () => React.ReactNode> = {
   Super_Admin: AdminDashboardPage,

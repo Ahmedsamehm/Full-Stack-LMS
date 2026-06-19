@@ -12,6 +12,7 @@ import type {
 export async function getUser() {
   try {
     const { data } = await api.get('/users/me')
+
     return data
   } catch (error: any) {
     console.error('getUser error:', error?.response?.data, error?.config?.url)

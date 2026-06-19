@@ -4,7 +4,7 @@ import type { LoginRequest, RegisterRequest } from '#/schemas'
 export async function loginApi(credentials: LoginRequest) {
   const { data } = await api.post('/auth/login', credentials)
 
-  return data as { user: { id: string; email: string; role: string } }
+  return data.data.user as { user: { id: string; email: string; role: string } }
 }
 
 export async function registerApi(formData: RegisterRequest) {

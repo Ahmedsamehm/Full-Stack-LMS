@@ -6,33 +6,11 @@ import TanStackQueryDevtools from '../lib/devtools'
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
-import { getUser } from '#/features/users/_api/users'
-import { userKeys } from '#/features/users/_hooks/query-keys'
 
 interface MyRouterContext {
   queryClient: QueryClient
 }
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-  beforeLoad: async ({ context: { queryClient } }) => {
-    // Skip during SSR — cookies can't cross domains on Vercel serverless
-    if (typeof window === 'undefined') {
-      return { user: null }
-    }
-    try {
-      // ensureQueryData: uses TanStack Query cache.
-      // If data is fresh (< 5 min old), returns cached value — NO network call.
-      // Only fetches from backend when cache is empty or stale.
-      const user = await queryClient.ensureQueryData({
-        queryKey: userKeys.self(),
-        queryFn: () => getUser(),
-        staleTime: 1000 * 60 * 5, // 5 minutes
-      })
-      return { user }
-    } catch {
-      return { user: null }
-    }
-  },
-
   head: () => ({
     meta: [
       {

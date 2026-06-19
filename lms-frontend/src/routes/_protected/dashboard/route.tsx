@@ -47,6 +47,7 @@ export const Route = createFileRoute('/_protected/dashboard')({
 
 function RouteComponent() {
   const { user } = Route.useRouteContext()
+
   if (!user) return null
   const role = user.data.role
   // Fall back to Student nav while role is loading

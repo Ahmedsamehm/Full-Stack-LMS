@@ -8,8 +8,6 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-// import { toast } from 'sonner'; // Adjust to your toast library
-// import { useForgotPasswordMutation } from '@/hooks/auth/use-forgot-password'; // Adjust import path
 
 const forgotPasswordSchema = z.object({
   email: z.string().email('Please enter a valid email address'),

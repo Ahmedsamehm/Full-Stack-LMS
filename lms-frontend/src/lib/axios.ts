@@ -75,69 +75,30 @@ const processQueue = (error: unknown) => {
 
 api.interceptors.response.use(
   (response) => response,
-
   async (error: AxiosError) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & {
-      _retry?: boolean
-    }
+    const originalRequest = error.config as any
 
-    // ── SSR Guard ─────────────────────────────────────────────────────────────
     if (typeof window === 'undefined') {
       return Promise.reject(error)
     }
-    // ──────────────────────────────────────────────────────────────────────────
 
-    const isRefreshRequest = originalRequest?.url?.includes('/auth/refresh')
-    const isLoginOrRegister = originalRequest?.url?.includes('/auth/login') || originalRequest?.url?.includes('/auth/register')
+    const isAuthEndpoint =
+      originalRequest?.url?.includes('/auth/login') ||
+      originalRequest?.url?.includes('/auth/register') ||
+      originalRequest?.url?.includes('/auth/refresh') ||
+      originalRequest?.url?.includes('/users/me')
 
-    // If 401 and not already retried and not an auth endpoint
-    if (error.response?.status === 401 && !originalRequest?._retry && !isRefreshRequest && !isLoginOrRegister) {
-      // If a refresh is already happening, queue this request
-      if (isRefreshing) {
-        return new Promise<void>((resolve, reject) => {
-          failedQueue.push({ resolve, reject })
-        })
-          .then(() => {
-            return api(originalRequest)
-          })
-          .catch((err) => Promise.reject(err))
-      }
-
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
       originalRequest._retry = true
-      isRefreshing = true
 
       try {
-        // Call refresh endpoint.
-        // Browser automatically sends the /auth/refresh HttpOnly cookie!
         await api.post('/auth/refresh')
-
-        // Process the queue: retry all failed requests
-        processQueue(null)
-
-        // Retry the original request
         return api(originalRequest)
-      } catch (refreshError: any) {
-        // If refresh fails, reject all queued requests
-        processQueue(refreshError)
-
-        // const authPages = ['/login', '/register']
-        // if (!authPages.includes(window.location.pathname)) {
-        //   window.location.href = '/login'
-        // }
-
-        if (refreshError && typeof refreshError === 'object') {
-          refreshError.message = getErrorMessage(refreshError)
-        }
+      } catch (refreshError) {
         return Promise.reject(refreshError)
-      } finally {
-        isRefreshing = false
       }
     }
 
-    // Format error for all other cases (400, 404, 500, etc.)
-    if (error && typeof error === 'object') {
-      error.message = getErrorMessage(error)
-    }
     return Promise.reject(error)
   },
 )

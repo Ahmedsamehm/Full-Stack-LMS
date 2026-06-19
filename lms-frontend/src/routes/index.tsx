@@ -5,8 +5,16 @@ import LandingHero from '#/features/landing/_components/landing-hero'
 import PopularCourses from '#/features/landing/_components/popular-courses'
 import AboutSection from '#/features/landing/_components/about-section'
 import Footer from '#/components/Footer'
+import { useGetUser } from '#/features/users/_hooks/useGetUser'
 
 export const Route = createFileRoute('/')({
+  beforeLoad: async ({ context }) => {
+    const user = await context.queryClient.ensureQueryData({
+      queryKey: ['user'],
+      queryFn: getUser,
+    })
+    return { user }
+  },
   head: () => ({
     meta: [
       {
