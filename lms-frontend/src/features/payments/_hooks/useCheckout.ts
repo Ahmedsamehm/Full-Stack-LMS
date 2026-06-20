@@ -7,7 +7,7 @@ export function useCreateCheckoutSession() {
   return useMutation({
     mutationFn: async (courseId: string) => {
       const { data } = await createCheckoutSession({ data: { courseId } })
-      // response shape: { success: true, data: { checkoutUrl, sessionId } }
+
       return data as { checkoutUrl: string; sessionId: string }
     },
   })

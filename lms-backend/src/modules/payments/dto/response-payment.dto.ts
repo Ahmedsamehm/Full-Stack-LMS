@@ -8,7 +8,7 @@ export class PaymentResponseDto {
     currency: string;
     status: PaymentStatus;
     provider: PaymentProvider;
-    transactionId: string;
+    transactionId: string | null;
     createdAt: Date;
     updatedAt: Date;
     user: { id: string; name: string; email: string };

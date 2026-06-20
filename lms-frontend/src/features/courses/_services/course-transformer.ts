@@ -28,25 +28,28 @@ export interface ApiEnrollment {
  * @param courseData The API course detail data
  */
 export function transformCourseDetail(courseData: ApiCourseDetail): UiCourseDetail {
-  const teacherName = courseData.teacher?.name || "Instructor"
+  const teacherName = courseData.teacher?.name || 'Instructor'
   const teacherInitials = courseData.teacher?.name
-    ? courseData.teacher.name.split(" ").map((n) => n[0]).join("")
-    : "IN"
+    ? courseData.teacher.name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+    : 'IN'
 
   return {
     id: courseData.id,
     slug: courseData.id,
     title: courseData.title,
-    description: courseData.description || "",
+    description: courseData.description || '',
     price: courseData.price,
     originalPrice: undefined,
     thumbnailUrl: courseData.thumbnailUrl || undefined,
-    category: courseData.category?.name || "Uncategorized",
+    category: courseData.category?.name || 'Uncategorized',
     stats: {
       enrollments: courseData.stats?.enrollments ?? 0,
     },
     instructor: {
-      id: courseData.teacher?.id || "",
+      id: courseData.teacher?.id || '',
       name: teacherName,
       initials: teacherInitials,
       rating: 4.8,
@@ -57,16 +60,12 @@ export function transformCourseDetail(courseData: ApiCourseDetail): UiCourseDeta
       title: l.title,
       duration: l.duration,
       orderIndex: l.orderIndex,
-      description: "",
+      description: '',
     })),
     totalLessons: courseData.lessons?.length || 0,
     totalDuration: courseData.lessons?.reduce((acc, l) => acc + (l.duration || 0), 0) || 0,
-    objectives: [
-      "Master the core concepts of this course",
-      "Gain practical, hands-on experience",
-      "Learn best practices from industry experts",
-    ],
-    teacherBio: "Experienced professional instructor dedicated to teaching high-quality technical skills.",
+    objectives: ['Master the core concepts of this course', 'Gain practical, hands-on experience', 'Learn best practices from industry experts'],
+    teacherBio: 'Experienced professional instructor dedicated to teaching high-quality technical skills.',
     teacherInitials,
   }
 }
@@ -177,21 +176,24 @@ export function transformDashboardCourseDetail(course: ApiCourseDetail): Dashboa
  * @param course The API course data
  */
 export function transformCourseListItem(course: ApiCourse): CourseListItem {
-  const teacherName = course.teacher?.name || "Instructor"
+  const teacherName = course.teacher?.name || 'Instructor'
   const teacherInitials = course.teacher?.name
-    ? course.teacher.name.split(" ").map((n: string) => n[0]).join("")
-    : "IN"
+    ? course.teacher.name
+        .split(' ')
+        .map((n: string) => n[0])
+        .join('')
+    : 'IN'
 
   return {
     id: course.id,
     slug: course.slug || course.id,
-    category: course.category?.name || "Uncategorized",
+    category: course.category?.name || 'Uncategorized',
     title: course.title,
-    description: course.description || "",
+    description: course.description || '',
     price: course.price || 0,
     originalPrice: course.originalPrice,
     instructor: {
-      id: course.teacher?.id || course.teacherId || "",
+      id: course.teacher?.id || course.teacherId || '',
       name: teacherName,
       initials: teacherInitials,
       rating: 4.8,
@@ -199,5 +201,3 @@ export function transformCourseListItem(course: ApiCourse): CourseListItem {
     },
   }
 }
-
-

@@ -75,15 +75,8 @@ export const enrollmentDetailSchema = enrollmentSchema.extend({
 })
 
 export const createEnrollmentSchema = z.object({
-  userId: z.string().uuid(),
   courseId: z.string().uuid(),
-})
-
-export const createEnrollmentByTeacherSchema = createEnrollmentSchema
-export const createEnrollmentByAdminSchema = createEnrollmentSchema
-
-export const createEnrollmentFreeSchema = z.object({
-  courseId: z.string().uuid(),
+  userId: z.string().uuid().optional(),
 })
 
 export const updateEnrollmentStatusSchema = z.object({
@@ -102,9 +95,6 @@ export type Enrollment = z.infer<typeof enrollmentSchema>
 export type EnrollmentDetailCourse = z.infer<typeof enrollmentDetailCourseSchema>
 export type LessonProgressItem = z.infer<typeof lessonProgressItemSchema>
 export type EnrollmentDetail = z.infer<typeof enrollmentDetailSchema>
-export type CreateEnrollmentByTeacherRequest = z.infer<typeof createEnrollmentByTeacherSchema>
-export type CreateEnrollmentByAdminRequest = z.infer<typeof createEnrollmentByAdminSchema>
-export type CreateEnrollmentFreeRequest = z.infer<typeof createEnrollmentFreeSchema>
 export type UpdateEnrollmentStatusRequest = z.infer<typeof updateEnrollmentStatusSchema>
 export type CompleteLessonRequest = z.infer<typeof completeLessonSchema>
 export type CreateEnrollmentRequest = z.infer<typeof createEnrollmentSchema>

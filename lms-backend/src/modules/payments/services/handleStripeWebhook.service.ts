@@ -1,37 +1,32 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../core/database/prisma.service';
 import { EnrollByPaymentService } from '../../enrollments/services/enrollByPayment.service';
 import { StripeService } from '../utils/stripe';
 import { PaymentStatus } from '@prisma/client';
-import { env } from '../../../core/config/env';
 
 @Injectable()
-export class HandleStripeWebhookService {
-    private readonly logger = new Logger(HandleStripeWebhookService.name);
-
+export class HandleWebhookService {
     constructor(
-        private readonly prisma: PrismaService,
-        private readonly enrollByPaymentService: EnrollByPaymentService,
-        private readonly stripeService: StripeService,
+        private prisma: PrismaService,
+        private stripeService: StripeService,
+        private enrollByPaymentService: EnrollByPaymentService,
     ) {}
 
-    async handleWebhook(body: Buffer, signature: string): Promise<{ received: boolean }> {
-        if (!signature || !body) {
+    async execute(rawBody: Buffer, signature: string) {
+        if (!signature || !rawBody) {
             throw new BadRequestException('Missing signature or body');
         }
 
         let event: any;
 
         try {
-            event = this.stripeService.stripe.webhooks.constructEvent(body, signature, env.STRIPE_WEBHOOK_SECRET);
+            event = this.stripeService.stripe.webhooks.constructEvent(rawBody, signature, process.env.STRIPE_WEBHOOK_SECRET!);
         } catch (err) {
-            this.logger.error(`Webhook signature verification failed: ${err}`);
-            throw new BadRequestException('Invalid webhook signature');
+            throw new BadRequestException(`Invalid webhook signature: ${err.message}`);
         }
 
         if (event.type === 'checkout.session.completed') {
             const session = event.data.object;
-
             await this.handleCheckoutCompleted(session);
         }
 
@@ -39,41 +34,45 @@ export class HandleStripeWebhookService {
     }
 
     private async handleCheckoutCompleted(session: any) {
-        const { userId, courseId } = session.metadata as { userId: string; courseId: string };
+        const { userId, courseId, paymentId } = session.metadata as {
+            userId: string;
+            courseId: string;
+            paymentId: string;
+        };
 
-        if (!userId || !courseId) {
-            this.logger.error('Missing metadata in checkout session');
-            return;
+        if (!userId || !courseId || !paymentId) {
+            throw new BadRequestException('Missing metadata in checkout session');
         }
 
+        // 1. Find the PENDING payment record
         const payment = await this.prisma.payment.findUnique({
-            where: { transactionId: session.id },
+            where: { id: paymentId },
         });
 
         if (!payment) {
-            this.logger.error(`Payment not found for session ${session.id}`);
-            return;
+            throw new BadRequestException(`Payment record not found for ID ${paymentId}`);
         }
 
+        // 2. Idempotency Check: If already SUCCESS, skip
         if (payment.status === PaymentStatus.SUCCESS) {
-            this.logger.log(`Payment already processed for session ${session.id}`);
             return;
         }
 
+        // 3. Update Payment Status
         await this.prisma.payment.update({
-            where: { id: payment.id },
+            where: { id: paymentId },
             data: {
                 status: PaymentStatus.SUCCESS,
+                transactionId: session.id, // Stripe Session ID
                 metadata: {
-                    ...(payment.metadata as object),
                     stripePaymentIntent: session.payment_intent,
                     stripePaymentMethod: session.payment_method_types?.[0],
                 },
             },
         });
 
+        // 4. Create Enrollment
+        // Note: EnrollByPaymentService should check if enrollment already exists to avoid duplicates
         await this.enrollByPaymentService.enroll(userId, courseId);
-
-        this.logger.log(`Payment successful and enrollment created for user ${userId}, course ${courseId}`);
     }
 }

@@ -2,12 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { EnrollmentStatus } from '@prisma/client';
 import { PaginationDto } from '../../common/dto/pagination.dto';
 import { EnrollmentQueryDto } from './dto/enrollment-query.dto';
-import { CreateEnrollmentByTeacherDto } from './dto/create-enrollment-by-teacher.dto';
-import { CreateEnrollmentByAdminDto } from './dto/create-enrollment-by-admin.dto';
-import { EnrollFreeService } from './services/enrollFree.service';
+import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
+import { EnrollService } from './services/enroll.service';
 import { EnrollByPaymentService } from './services/enrollByPayment.service';
-import { EnrollByTeacherService } from './services/enrollByTeacher.service';
-import { EnrollByAdminService } from './services/enrollByAdmin.service';
 import { GetMyEnrollmentsService } from './services/getMyEnrollments.service';
 import { GetEnrollmentByIdService } from './services/getEnrollmentById.service';
 import { GetEnrollmentsByCourseService } from './services/getEnrollmentsByCourse.service';
@@ -19,10 +16,8 @@ import { RemoveEnrollmentService } from './services/removeEnrollment.service';
 @Injectable()
 export class EnrollmentsService {
     constructor(
-        private readonly enrollFreeService: EnrollFreeService,
+        private readonly enrollService: EnrollService,
         private readonly enrollByPaymentService: EnrollByPaymentService,
-        private readonly enrollByTeacherService: EnrollByTeacherService,
-        private readonly enrollByAdminService: EnrollByAdminService,
         private readonly getMyEnrollmentsService: GetMyEnrollmentsService,
         private readonly getEnrollmentByIdService: GetEnrollmentByIdService,
         private readonly getEnrollmentsByCourseService: GetEnrollmentsByCourseService,
@@ -32,20 +27,12 @@ export class EnrollmentsService {
         private readonly removeEnrollmentService: RemoveEnrollmentService,
     ) {}
 
-    enrollFree(userId: string, courseId: string) {
-        return this.enrollFreeService.enroll(userId, courseId);
+    enroll(dto: CreateEnrollmentDto, currentUser: { id: string; role: any }) {
+        return this.enrollService.enroll(dto, currentUser);
     }
 
     enrollByPayment(userId: string, courseId: string) {
         return this.enrollByPaymentService.enroll(userId, courseId);
-    }
-
-    enrollByTeacher(dto: CreateEnrollmentByTeacherDto, teacherId: string) {
-        return this.enrollByTeacherService.enroll(dto, teacherId);
-    }
-
-    enrollByAdmin(dto: CreateEnrollmentByAdminDto) {
-        return this.enrollByAdminService.enroll(dto);
     }
 
     findMyEnrollments(userId: string, pagination: PaginationDto) {

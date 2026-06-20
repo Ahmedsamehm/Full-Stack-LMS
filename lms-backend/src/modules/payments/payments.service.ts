@@ -2,29 +2,31 @@ import { Injectable } from '@nestjs/common';
 import { PaginationDto } from '../../common/dto/pagination.dto';
 import { CreateCheckoutDto } from './dto/create-checkout.dto';
 import { CreateCheckoutService } from './services/createCheckout.service';
-import { HandleStripeWebhookService } from './services/handleStripeWebhook.service';
 import { GetPaymentByIdService } from './services/getPaymentById.service';
 import { GetPaymentsByUserService } from './services/getPaymentsByUser.service';
 import { GetAllPaymentsService } from './services/getAllPayments.service';
 import { RefundPaymentService } from './services/refundPayment.service';
 
+import { UserResponseDto } from '../../core/auth/dto/response-auth.dto';
+import { HandleWebhookService } from './services/handleStripeWebhook.service';
+
 @Injectable()
 export class PaymentsService {
     constructor(
         private readonly createCheckoutService: CreateCheckoutService,
-        private readonly handleStripeWebhookService: HandleStripeWebhookService,
+        private readonly handleStripeWebhookService: HandleWebhookService,
         private readonly getPaymentByIdService: GetPaymentByIdService,
         private readonly getPaymentsByUserService: GetPaymentsByUserService,
         private readonly getAllPaymentsService: GetAllPaymentsService,
         private readonly refundPaymentService: RefundPaymentService,
     ) {}
 
-    createCheckout(dto: CreateCheckoutDto, userId: string) {
-        return this.createCheckoutService.create(dto, userId);
+    createCheckout(dto: CreateCheckoutDto, user: UserResponseDto) {
+        return this.createCheckoutService.execute(dto, user);
     }
 
     handleStripeWebhook(body: Buffer, signature: string) {
-        return this.handleStripeWebhookService.handleWebhook(body, signature);
+        return this.handleStripeWebhookService.execute(body, signature);
     }
 
     findById(id: string) {

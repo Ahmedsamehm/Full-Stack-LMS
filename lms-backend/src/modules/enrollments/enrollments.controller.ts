@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Patch, Delete, Body, Param, Query, HttpCode, HttpStatus, ParseUUIDPipe } from '@nestjs/common';
 import { EnrollmentsService } from './enrollments.service';
-import { CreateEnrollmentByTeacherDto } from './dto/create-enrollment-by-teacher.dto';
-import { CreateEnrollmentByAdminDto } from './dto/create-enrollment-by-admin.dto';
+import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 import { UpdateEnrollmentStatusDto } from './dto/update-enrollment-status.dto';
 import { CompleteLessonDto } from './dto/complete-lesson.dto';
 import { PaginationDto } from '../../common/dto/pagination.dto';
@@ -15,28 +14,14 @@ import { StudentOnly, TeacherOnly, AdminOnly } from '../../common/decorators/rol
 export class EnrollmentsController {
     constructor(private readonly enrollmentsService: EnrollmentsService) {}
 
-    @Post('free/:courseId')
+    @Post()
     @StudentOnly()
-    @HttpCode(HttpStatus.CREATED)
-    @ResponseMessage('Enrolled in course successfully')
-    enrollFree(@Param('courseId', ParseUUIDPipe) courseId: string, @CurrentUser() user: any) {
-        return this.enrollmentsService.enrollFree(user.id, courseId);
-    }
-
-    @Post('by-teacher')
     @TeacherOnly()
-    @HttpCode(HttpStatus.CREATED)
-    @ResponseMessage('Student enrolled successfully')
-    enrollByTeacher(@Body() dto: CreateEnrollmentByTeacherDto, @CurrentUser() user: any) {
-        return this.enrollmentsService.enrollByTeacher(dto, user.id);
-    }
-
-    @Post('by-admin')
     @AdminOnly()
     @HttpCode(HttpStatus.CREATED)
-    @ResponseMessage('Student enrolled successfully')
-    enrollByAdmin(@Body() dto: CreateEnrollmentByAdminDto) {
-        return this.enrollmentsService.enrollByAdmin(dto);
+    @ResponseMessage('Enrolled successfully')
+    enroll(@Body() dto: CreateEnrollmentDto, @CurrentUser() user: any) {
+        return this.enrollmentsService.enroll(dto, user);
     }
 
     @Post('by-payment')

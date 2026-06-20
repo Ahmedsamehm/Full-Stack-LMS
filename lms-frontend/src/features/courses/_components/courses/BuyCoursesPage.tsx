@@ -3,14 +3,14 @@ import { ShoppingCart, CheckCircle, Sparkles, Star } from 'lucide-react'
 import { toast } from 'sonner'
 import { useGetCourses } from '#/features/courses/_hooks/courses/useGetCourses'
 import { useGetMyCourses } from '#/features/courses/_hooks/courses/useGetMyCourses'
-import { useCreateCheckoutSession, useEnrollFreeCourse } from '../_hooks/useCheckout'
-import { handleCourseEnrollment } from '../_services/checkout.service'
+import { useCreateCheckoutSession, useEnrollFreeCourse } from '../../../payments/_hooks/useCheckout'
+import { handleCourseEnrollment } from '../../../payments/_services/checkout.service'
 import { CourseGridSkeleton } from '#/components/loading-skeleton'
 import { EmptyState } from '#/components/empty-state'
 import SearchBar from '#/components/search-bar'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '#/components/ui/select'
 import { Button } from '#/components/ui/button'
-import { usePaymentFilters } from '../_hooks/usePaymentFilters'
+import { usePaymentFilters } from '../../../payments/_hooks/usePaymentFilters'
 import type { Course } from '#/schemas'
 import type { BuyCoursesSearchParams } from '#/lib/search'
 
@@ -28,11 +28,8 @@ interface BuyCoursesPageProps {
 export default function BuyCoursesPage({ params: _params, searchParams }: BuyCoursesPageProps = {}) {
   const { category, search, setFilter } = usePaymentFilters()
 
-  const { data: allCoursesData, isLoading: isLoadingAll } = useGetCourses(
-    { limit: PAGINATION.MAX_LIMIT, search: search || undefined },
-  )
+  const { data: allCoursesData, isLoading: isLoadingAll } = useGetCourses({ limit: PAGINATION.MAX_LIMIT, search: search || undefined })
   const { data: enrolledCoursesData, isLoading: isLoadingMy } = useGetMyCourses({ limit: PAGINATION.MAX_LIMIT })
-
 
   const checkout = useCreateCheckoutSession()
   const enrollFree = useEnrollFreeCourse()
@@ -79,7 +76,7 @@ export default function BuyCoursesPage({ params: _params, searchParams }: BuyCou
           </div>
           <div>
             <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-2">Browse &amp; Enroll in Premium Courses</h1>
-            <p className="text-sm md:text-base text-white/90 max-w-xl">
+            <p className="text-sm md:text-base text-white/90 max-w-2xl">
               Gain access to high-quality curricula designed by professional educators. Invest in your skill set today!
             </p>
           </div>

@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
 import { EnrollmentsController } from './enrollments.controller';
 import { EnrollmentsService } from './enrollments.service';
-import { EnrollFreeService } from './services/enrollFree.service';
+import { EnrollService } from './services/enroll.service';
 import { EnrollByPaymentService } from './services/enrollByPayment.service';
-import { EnrollByTeacherService } from './services/enrollByTeacher.service';
-import { EnrollByAdminService } from './services/enrollByAdmin.service';
 import { GetMyEnrollmentsService } from './services/getMyEnrollments.service';
 import { GetEnrollmentByIdService } from './services/getEnrollmentById.service';
 import { GetEnrollmentsByCourseService } from './services/getEnrollmentsByCourse.service';
@@ -18,10 +16,8 @@ import { CheckEnrollmentExpirationService } from './services/checkEnrollmentExpi
     controllers: [EnrollmentsController],
     providers: [
         EnrollmentsService,
-        EnrollFreeService,
+        EnrollService,
         EnrollByPaymentService,
-        EnrollByTeacherService,
-        EnrollByAdminService,
         GetMyEnrollmentsService,
         GetEnrollmentByIdService,
         GetEnrollmentsByCourseService,

@@ -10,4 +10,3 @@ export function useGetMyEnrollments(params: PaginationParams, options?: { enable
     ...options,
   })
 }
-

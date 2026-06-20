@@ -24,7 +24,7 @@ interface DashboardTopbarProps {
 
 export default function DashboardTopbar({ userName = 'User', userInitials = 'U', userAvatar }: DashboardTopbarProps) {
   const { data: user, isPending } = useGetUser()
-  const { mutate } = useLogout()
+  const { mutate, isPending: isLogout } = useLogout()
 
   const handleLogout = () => {
     mutate()
@@ -83,7 +83,7 @@ export default function DashboardTopbar({ userName = 'User', userInitials = 'U',
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
+                <DropdownMenuItem disabled={isLogout} onClick={handleLogout} className="text-destructive focus:text-destructive">
                   Logout
                 </DropdownMenuItem>
               </DropdownMenuGroup>

@@ -34,12 +34,14 @@ export const courseSchema = z.object({
   stats: courseStatsSchema,
 })
 
-export const teacherRefSchema = userSchema.pick({
-  id: true,
-  name: true,
-}).extend({
-  avatarUrl: z.string().nullable().optional(),
-})
+export const teacherRefSchema = userSchema
+  .pick({
+    id: true,
+    name: true,
+  })
+  .extend({
+    avatarUrl: z.string().nullable().optional(),
+  })
 
 export const lessonRefSchema = z.object({
   id: z.string().uuid(),

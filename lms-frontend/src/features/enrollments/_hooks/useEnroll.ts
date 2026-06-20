@@ -1,18 +1,17 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import type { CreateEnrollmentFreeRequest } from '#/schemas'
-import { enrollFree } from '../_api/enrollments'
+import type { CreateEnrollmentRequest } from '#/schemas'
+import { enroll } from '../_api/enrollments'
 import { toast } from 'sonner'
 import { enrollmentKeys } from './query-keys'
 
-export function useEnrollFree() {
+export function useEnroll() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (data: CreateEnrollmentFreeRequest) =>
-      enrollFree({ data }),
+    mutationFn: async (data: CreateEnrollmentRequest) => enroll({ data }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: enrollmentKeys.all })
-      toast.success('Enrolled in free course successfully')
+      toast.success('Student enrolled successfully')
     },
     onError: (e: any) => {
       const message = e.response?.data?.message || e.message

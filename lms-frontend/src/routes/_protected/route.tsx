@@ -10,7 +10,7 @@ export const Route = createFileRoute('/_protected')({
     })
 
     if (!user) {
-      throw redirect({ to: '/login' })
+      throw redirect({ to: '/login', search: location.href })
     }
 
     return { user }

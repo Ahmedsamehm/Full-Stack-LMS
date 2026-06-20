@@ -11,4 +11,3 @@ export function useGetCourses(params: CourseListParams = {}, options?: Omit<UseQ
     ...options,
   })
 }
-

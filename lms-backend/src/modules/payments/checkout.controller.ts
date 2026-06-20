@@ -16,7 +16,7 @@ export class CheckoutController {
     @StudentOnly()
     @ResponseMessage('Checkout session created successfully')
     createCheckout(@Body() dto: CreateCheckoutDto, @CurrentUser() user: UserResponseDto) {
-        return this.paymentsService.createCheckout(dto, user.id);
+        return this.paymentsService.createCheckout(dto, user);
     }
 
     @Post('webhook/stripe')

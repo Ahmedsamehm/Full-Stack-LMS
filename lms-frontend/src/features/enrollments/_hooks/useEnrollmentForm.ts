@@ -4,9 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getUsers } from '#/features/users/_api/users'
 import { getMyStudents } from '#/features/teacher/_api/teacher'
 import { getCourses, getMyCourses } from '#/features/courses/_api/courses'
-import { useEnrollByAdmin } from './useEnrollByAdmin'
-import { useEnrollByTeacher } from './useEnrollByTeacher'
-import { useEnrollFree } from './useEnrollFree'
+import { useEnroll } from './useEnroll'
 import { enrollmentFormSchema, type EnrollmentFormValues, type Roles } from '#/schemas'
 import { isAdminRole } from '#/lib/auth'
 
@@ -18,9 +16,7 @@ interface UseEnrollmentFormProps {
 export function useEnrollmentForm({ onSuccess, role }: UseEnrollmentFormProps) {
   const isAdmin = isAdminRole(role)
 
-  const enrollByAdmin = useEnrollByAdmin()
-  const enrollByTeacher = useEnrollByTeacher()
-  const enrollFree = useEnrollFree()
+  const enroll = useEnroll()
 
   const form = useForm<EnrollmentFormValues>({
     resolver: zodResolver(enrollmentFormSchema),
@@ -33,7 +29,7 @@ export function useEnrollmentForm({ onSuccess, role }: UseEnrollmentFormProps) {
 
   const isFreeCourse = form.watch('isFreeCourse')
 
-  const isPending = isFreeCourse ? enrollFree.isPending : isAdmin ? enrollByAdmin.isPending : enrollByTeacher.isPending
+  const isPending = enroll.isPending
 
   const { data: studentsData, isLoading: loadingStudents } = useQuery({
     queryKey: ['users', { role: 'Student' }],
@@ -66,26 +62,16 @@ export function useEnrollmentForm({ onSuccess, role }: UseEnrollmentFormProps) {
   const isLoadingCourses = isAdmin ? loadingCourses : loadingMyCourses
 
   const onSubmit = (data: EnrollmentFormValues) => {
-    if (data.isFreeCourse) {
-      enrollFree.mutate(
-        { courseId: data.courseId },
-        {
-          onSuccess: () => {
-            form.reset()
-            onSuccess?.()
-          },
-        },
-      )
-    } else {
-      const payload = { userId: data.userId || '', courseId: data.courseId }
-      const mutation = isAdmin ? enrollByAdmin : enrollByTeacher
-      mutation.mutate(payload, {
-        onSuccess: () => {
-          form.reset()
-          onSuccess?.()
-        },
-      })
+    const payload = {
+      courseId: data.courseId,
+      ...(data.isFreeCourse ? {} : { userId: data.userId || '' }),
     }
+    enroll.mutate(payload, {
+      onSuccess: () => {
+        form.reset()
+        onSuccess?.()
+      },
+    })
   }
 
   return {

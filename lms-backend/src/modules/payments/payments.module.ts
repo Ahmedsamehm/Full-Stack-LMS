@@ -3,7 +3,7 @@ import { CheckoutController } from './checkout.controller';
 import { PaymentsController } from './payments.controller';
 import { PaymentsService } from './payments.service';
 import { CreateCheckoutService } from './services/createCheckout.service';
-import { HandleStripeWebhookService } from './services/handleStripeWebhook.service';
+import { HandleWebhookService } from './services/handleStripeWebhook.service';
 import { GetPaymentByIdService } from './services/getPaymentById.service';
 import { GetPaymentsByUserService } from './services/getPaymentsByUser.service';
 import { GetAllPaymentsService } from './services/getAllPayments.service';
@@ -14,7 +14,7 @@ import { StripeService } from './utils/stripe';
 @Module({
     imports: [EnrollmentsModule],
     controllers: [CheckoutController, PaymentsController],
-    providers: [PaymentsService, CreateCheckoutService, HandleStripeWebhookService, GetPaymentByIdService, GetPaymentsByUserService, GetAllPaymentsService, RefundPaymentService, StripeService],
+    providers: [PaymentsService, CreateCheckoutService, HandleWebhookService, GetPaymentByIdService, GetPaymentsByUserService, GetAllPaymentsService, RefundPaymentService, StripeService],
     exports: [GetPaymentsByUserService],
 })
 export class PaymentsModule {}

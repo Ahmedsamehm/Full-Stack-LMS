@@ -13,29 +13,18 @@ const courseDetailSearchSchema = z.object({
 
 export const Route = createFileRoute('/_protected/dashboard/courses/$id')({
   validateSearch: (search) => courseDetailSearchSchema.parse(search),
-  loaderDeps: ({ search }) => ({
-    payment: search.payment,
-  }),
-  loader: async ({ context: { queryClient }, params, deps }) => {
-    const detailKey = courseKeys.detail(params.id)
-    if (deps.payment === 'success') {
-      await queryClient.invalidateQueries({ queryKey: detailKey })
-      await queryClient.invalidateQueries({ queryKey: courseKeys.all })
-    }
+
+  loader: async ({ context: { queryClient }, params }) => {
+    const key = courseKeys.detail(params.id)
+
     await queryClient.ensureQueryData({
-      queryKey: detailKey,
+      queryKey: key,
       queryFn: () => getCourseById({ data: params.id }),
     })
+
     return { id: params.id }
   },
-  head: () => ({
-    meta: [
-      {
-        title: 'EduPro - Course Details',
-        description: 'EduPro Courses',
-      },
-    ],
-  }),
+
   component: RouteComponent,
 })
 
