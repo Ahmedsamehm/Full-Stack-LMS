@@ -60,7 +60,7 @@ api.interceptors.request.use(async (config) => {
 // RESPONSE INTERCEPTOR: Handles Errors, Refresh Logic, and Concurrent Queues
 // ─────────────────────────────────────────────────────────────────────────────
 let isRefreshing = false
-let failedQueue: Array<{ resolve: () => void; reject: (err: unknown) => void }> = []
+let failedQueue: Array<{ resolve: (token?: unknown) => void; reject: (err: unknown) => void }> = []
 
 const processQueue = (error: unknown) => {
   failedQueue.forEach((prom) => {
@@ -85,17 +85,28 @@ api.interceptors.response.use(
     const isAuthEndpoint =
       originalRequest?.url?.includes('/auth/login') ||
       originalRequest?.url?.includes('/auth/register') ||
-      originalRequest?.url?.includes('/auth/refresh') ||
-      originalRequest?.url?.includes('/users/me')
+      originalRequest?.url?.includes('/auth/refresh')
 
     if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject })
+        }).then(() => api(originalRequest))
+      }
+
       originalRequest._retry = true
+      isRefreshing = true
 
       try {
         await api.post('/auth/refresh')
+        processQueue(null)
         return api(originalRequest)
       } catch (refreshError) {
+        processQueue(refreshError)
+        window.location.href = '/login'
         return Promise.reject(refreshError)
+      } finally {
+        isRefreshing = false
       }
     }
 

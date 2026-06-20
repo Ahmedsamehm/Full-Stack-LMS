@@ -4,16 +4,9 @@ import { transformDashboardCourseDetail } from '#/features/courses/_services/cou
 import { getCourseById } from '#/features/courses/_api/courses'
 import { useGetCourseById } from '#/features/courses/_hooks/courses/useGetCourseById'
 import { courseKeys } from '#/features/courses/_hooks/query-keys'
-import { z } from 'zod'
 import type { Roles } from '#/schemas/enums'
 
-const courseDetailSearchSchema = z.object({
-  payment: z.string().optional(),
-})
-
 export const Route = createFileRoute('/_protected/dashboard/courses/$id')({
-  validateSearch: (search) => courseDetailSearchSchema.parse(search),
-
   loader: async ({ context: { queryClient }, params }) => {
     const key = courseKeys.detail(params.id)
 

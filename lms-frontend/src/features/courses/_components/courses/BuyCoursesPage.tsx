@@ -1,6 +1,4 @@
-import { useEffect } from 'react'
-import { ShoppingCart, CheckCircle, Sparkles, Star } from 'lucide-react'
-import { toast } from 'sonner'
+import { ShoppingCart, CheckCircle, Sparkles, Star, Loader2 } from 'lucide-react'
 import { useGetCourses } from '#/features/courses/_hooks/courses/useGetCourses'
 import { useGetMyCourses } from '#/features/courses/_hooks/courses/useGetMyCourses'
 import { useCreateCheckoutSession, useEnrollFreeCourse } from '../../../payments/_hooks/useCheckout'
@@ -12,20 +10,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '#
 import { Button } from '#/components/ui/button'
 import { usePaymentFilters } from '../../../payments/_hooks/usePaymentFilters'
 import type { Course } from '#/schemas'
-import type { BuyCoursesSearchParams } from '#/lib/search'
-
 import { PAGINATION } from '#/lib/constants'
 
 // ─── BuyCoursesPageProps ───────────────────────────────────────────────────────
 
 interface BuyCoursesPageProps {
   params?: { limit: number; page: number; search?: string }
-  searchParams?: BuyCoursesSearchParams
 }
 
 // ─── BuyCoursesPage ────────────────────────────────────────────────────────────
 
-export default function BuyCoursesPage({ params: _params, searchParams }: BuyCoursesPageProps = {}) {
+export default function BuyCoursesPage({ params: _params }: BuyCoursesPageProps = {}) {
   const { category, search, setFilter } = usePaymentFilters()
 
   const { data: allCoursesData, isLoading: isLoadingAll } = useGetCourses({ limit: PAGINATION.MAX_LIMIT, search: search || undefined })
@@ -47,25 +42,9 @@ export default function BuyCoursesPage({ params: _params, searchParams }: BuyCou
 
   const categories = Array.from(new Set(courses.map((c) => c.category?.name).filter(Boolean))) as string[]
 
-  useEffect(() => {
-    if (searchParams?.payment === 'failed') {
-      toast.error('Payment was cancelled or failed. Please try again.')
-    }
-  }, [searchParams?.payment])
-
   return (
     <div className="flex-1 overflow-y-auto w-full bg-surface-bright/30">
       <div className="px-4 md:px-8 py-8 max-w-[1440px] mx-auto flex flex-col gap-6">
-        {/* Error/Warning Banner if Payment Failed */}
-        {searchParams?.payment === 'failed' && (
-          <div className="bg-destructive/10 border border-destructive/20 text-destructive rounded-2xl p-4 flex items-center gap-3">
-            <span className="flex-1 text-sm font-medium">
-              Your payment session was cancelled or failed. Don't worry, you haven't been charged. You can try purchasing the course again.
-            </span>
-          </div>
-        )}
-
-        {/* Hero Banner */}
         <div className="relative overflow-hidden bg-gradient-to-r from-primary/90 to-primary-container/40 p-6 md:p-8 rounded-2xl border border-outline-variant shadow-sm flex flex-col gap-4 text-white">
           <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none transform translate-y-6 translate-x-6 scale-150">
             <ShoppingCart className="size-48" />
@@ -120,6 +99,7 @@ export default function BuyCoursesPage({ params: _params, searchParams }: BuyCou
                 key={course.id}
                 course={course}
                 isEnrolled={enrolledIds.has(course.id)}
+                isPending={checkout.isPending || enrollFree.isPending}
                 onBuy={() => handleCourseEnrollment(course.id, course.price, { checkout, enrollFree })}
               />
             ))}
@@ -135,10 +115,11 @@ export default function BuyCoursesPage({ params: _params, searchParams }: BuyCou
 interface CourseCardProps {
   course: Course
   isEnrolled: boolean
+  isPending: boolean
   onBuy: () => void
 }
 
-function CourseCard({ course, isEnrolled, onBuy }: CourseCardProps) {
+function CourseCard({ course, isEnrolled, isPending, onBuy }: CourseCardProps) {
   return (
     <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant overflow-hidden flex flex-col shadow-sm hover:shadow-md hover:scale-[1.01] transition-all duration-300">
       <div className="h-44 w-full relative">
@@ -184,10 +165,11 @@ function CourseCard({ course, isEnrolled, onBuy }: CourseCardProps) {
           ) : (
             <Button
               onClick={onBuy}
-              className="flex items-center justify-center gap-2 bg-primary text-white hover:bg-primary/90 active:scale-95 transition-all shadow-sm cursor-pointer"
+              disabled={isPending}
+              className="flex items-center justify-center gap-2 bg-primary text-white hover:bg-primary/90 active:scale-95 transition-all shadow-sm cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <ShoppingCart className="size-4" />
-              {course.price > 0 ? 'Buy Now' : 'Enroll Free'}
+              {isPending ? <Loader2 className="size-4 animate-spin" /> : <ShoppingCart className="size-4" />}
+              {isPending ? 'Processing...' : course.price > 0 ? 'Buy Now' : 'Enroll Free'}
             </Button>
           )}
         </div>

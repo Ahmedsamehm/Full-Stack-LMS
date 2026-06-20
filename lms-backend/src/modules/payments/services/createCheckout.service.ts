@@ -71,8 +71,8 @@ export class CreateCheckoutService {
                 },
             ],
             mode: 'payment',
-            success_url: `${process.env.FRONTEND_URL}/dashboard/courses/${course.id}?payment=success`,
-            cancel_url: `${process.env.FRONTEND_URL}/dashboard/buy-courses?payment=failed&courseId=${course.id}`,
+            success_url: `${process.env.FRONTEND_URL}/dashboard/payment-result?status=success&courseId=${course.id}`,
+            cancel_url: `${process.env.FRONTEND_URL}/dashboard/payment-result?status=failed&courseId=${course.id}`,
             customer_email: user.email,
             metadata: {
                 userId: user.id,

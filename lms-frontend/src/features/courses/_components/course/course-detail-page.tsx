@@ -1,6 +1,7 @@
 import { CourseDetailSkeleton } from '#/components/loading-skeleton'
 import { ErrorState } from '#/components/error-state'
 import { useGetCourseById } from '../../_hooks/courses/useGetCourseById'
+import { useCreateCheckoutSession, useEnrollFreeCourse } from '#/features/payments/_hooks/useCheckout'
 import { transformCourseDetail } from '../../_services/course-transformer'
 import type { CourseDetail as ApiCourseDetail } from '#/schemas'
 
@@ -21,6 +22,8 @@ import CourseMobileCta from './course-mobile-cta'
 export default function CourseDetailPage({ id }: CourseDetailPageProps) {
   const { data: apiResponse, isLoading, isError } = useGetCourseById(id)
   const courseData = apiResponse?.data
+  const checkout = useCreateCheckoutSession()
+  const enrollFree = useEnrollFreeCourse()
 
   if (isLoading) {
     return <CourseDetailSkeleton />
@@ -60,18 +63,21 @@ export default function CourseDetailPage({ id }: CourseDetailPageProps) {
           <div className="lg:w-[35%]">
             <div className="lg:sticky lg:top-24">
               <CourseSidebarCard
+                courseId={course.id}
                 price={course.price}
                 originalPrice={course.originalPrice}
                 totalLessons={course.totalLessons}
                 totalDuration={course.totalDuration}
                 enrollments={course.stats.enrollments}
+                checkout={checkout}
+                enrollFree={enrollFree}
               />
             </div>
           </div>
         </div>
       </div>
 
-      <CourseMobileCta price={course.price} />
+      <CourseMobileCta courseId={course.id} price={course.price} checkout={checkout} enrollFree={enrollFree} />
     </main>
   )
 }

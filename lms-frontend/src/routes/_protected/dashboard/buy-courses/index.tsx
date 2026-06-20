@@ -39,6 +39,5 @@ export const Route = createFileRoute('/_protected/dashboard/buy-courses/')({
 
 function RouteComponent() {
   const params = Route.useLoaderData()
-  const searchParams = Route.useSearch()
-  return <BuyCoursesPage params={params} searchParams={searchParams} />
+  return <BuyCoursesPage params={params} />
 }

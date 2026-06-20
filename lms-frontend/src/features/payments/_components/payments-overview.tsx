@@ -36,12 +36,7 @@ export default function PaymentsOverview({ data, isLoading }: PaymentsOverviewPr
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-            <XAxis
-              dataKey="month"
-              tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }}
-              axisLine={{ stroke: 'var(--border)' }}
-              tickLine={false}
-            />
+            <XAxis dataKey="month" tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }} axisLine={{ stroke: 'var(--border)' }} tickLine={false} />
             <YAxis
               tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }}
               axisLine={false}
@@ -57,12 +52,7 @@ export default function PaymentsOverview({ data, isLoading }: PaymentsOverviewPr
               }}
               formatter={(value) => [`$${Number(value).toLocaleString()}`, 'Revenue']}
             />
-            <Bar
-              dataKey="revenue"
-              fill="var(--primary)"
-              radius={[4, 4, 0, 0]}
-              maxBarSize={36}
-            />
+            <Bar dataKey="revenue" fill="var(--primary)" radius={[4, 4, 0, 0]} maxBarSize={36} />
           </BarChart>
         </ResponsiveContainer>
       </div>

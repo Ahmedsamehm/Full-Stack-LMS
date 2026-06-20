@@ -23,6 +23,7 @@ import { Route as ProtectedDashboardCoursesRouteRouteImport } from './routes/_pr
 import { Route as ProtectedDashboardUsersIndexRouteImport } from './routes/_protected/dashboard/users/index'
 import { Route as ProtectedDashboardStudentsIndexRouteImport } from './routes/_protected/dashboard/students/index'
 import { Route as ProtectedDashboardSettingsIndexRouteImport } from './routes/_protected/dashboard/settings/index'
+import { Route as ProtectedDashboardPaymentResultIndexRouteImport } from './routes/_protected/dashboard/payment-result/index'
 import { Route as ProtectedDashboardEnrollmentsIndexRouteImport } from './routes/_protected/dashboard/enrollments/index'
 import { Route as ProtectedDashboardCoursesIndexRouteImport } from './routes/_protected/dashboard/courses/index'
 import { Route as ProtectedDashboardBuyCoursesIndexRouteImport } from './routes/_protected/dashboard/buy-courses/index'
@@ -105,6 +106,12 @@ const ProtectedDashboardSettingsIndexRoute =
     path: '/settings/',
     getParentRoute: () => ProtectedDashboardRouteRoute,
   } as any)
+const ProtectedDashboardPaymentResultIndexRoute =
+  ProtectedDashboardPaymentResultIndexRouteImport.update({
+    id: '/payment-result/',
+    path: '/payment-result/',
+    getParentRoute: () => ProtectedDashboardRouteRoute,
+  } as any)
 const ProtectedDashboardEnrollmentsIndexRoute =
   ProtectedDashboardEnrollmentsIndexRouteImport.update({
     id: '/enrollments/',
@@ -173,6 +180,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/buy-courses/': typeof ProtectedDashboardBuyCoursesIndexRoute
   '/dashboard/courses/': typeof ProtectedDashboardCoursesIndexRoute
   '/dashboard/enrollments/': typeof ProtectedDashboardEnrollmentsIndexRoute
+  '/dashboard/payment-result/': typeof ProtectedDashboardPaymentResultIndexRoute
   '/dashboard/settings/': typeof ProtectedDashboardSettingsIndexRoute
   '/dashboard/students/': typeof ProtectedDashboardStudentsIndexRoute
   '/dashboard/users/': typeof ProtectedDashboardUsersIndexRoute
@@ -193,6 +201,7 @@ export interface FileRoutesByTo {
   '/dashboard/buy-courses': typeof ProtectedDashboardBuyCoursesIndexRoute
   '/dashboard/courses': typeof ProtectedDashboardCoursesIndexRoute
   '/dashboard/enrollments': typeof ProtectedDashboardEnrollmentsIndexRoute
+  '/dashboard/payment-result': typeof ProtectedDashboardPaymentResultIndexRoute
   '/dashboard/settings': typeof ProtectedDashboardSettingsIndexRoute
   '/dashboard/students': typeof ProtectedDashboardStudentsIndexRoute
   '/dashboard/users': typeof ProtectedDashboardUsersIndexRoute
@@ -219,6 +228,7 @@ export interface FileRoutesById {
   '/_protected/dashboard/buy-courses/': typeof ProtectedDashboardBuyCoursesIndexRoute
   '/_protected/dashboard/courses/': typeof ProtectedDashboardCoursesIndexRoute
   '/_protected/dashboard/enrollments/': typeof ProtectedDashboardEnrollmentsIndexRoute
+  '/_protected/dashboard/payment-result/': typeof ProtectedDashboardPaymentResultIndexRoute
   '/_protected/dashboard/settings/': typeof ProtectedDashboardSettingsIndexRoute
   '/_protected/dashboard/students/': typeof ProtectedDashboardStudentsIndexRoute
   '/_protected/dashboard/users/': typeof ProtectedDashboardUsersIndexRoute
@@ -243,6 +253,7 @@ export interface FileRouteTypes {
     | '/dashboard/buy-courses/'
     | '/dashboard/courses/'
     | '/dashboard/enrollments/'
+    | '/dashboard/payment-result/'
     | '/dashboard/settings/'
     | '/dashboard/students/'
     | '/dashboard/users/'
@@ -263,6 +274,7 @@ export interface FileRouteTypes {
     | '/dashboard/buy-courses'
     | '/dashboard/courses'
     | '/dashboard/enrollments'
+    | '/dashboard/payment-result'
     | '/dashboard/settings'
     | '/dashboard/students'
     | '/dashboard/users'
@@ -288,6 +300,7 @@ export interface FileRouteTypes {
     | '/_protected/dashboard/buy-courses/'
     | '/_protected/dashboard/courses/'
     | '/_protected/dashboard/enrollments/'
+    | '/_protected/dashboard/payment-result/'
     | '/_protected/dashboard/settings/'
     | '/_protected/dashboard/students/'
     | '/_protected/dashboard/users/'
@@ -404,6 +417,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDashboardSettingsIndexRouteImport
       parentRoute: typeof ProtectedDashboardRouteRoute
     }
+    '/_protected/dashboard/payment-result/': {
+      id: '/_protected/dashboard/payment-result/'
+      path: '/payment-result'
+      fullPath: '/dashboard/payment-result/'
+      preLoaderRoute: typeof ProtectedDashboardPaymentResultIndexRouteImport
+      parentRoute: typeof ProtectedDashboardRouteRoute
+    }
     '/_protected/dashboard/enrollments/': {
       id: '/_protected/dashboard/enrollments/'
       path: '/enrollments'
@@ -491,6 +511,7 @@ interface ProtectedDashboardRouteRouteChildren {
   ProtectedDashboardIndexRoute: typeof ProtectedDashboardIndexRoute
   ProtectedDashboardBuyCoursesIndexRoute: typeof ProtectedDashboardBuyCoursesIndexRoute
   ProtectedDashboardEnrollmentsIndexRoute: typeof ProtectedDashboardEnrollmentsIndexRoute
+  ProtectedDashboardPaymentResultIndexRoute: typeof ProtectedDashboardPaymentResultIndexRoute
   ProtectedDashboardSettingsIndexRoute: typeof ProtectedDashboardSettingsIndexRoute
   ProtectedDashboardStudentsIndexRoute: typeof ProtectedDashboardStudentsIndexRoute
   ProtectedDashboardUsersIndexRoute: typeof ProtectedDashboardUsersIndexRoute
@@ -509,6 +530,8 @@ const ProtectedDashboardRouteRouteChildren: ProtectedDashboardRouteRouteChildren
       ProtectedDashboardBuyCoursesIndexRoute,
     ProtectedDashboardEnrollmentsIndexRoute:
       ProtectedDashboardEnrollmentsIndexRoute,
+    ProtectedDashboardPaymentResultIndexRoute:
+      ProtectedDashboardPaymentResultIndexRoute,
     ProtectedDashboardSettingsIndexRoute: ProtectedDashboardSettingsIndexRoute,
     ProtectedDashboardStudentsIndexRoute: ProtectedDashboardStudentsIndexRoute,
     ProtectedDashboardUsersIndexRoute: ProtectedDashboardUsersIndexRoute,
