@@ -103,7 +103,9 @@ api.interceptors.response.use(
         return api(originalRequest)
       } catch (refreshError) {
         processQueue(refreshError)
-        window.location.href = '/login'
+        // Dispatch a custom event so TanStack Router can handle the redirect
+        // This preserves the current URL for redirect-after-login
+        window.dispatchEvent(new CustomEvent('auth:logout'))
         return Promise.reject(refreshError)
       } finally {
         isRefreshing = false

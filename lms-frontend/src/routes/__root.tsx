@@ -1,7 +1,8 @@
-import { HeadContent, Scripts, createRootRouteWithContext } from '@tanstack/react-router'
+import { HeadContent, Scripts, createRootRouteWithContext, useRouter } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import TanStackQueryDevtools from '../lib/devtools'
+import { useEffect } from 'react'
 
 import appCss from '../styles.css?url'
 
@@ -35,6 +36,21 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const router = useRouter()
+
+  useEffect(() => {
+    const handleAuthLogout = () => {
+      const currentPath = window.location.pathname + window.location.search
+      router.navigate({
+        to: '/login',
+        search: { redirect: currentPath },
+      })
+    }
+
+    window.addEventListener('auth:logout', handleAuthLogout)
+    return () => window.removeEventListener('auth:logout', handleAuthLogout)
+  }, [router])
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -59,3 +75,4 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     </html>
   )
 }
+
