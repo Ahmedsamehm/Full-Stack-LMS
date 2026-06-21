@@ -3,7 +3,7 @@ import { getUser } from '#/features/users/_api/users'
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected')({
-  loader: async ({ context, location }) => {
+  beforeLoad: async ({ context, location }) => {
     // Only run on client side where cookies exist
     const user = await context.queryClient.ensureQueryData({
       queryKey: ['user'],
@@ -11,8 +11,11 @@ export const Route = createFileRoute('/_protected')({
     })
 
     if (!user) {
+      const searchParams = new URLSearchParams(location.search as Record<string, string>).toString()
+      const redirectPath = searchParams ? `${location.pathname}?${searchParams}` : location.pathname
       throw redirect({
         to: '/login',
+        search: { redirect: redirectPath },
       })
     }
 
