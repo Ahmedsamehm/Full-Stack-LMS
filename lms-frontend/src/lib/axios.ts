@@ -1,8 +1,5 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios'
 import { createIsomorphicFn } from '@tanstack/react-start'
-import { env } from './env'
-
-const apiUrl = env.VITE_API_URL
 
 const api = axios.create({
   baseURL: '/api',
@@ -40,13 +37,6 @@ api.interceptors.request.use(async (config) => {
   if (typeof window !== 'undefined') {
     return config
   }
-
-  // SERVER SIDE (SSR): Manually forward cookies to the backend API
-  // 1. Fix Base URL for SSR to avoid self-request loops
-  if (config.baseURL && config.baseURL.startsWith('/')) {
-    config.baseURL = env.SSR_API_URL
-  }
-
   // 2. Extract cookies from the incoming browser request and forward them
   const forwardedHeaders = await getForwardedHeaders()
   if (forwardedHeaders.Cookie) {
