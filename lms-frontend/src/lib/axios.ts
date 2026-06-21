@@ -88,35 +88,18 @@ api.interceptors.response.use(
       if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
         originalRequest._retry = true
         try {
+          // Forward the same cookies so the refresh endpoint can read the refresh token
           const forwardedHeaders = await getForwardedHeaders()
-          const refreshResponse = await api.post('/auth/refresh', null, {
+          await api.post('/auth/refresh', null, {
             headers: forwardedHeaders.Cookie ? { Cookie: forwardedHeaders.Cookie } : {},
           })
-
-          const setCookieHeaders = refreshResponse.headers['set-cookie'] as string[] | undefined
-
-          if (setCookieHeaders?.length) {
-            const newCookiePairs = setCookieHeaders.map((c) => c.split(';')[0]).join('; ')
-            originalRequest.headers = {
-              ...originalRequest.headers,
-              Cookie: newCookiePairs,
-            }
-
-            try {
-              const { setResponseHeader } = await import('@tanstack/react-start/server')
-              setCookieHeaders.forEach((cookie) => {
-                setResponseHeader('Set-Cookie', cookie)
-              })
-            } catch (e) {
-              console.warn('SSR: Could not forward refreshed cookies to browser response.')
-            }
-          }
-
           return api(originalRequest)
         } catch {
+          // Refresh failed server-side — let beforeLoad redirect to /login naturally
           return Promise.reject(error)
         }
       }
+      return Promise.reject(error)
     }
 
     // ── CLIENT SIDE ───────────────────────────────────────────────────────────────
