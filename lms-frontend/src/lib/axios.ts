@@ -68,15 +68,31 @@ api.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as any
 
-    if (typeof window === 'undefined') {
-      return Promise.reject(error)
-    }
-
     const isAuthEndpoint =
       originalRequest?.url?.includes('/auth/login') ||
       originalRequest?.url?.includes('/auth/register') ||
       originalRequest?.url?.includes('/auth/refresh')
 
+    // ── SSR: attempt refresh server-side so page reloads don't log the user out ──
+    if (typeof window === 'undefined') {
+      if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
+        originalRequest._retry = true
+        try {
+          // Forward the same cookies so the refresh endpoint can read the refresh token
+          const forwardedHeaders = await getForwardedHeaders()
+          await api.post('/auth/refresh', null, {
+            headers: forwardedHeaders.Cookie ? { Cookie: forwardedHeaders.Cookie } : {},
+          })
+          return api(originalRequest)
+        } catch {
+          // Refresh failed server-side — let beforeLoad redirect to /login naturally
+          return Promise.reject(error)
+        }
+      }
+      return Promise.reject(error)
+    }
+
+    // ── CLIENT SIDE ───────────────────────────────────────────────────────────────
     if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
