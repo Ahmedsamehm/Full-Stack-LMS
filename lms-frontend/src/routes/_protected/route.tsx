@@ -4,6 +4,12 @@ import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected')({
   beforeLoad: async ({ context, location }) => {
+    // SKIP on server — let client handle auth after hydration
+    if (typeof window === 'undefined') {
+      return { user: null }
+    }
+
+    // Only run on client side where cookies exist
     const user = await context.queryClient.ensureQueryData({
       queryKey: ['user'],
       queryFn: getUser,
