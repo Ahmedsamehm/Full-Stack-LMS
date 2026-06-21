@@ -65,14 +65,14 @@ export class AuthController {
         res.clearCookie('refreshToken', {
             httpOnly: true,
             secure: true,
-            sameSite: 'none',
+            sameSite: 'lax',
             path: '/',
         });
 
         res.clearCookie('accessToken', {
             httpOnly: true,
             secure: true,
-            sameSite: 'none',
+            sameSite: 'lax',
             path: '/',
         });
 
@@ -99,7 +99,7 @@ export class AuthController {
         res.cookie('refreshToken', token, {
             httpOnly: true,
             secure: true,
-            sameSite: 'none',
+            sameSite: 'lax',
             path: '/',
             maxAge: env.JWT_REFRESH_COOKIE_MAX_AGE,
         });
@@ -109,7 +109,7 @@ export class AuthController {
         res.cookie('accessToken', token, {
             httpOnly: true,
             secure: true,
-            sameSite: 'none',
+            sameSite: 'lax',
             path: '/',
             maxAge: env.JWT_ACCESS_COOKIE_MAX_AGE,
         });
