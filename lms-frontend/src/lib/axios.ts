@@ -2,8 +2,8 @@ import axios, { AxiosError } from 'axios'
 import { createIsomorphicFn } from '@tanstack/react-start'
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-  withCredentials: true,
+  baseURL: '/api',
+  withCredentials: true, // Sends cookies automatically in the browser
   headers: {
     'Content-Type': 'application/json',
   },
