@@ -8,7 +8,7 @@ import { Reflector } from '@nestjs/core';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import express from 'express';
-import { corsOrigins } from '../src/core/config/env';
+import { corsOrigins, env } from '../src/core/config/env';
 
 const server = express();
 
@@ -27,7 +27,7 @@ async function createApp() {
     app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 
     app.enableCors({
-        origin: corsOrigins,
+        origin: env.FRONTEND_URL,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
         allowedHeaders: ['Authorization', 'Content-Type', 'Accept', 'x-lang', 'accept-language', 'stripe-signature'],
         credentials: true,
