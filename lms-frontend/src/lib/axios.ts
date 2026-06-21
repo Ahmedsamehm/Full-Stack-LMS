@@ -30,6 +30,12 @@ const getForwardedHeaders = createIsomorphicFn()
   .client((): { Cookie?: string } => ({}))
 
 // ─────────────────────────────────────────────────────────────────────────────
+// SSR Base URL: On the server '/api' is a relative path with no proxy.
+// We must use the absolute backend URL directly.
+// ─────────────────────────────────────────────────────────────────────────────
+const SSR_API_URL = import.meta.env.VITE_API_URL_SSR ?? import.meta.env.VITE_API_URL
+
+// ─────────────────────────────────────────────────────────────────────────────
 // REQUEST INTERCEPTOR: Handles SSR Base URL and SSR Cookie forwarding
 // ─────────────────────────────────────────────────────────────────────────────
 api.interceptors.request.use(async (config) => {
@@ -37,7 +43,11 @@ api.interceptors.request.use(async (config) => {
   if (typeof window !== 'undefined') {
     return config
   }
-  // 2. Extract cookies from the incoming browser request and forward them
+
+  // SSR: override baseURL to absolute backend URL (Vercel rewrites don't work server-side)
+  config.baseURL = SSR_API_URL
+
+  // Forward the browser's cookies (including access + refresh tokens) to the backend
   const forwardedHeaders = await getForwardedHeaders()
   if (forwardedHeaders.Cookie) {
     config.headers.Cookie = forwardedHeaders.Cookie
@@ -78,18 +88,35 @@ api.interceptors.response.use(
       if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
         originalRequest._retry = true
         try {
-          // Forward the same cookies so the refresh endpoint can read the refresh token
           const forwardedHeaders = await getForwardedHeaders()
-          await api.post('/auth/refresh', null, {
+          const refreshResponse = await api.post('/auth/refresh', null, {
             headers: forwardedHeaders.Cookie ? { Cookie: forwardedHeaders.Cookie } : {},
           })
+
+          const setCookieHeaders = refreshResponse.headers['set-cookie'] as string[] | undefined
+
+          if (setCookieHeaders?.length) {
+            const newCookiePairs = setCookieHeaders.map((c) => c.split(';')[0]).join('; ')
+            originalRequest.headers = {
+              ...originalRequest.headers,
+              Cookie: newCookiePairs,
+            }
+
+            try {
+              const { setResponseHeader } = await import('@tanstack/react-start/server')
+              setCookieHeaders.forEach((cookie) => {
+                setResponseHeader('Set-Cookie', cookie)
+              })
+            } catch (e) {
+              console.warn('SSR: Could not forward refreshed cookies to browser response.')
+            }
+          }
+
           return api(originalRequest)
         } catch {
-          // Refresh failed server-side — let beforeLoad redirect to /login naturally
           return Promise.reject(error)
         }
       }
-      return Promise.reject(error)
     }
 
     // ── CLIENT SIDE ───────────────────────────────────────────────────────────────

@@ -57,11 +57,12 @@ export class TokenService {
         const newTokenHash = hashToken(newToken);
         const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
-        await this.prisma.$transaction([
-            this.prisma.refreshToken.delete({ where: { tokenHash: oldTokenHash } }),
-            this.prisma.refreshToken.create({
-                data: { tokenHash: newTokenHash, userId, expiresAt },
-            }),
-        ]);
+        await this.prisma.refreshToken.update({
+            where: { tokenHash: oldTokenHash },
+            data: { replacedBy: newTokenHash },
+        });
+        await this.prisma.refreshToken.create({
+            data: { tokenHash: newTokenHash, userId, expiresAt },
+        });
     }
 }
