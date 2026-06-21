@@ -5,7 +5,7 @@ import { env } from './env'
 const apiUrl = env.VITE_API_URL
 
 const api = axios.create({
-  baseURL: apiUrl,
+  baseURL: '/api',
   withCredentials: true, // Sends cookies automatically in the browser
   headers: {
     'Content-Type': 'application/json',
