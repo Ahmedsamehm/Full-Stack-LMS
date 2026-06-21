@@ -1,4 +1,4 @@
-import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios'
+import axios, { AxiosError } from 'axios'
 import { createIsomorphicFn } from '@tanstack/react-start'
 
 const api = axios.create({

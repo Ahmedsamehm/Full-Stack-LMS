@@ -1,5 +1,3 @@
-import Footer from '#/components/Footer'
-import Header from '#/components/Header'
 import { createFileRoute } from '@tanstack/react-router'
 
 import CoursesPage from '#/features/courses/_components/courses/courses-page'
@@ -57,7 +55,6 @@ function RouteComponent() {
 
   return (
     <>
-      <Header />
       <CoursesPage
         courses={courses}
         categories={categoriesList}
@@ -67,7 +64,6 @@ function RouteComponent() {
         meta={coursesData?.meta}
         pageTitle={pageTitle}
       />
-      <Footer />
     </>
   )
 }

@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PublicCoursesRouteRouteImport } from './routes/_public/_courses/route'
 import { Route as PublicAuthRouteRouteImport } from './routes/_public/_auth/route'
 import { Route as ProtectedDashboardRouteRouteImport } from './routes/_protected/dashboard/route'
 import { Route as ProtectedDashboardIndexRouteImport } from './routes/_protected/dashboard/index'
@@ -47,6 +48,10 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PublicCoursesRouteRoute = PublicCoursesRouteRouteImport.update({
+  id: '/_courses',
+  getParentRoute: () => PublicRouteRoute,
+} as any)
 const PublicAuthRouteRoute = PublicAuthRouteRouteImport.update({
   id: '/_auth',
   getParentRoute: () => PublicRouteRoute,
@@ -62,9 +67,9 @@ const ProtectedDashboardIndexRoute = ProtectedDashboardIndexRouteImport.update({
   getParentRoute: () => ProtectedDashboardRouteRoute,
 } as any)
 const PublicCoursesCoursesRoute = PublicCoursesCoursesRouteImport.update({
-  id: '/_courses/courses',
+  id: '/courses',
   path: '/courses',
-  getParentRoute: () => PublicRouteRoute,
+  getParentRoute: () => PublicCoursesRouteRoute,
 } as any)
 const PublicAuthRegisterRoute = PublicAuthRegisterRouteImport.update({
   id: '/register',
@@ -162,9 +167,9 @@ const ProtectedDashboardSettingsBillingIndexRoute =
   } as any)
 const PublicCoursesIdCoursesIdRoute =
   PublicCoursesIdCoursesIdRouteImport.update({
-    id: '/_courses/_id/courses/$id',
+    id: '/_id/courses/$id',
     path: '/courses/$id',
-    getParentRoute: () => PublicRouteRoute,
+    getParentRoute: () => PublicCoursesRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -218,6 +223,7 @@ export interface FileRoutesById {
   '/_public': typeof PublicRouteRouteWithChildren
   '/_protected/dashboard': typeof ProtectedDashboardRouteRouteWithChildren
   '/_public/_auth': typeof PublicAuthRouteRouteWithChildren
+  '/_public/_courses': typeof PublicCoursesRouteRouteWithChildren
   '/_protected/dashboard/courses': typeof ProtectedDashboardCoursesRouteRouteWithChildren
   '/_public/_auth/forgotPassword': typeof PublicAuthForgotPasswordRoute
   '/_public/_auth/login': typeof PublicAuthLoginRoute
@@ -290,6 +296,7 @@ export interface FileRouteTypes {
     | '/_public'
     | '/_protected/dashboard'
     | '/_public/_auth'
+    | '/_public/_courses'
     | '/_protected/dashboard/courses'
     | '/_public/_auth/forgotPassword'
     | '/_public/_auth/login'
@@ -340,6 +347,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_public/_courses': {
+      id: '/_public/_courses'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PublicCoursesRouteRouteImport
+      parentRoute: typeof PublicRouteRoute
+    }
     '/_public/_auth': {
       id: '/_public/_auth'
       path: ''
@@ -366,7 +380,7 @@ declare module '@tanstack/react-router' {
       path: '/courses'
       fullPath: '/courses'
       preLoaderRoute: typeof PublicCoursesCoursesRouteImport
-      parentRoute: typeof PublicRouteRoute
+      parentRoute: typeof PublicCoursesRouteRoute
     }
     '/_public/_auth/register': {
       id: '/_public/_auth/register'
@@ -485,7 +499,7 @@ declare module '@tanstack/react-router' {
       path: '/courses/$id'
       fullPath: '/courses/$id'
       preLoaderRoute: typeof PublicCoursesIdCoursesIdRouteImport
-      parentRoute: typeof PublicRouteRoute
+      parentRoute: typeof PublicCoursesRouteRoute
     }
   }
 }
@@ -578,16 +592,27 @@ const PublicAuthRouteRouteWithChildren = PublicAuthRouteRoute._addFileChildren(
   PublicAuthRouteRouteChildren,
 )
 
-interface PublicRouteRouteChildren {
-  PublicAuthRouteRoute: typeof PublicAuthRouteRouteWithChildren
+interface PublicCoursesRouteRouteChildren {
   PublicCoursesCoursesRoute: typeof PublicCoursesCoursesRoute
   PublicCoursesIdCoursesIdRoute: typeof PublicCoursesIdCoursesIdRoute
 }
 
-const PublicRouteRouteChildren: PublicRouteRouteChildren = {
-  PublicAuthRouteRoute: PublicAuthRouteRouteWithChildren,
+const PublicCoursesRouteRouteChildren: PublicCoursesRouteRouteChildren = {
   PublicCoursesCoursesRoute: PublicCoursesCoursesRoute,
   PublicCoursesIdCoursesIdRoute: PublicCoursesIdCoursesIdRoute,
+}
+
+const PublicCoursesRouteRouteWithChildren =
+  PublicCoursesRouteRoute._addFileChildren(PublicCoursesRouteRouteChildren)
+
+interface PublicRouteRouteChildren {
+  PublicAuthRouteRoute: typeof PublicAuthRouteRouteWithChildren
+  PublicCoursesRouteRoute: typeof PublicCoursesRouteRouteWithChildren
+}
+
+const PublicRouteRouteChildren: PublicRouteRouteChildren = {
+  PublicAuthRouteRoute: PublicAuthRouteRouteWithChildren,
+  PublicCoursesRouteRoute: PublicCoursesRouteRouteWithChildren,
 }
 
 const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(
