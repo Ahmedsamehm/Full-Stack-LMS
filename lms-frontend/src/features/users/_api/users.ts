@@ -8,17 +8,15 @@ import type {
   updateUserParamsSchema,
   changeUserRoleParamsSchema,
 } from '#/schemas'
-import axios from 'axios'
 
-export const getUser = async () => {
+export async function getUser() {
   try {
-    const res = await api.get('/auth/me')
-    return res.data
-  } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.status === 401) {
-      return null
-    }
-    throw error
+    const { data } = await api.get('/users/me')
+
+    return data
+  } catch (error: any) {
+    console.error('getUser error:', error?.response?.data, error?.config?.url)
+    return null
   }
 }
 
