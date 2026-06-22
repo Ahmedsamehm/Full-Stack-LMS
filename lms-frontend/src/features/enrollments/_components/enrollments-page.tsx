@@ -21,24 +21,16 @@ import { usePagination } from '#/hooks/usePagination'
 import { transformEnrollment } from '../_services/enrollment-transformer'
 
 interface EnrollmentsPageProps {
-  initialData?: any
-  initialEnrollments?: DisplayEnrollment[]
   role: Roles
 }
 
-export default function EnrollmentsPage({ initialData, initialEnrollments, role }: EnrollmentsPageProps) {
+export default function EnrollmentsPage({ role }: EnrollmentsPageProps) {
   const { status, search, page, setFilter, clearFilters } = useEnrollmentFilters()
   const [isEnrollDialogOpen, setIsEnrollDialogOpen] = useState(false)
   const [enrollmentToDelete, setEnrollmentToDelete] = useState<string | null>(null)
 
-  const { data, isLoading, isFetching, isError, refetch } = useGetEnrollments(
-    {
-      page,
-      search: search || undefined,
-      status,
-    },
-    { initialData },
-  )
+  const params = { page, search: search || undefined, status }
+  const { data, isLoading, isFetching, isError, refetch } = useGetEnrollments(params)
 
   const { currentPage, setPage, totalPages } = usePagination({
     totalPages: data?.meta?.totalPages,
@@ -46,7 +38,7 @@ export default function EnrollmentsPage({ initialData, initialEnrollments, role 
   const deleteMutation = useDeleteEnrollment()
   const updateStatusMutation = useUpdateEnrollmentStatus()
 
-  const displayEnrollments: DisplayEnrollment[] = data?.data ? data.data.map(transformEnrollment) : (initialEnrollments ?? [])
+  const displayEnrollments: DisplayEnrollment[] = data?.data ? data.data.map(transformEnrollment) : []
 
   const handleUpdateStatus = (id: string, nextStatus: EnrollmentStatus) => {
     updateStatusMutation.mutate({ id, status: nextStatus })

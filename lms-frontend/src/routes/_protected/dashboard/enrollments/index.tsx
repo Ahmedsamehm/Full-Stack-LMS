@@ -1,7 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import EnrollmentsPage from '#/features/enrollments/_components/enrollments-page'
-import { GetAllEnrollments } from '#/features/enrollments/_api/enrollments'
-import { transformEnrollment } from '#/features/enrollments/_services/enrollment-transformer'
+import { enrollmentsQueryOptions } from '#/features/enrollments/_hooks/useGetEnrollments'
 import { enrollmentsSearchSchema, createSearchValidator } from '#/lib/search'
 import type { EnrollmentsSearchParams } from '#/lib/search'
 import type { Roles } from '#/schemas'
@@ -13,14 +12,13 @@ export const Route = createFileRoute('/_protected/dashboard/enrollments/')({
     search: search.search,
     status: search.status,
   }),
-  loader: async ({ deps }) => {
+  loader: async ({ context: { queryClient }, deps }) => {
     const params = {
       page: deps.page || 1,
       search: deps.search || undefined,
       status: deps.status || undefined,
     }
-    const data = await GetAllEnrollments({ data: params })
-    return data
+    await queryClient.ensureQueryData(enrollmentsQueryOptions(params))
   },
   head: () => ({
     meta: [
@@ -34,11 +32,9 @@ export const Route = createFileRoute('/_protected/dashboard/enrollments/')({
 })
 
 function RouteComponent() {
-  const loaderData = Route.useLoaderData()
   const { user } = Route.useRouteContext()
   if (!user) return null
   const role: Roles = user.data.role
-  const displayEnrollments = (loaderData?.data ?? []).map(transformEnrollment)
 
-  return <EnrollmentsPage initialData={loaderData} initialEnrollments={displayEnrollments} role={role} />
+  return <EnrollmentsPage role={role} />
 }

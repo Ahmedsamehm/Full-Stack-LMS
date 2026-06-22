@@ -6,31 +6,33 @@ import { studentKeys } from './query-keys'
 import { userKeys } from '#/features/users/_hooks/query-keys'
 import { PAGINATION } from '#/lib/constants'
 
-interface UseStudentManagementOptions {
-  initialData?: any
-}
-
 interface StudentQueryParams {
   page?: number
   search?: string
 }
 
-export function useStudentManagement(params?: StudentQueryParams, isTeacher?: boolean, options?: UseStudentManagementOptions) {
-  const query = useQuery({
-    queryKey: isTeacher 
-      ? studentKeys.teacherStudentsList({ page: params?.page, limit: PAGINATION.DEFAULT_LIMIT }) 
-      : userKeys.list({ page: params?.page, limit: PAGINATION.DEFAULT_LIMIT, search: params?.search }),
-    queryFn: () => 
-      isTeacher 
-        ? getTeacherStudents({ data: { page: params?.page, limit: PAGINATION.DEFAULT_LIMIT } }) 
-        : getStudents({ data: { page: params?.page, limit: PAGINATION.DEFAULT_LIMIT, search: params?.search } }),
-
+export function adminStudentsQueryOptions(params: StudentQueryParams) {
+  return {
+    queryKey: userKeys.list({ page: params.page, limit: PAGINATION.DEFAULT_LIMIT, search: params.search }),
+    queryFn: () => getStudents({ data: { page: params.page, limit: PAGINATION.DEFAULT_LIMIT, search: params.search } }),
     staleTime: 30 * 1000,
-    initialData: options?.initialData,
-  })
+  }
+}
+
+export function teacherStudentsQueryOptions(params: StudentQueryParams) {
+  return {
+    queryKey: studentKeys.teacherStudentsList({ page: params.page, limit: PAGINATION.DEFAULT_LIMIT }),
+    queryFn: () => getTeacherStudents({ data: { page: params.page, limit: PAGINATION.DEFAULT_LIMIT } }),
+    staleTime: 30 * 1000,
+  }
+}
+
+export function useStudentManagement(params?: StudentQueryParams, isTeacher?: boolean) {
+  const options = isTeacher ? teacherStudentsQueryOptions(params ?? {}) : adminStudentsQueryOptions(params ?? {})
+  const query = useQuery(options as any)
 
 
-  const rawData = query.data?.data as
+  const rawData = (query.data as any)?.data as
     | {
         id: string
         name: string
@@ -53,7 +55,7 @@ export function useStudentManagement(params?: StudentQueryParams, isTeacher?: bo
     return rawData.filter((user) => user.name.toLowerCase().includes(searchQuery) || user.email.toLowerCase().includes(searchQuery))
   }, [rawData, searchQuery])
 
-  const formattedData = transformStudentsPage(filteredData, query.data?.meta, !!isTeacher)
+  const formattedData = transformStudentsPage(filteredData, (query.data as any)?.meta, !!isTeacher)
 
   return {
     data: formattedData,

@@ -3,10 +3,14 @@ import { getMyEnrollments } from '../_api/enrollments'
 import type { PaginationParams } from '#/schemas'
 import { enrollmentKeys } from './query-keys'
 
-export function useGetMyEnrollments(params: PaginationParams, options?: { enabled?: boolean }) {
-  return useQuery({
+export function myEnrollmentsQueryOptions(params: PaginationParams) {
+  return {
     queryKey: enrollmentKeys.myList(params),
     queryFn: () => getMyEnrollments({ data: params }),
-    ...options,
-  })
+    staleTime: 30 * 1000,
+  }
+}
+
+export function useGetMyEnrollments(params: PaginationParams, options?: { enabled?: boolean }) {
+  return useQuery({ ...myEnrollmentsQueryOptions(params), ...options })
 }

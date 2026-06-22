@@ -12,15 +12,9 @@ import { usePaymentFilters } from '../../../payments/_hooks/usePaymentFilters'
 import type { Course } from '#/schemas'
 import { PAGINATION } from '#/lib/constants'
 
-// ─── BuyCoursesPageProps ───────────────────────────────────────────────────────
-
-interface BuyCoursesPageProps {
-  params?: { limit: number; page: number; search?: string }
-}
-
 // ─── BuyCoursesPage ────────────────────────────────────────────────────────────
 
-export default function BuyCoursesPage({ params: _params }: BuyCoursesPageProps = {}) {
+export default function BuyCoursesPage() {
   const { category, search, setFilter } = usePaymentFilters()
 
   const { data: allCoursesData, isLoading: isLoadingAll } = useGetCourses({ limit: PAGINATION.MAX_LIMIT, search: search || undefined })

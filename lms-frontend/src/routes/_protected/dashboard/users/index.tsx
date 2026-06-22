@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import UsersPage from '#/features/users/_components/users-page'
-import { getUsers } from '#/features/users/_api/users'
+import { usersQueryOptions } from '#/features/users/_hooks/useGetUsers'
 import { usersSearchSchema, createSearchValidator } from '#/lib/search'
 import type { UsersSearchParams } from '#/lib/search'
 import type { Roles } from '#/schemas/enums'
@@ -12,14 +12,13 @@ export const Route = createFileRoute('/_protected/dashboard/users/')({
     search: search.search,
     role: search.role,
   }),
-  loader: async ({ deps }) => {
+  loader: async ({ context: { queryClient }, deps }) => {
     const params = {
       page: deps.page || 1,
       search: deps.search || undefined,
       role: deps.role || undefined,
     }
-    const data = await getUsers({ data: params })
-    return data
+    await queryClient.ensureQueryData(usersQueryOptions(params))
   },
   head: () => ({
     meta: [
@@ -33,11 +32,9 @@ export const Route = createFileRoute('/_protected/dashboard/users/')({
 })
 
 function RouteComponent() {
-  const loaderData = Route.useLoaderData()
   const { user } = Route.useRouteContext()
-
 
   if (!user) return null
   const role = user.data.role as Roles
-  return <UsersPage initialData={loaderData} Role={role} />
+  return <UsersPage role={role} />
 }

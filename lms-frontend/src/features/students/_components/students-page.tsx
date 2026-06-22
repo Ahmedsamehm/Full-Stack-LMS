@@ -1,9 +1,9 @@
-import * as React from 'react'
+import { useMemo } from 'react'
 
 import { Pagination } from '#/components/pagination'
 import SectionHeader from '#/components/section-header'
 import { EmptyState } from '#/components/empty-state'
-import { isTeacherRole, isAdminRole } from '#/lib/auth'
+import { isAdminRole } from '#/lib/auth'
 import type { Roles } from '#/schemas/enums'
 
 import { usePagination } from '#/hooks/usePagination'
@@ -15,22 +15,19 @@ import StudentsFilterBar from './students-filter-bar'
 import StudentsTable from './students-table'
 import { TableSkeleton } from '#/components/loading-skeleton'
 import { PAGINATION } from '#/lib/constants'
-
 interface StudentsPageProps {
-  initialData?: unknown
+  isTeacher: boolean
   role?: Roles | null
 }
 
-export default function StudentsPage({ initialData, role }: StudentsPageProps = {}) {
-  const isTeacher = isTeacherRole(role)
-
+export default function StudentsPage({ isTeacher, role }: StudentsPageProps) {
   const { search, page } = useStudentFilters()
 
-  const queryParams = React.useMemo(() => {
+  const queryParams = useMemo(() => {
     return { page, search: search || undefined }
   }, [page, search])
 
-  const { data, isPending, isLoading } = useStudentManagement(queryParams, isTeacher, { initialData })
+  const { data, isPending, isLoading } = useStudentManagement(queryParams, isTeacher)
 
   const { data: coursesData } = useGetMyCourses({ limit: PAGINATION.DEFAULT_LIMIT })
 

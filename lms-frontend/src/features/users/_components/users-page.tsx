@@ -15,12 +15,11 @@ import UserDetailsDialog from './user-details-dialog'
 import type { Roles } from '#/schemas/enums'
 
 interface UsersPageProps {
-  initialData?: any
-  Role: Roles
+  role: Roles
 }
 
-export default function UsersPage({ initialData, Role }: UsersPageProps) {
-  const { role, search, page, setFilter, clearFilters } = useUserFilters()
+export default function UsersPage({ role }: UsersPageProps) {
+  const { role: filterRole, search, page, setFilter, clearFilters } = useUserFilters()
   const [isUserFormOpen, setIsUserFormOpen] = useState(false)
   const [selectedUserForEdit, setSelectedUserForEdit] = useState<any>(null)
 
@@ -31,14 +30,7 @@ export default function UsersPage({ initialData, Role }: UsersPageProps) {
 
   const deleteMutation = useDeleteUser()
 
-  const { data, isLoading, isFetching } = useGetUsers(
-    {
-      page,
-      role: role || undefined,
-      search: search || undefined,
-    },
-    { initialData },
-  )
+  const { data, isLoading, isFetching } = useGetUsers({ page, role: filterRole || undefined, search: search || undefined })
 
   const { currentPage, setPage, totalPages } = usePagination({
     totalPages: data?.meta?.totalPages,
@@ -104,7 +96,7 @@ export default function UsersPage({ initialData, Role }: UsersPageProps) {
       {/* Create/Edit User Modal */}
       <Dialog open={isUserFormOpen} onOpenChange={setIsUserFormOpen}>
         <DialogContent className="sm:max-w-2xl p-0 border-none bg-transparent" showCloseButton={false}>
-          <UserForm onSuccess={() => setIsUserFormOpen(false)} initialData={selectedUserForEdit} currentRole={Role} />
+          <UserForm onSuccess={() => setIsUserFormOpen(false)} initialData={selectedUserForEdit} currentRole={role} />
         </DialogContent>
       </Dialog>
 

@@ -1,10 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import BuyCoursesPage from '#/features/courses/_components/courses/BuyCoursesPage'
-import { getCourses } from '#/features/courses/_api/courses'
+import { coursesQueryOptions } from '#/features/courses/_hooks/courses/useGetCourses'
 import { buyCoursesSearchSchema, createSearchValidator } from '#/lib/search'
 import type { BuyCoursesSearchParams } from '#/lib/search'
 import { PAGINATION } from '#/lib/constants'
-import { courseKeys } from '#/features/courses/_hooks/query-keys'
 
 export const Route = createFileRoute('/_protected/dashboard/buy-courses/')({
   validateSearch: createSearchValidator(buyCoursesSearchSchema),
@@ -20,11 +19,7 @@ export const Route = createFileRoute('/_protected/dashboard/buy-courses/')({
       page: deps.page ?? PAGINATION.DEFAULT_PAGE,
       search: deps.search || undefined,
     }
-    await queryClient.ensureQueryData({
-      queryKey: courseKeys.list(params),
-      queryFn: () => getCourses({ data: params }),
-    })
-    return params
+    await queryClient.ensureQueryData(coursesQueryOptions(params))
   },
   head: () => ({
     meta: [
@@ -38,6 +33,5 @@ export const Route = createFileRoute('/_protected/dashboard/buy-courses/')({
 })
 
 function RouteComponent() {
-  const params = Route.useLoaderData()
-  return <BuyCoursesPage params={params} />
+  return <BuyCoursesPage />
 }
