@@ -12,6 +12,7 @@ import { rolesEnum } from '#/schemas/enums'
 import type { Roles } from '#/schemas/enums'
 import { useCreateUser } from '../_hooks/useCreateUser'
 import { useUpdateUser } from '../_hooks/useUpdateUser'
+import { extractErrorMessage } from '#/lib/errors'
 
 const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -39,13 +40,8 @@ export default function UserForm({ onSuccess, initialData, currentRole }: UserFo
   const updateMutation = useUpdateUser()
   const isPending = createMutation.isPending || updateMutation.isPending
 
-  const getErrorMessage = () => {
-    const error = (createMutation.error || updateMutation.error) as any
-    if (!error) return null
-    const message = error.response?.data?.message || error.message || 'An error occurred'
-    return Array.isArray(message) ? message.join(', ') : message
-  }
-  const formError = getErrorMessage()
+  const mutationError = createMutation.error || updateMutation.error
+  const formError = mutationError ? extractErrorMessage(mutationError, 'An error occurred') : null
 
   const {
     register,

@@ -9,16 +9,17 @@ export const Route = createFileRoute('/_protected/dashboard/courses/$id')({
     await queryClient.ensureQueryData(courseByIdQueryOptions(params.id))
     return { id: params.id }
   },
-
   component: RouteComponent,
 })
 
 function RouteComponent() {
   const { id } = Route.useLoaderData()
   const { user } = Route.useRouteContext()
-  if (!user) return null
-  const role = user.data.role as Roles
   const { data: courseData, isLoading } = useGetCourseById(id)
+
+  if (!user) return null
+
+  const role = user.data.role as Roles
   const mappedCourse = transformDashboardCourseDetail(courseData?.data)
 
   return <CourseDetailPage course={mappedCourse} isLoading={isLoading} role={role} />

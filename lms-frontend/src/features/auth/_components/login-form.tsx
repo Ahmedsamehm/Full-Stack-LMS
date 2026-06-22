@@ -13,7 +13,7 @@ import { loginRequestSchema } from '#/schemas/auth'
 
 import type { LoginRequest } from '#/schemas/auth'
 import { useLogin } from '../_hooks/useLogin'
-import { getAuthErrorMessage } from '../_utils/getAuthErrorMessage'
+import { extractErrorMessage } from '#/lib/errors'
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false)
@@ -135,7 +135,7 @@ export default function LoginForm() {
             <Button type="submit" size="lg" className="h-12 w-full text-base text-white" disabled={isPending}>
               {isSubmitting || isPending ? 'Signing In...' : 'Sign In'}
             </Button>
-            {error && <p className="text-sm text-destructive">{getAuthErrorMessage(error, 'Login failed. Please check your email and password.')}</p>}
+            {error && <p className="text-sm text-destructive">{extractErrorMessage(error, 'Login failed. Please check your email and password.')}</p>}
           </form>
           <Separator className="flex-1" />
           {/* Divider */}

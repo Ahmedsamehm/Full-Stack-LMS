@@ -9,6 +9,7 @@ import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '#/components/ui/dialog'
 import { toast } from 'sonner'
+import { extractErrorMessage } from '#/lib/errors'
 import { useEffect } from 'react'
 
 interface CreateLessonDialogProps {
@@ -88,9 +89,8 @@ export function CreateLessonDialog({ courseId, open, onOpenChange, lessonToEdit 
         toast.success('Lesson created successfully')
       }
       onOpenChange(false)
-    } catch (e: any) {
-      const message = e.response?.data?.message || e.message
-      toast.error(Array.isArray(message) ? message.join(', ') : message)
+    } catch (e: unknown) {
+      toast.error(extractErrorMessage(e))
     }
   }
 

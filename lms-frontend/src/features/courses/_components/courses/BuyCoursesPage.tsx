@@ -39,8 +39,8 @@ export default function BuyCoursesPage() {
   return (
     <div className="flex-1 overflow-y-auto w-full bg-surface-bright/30">
       <div className="px-4 md:px-8 py-8 max-w-[1440px] mx-auto flex flex-col gap-6">
-        <div className="relative overflow-hidden bg-gradient-to-r from-primary/90 to-primary-container/40 p-6 md:p-8 rounded-2xl border border-outline-variant shadow-sm flex flex-col gap-4 text-white">
-          <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none transform translate-y-6 translate-x-6 scale-150">
+        <div className="relative overflow-hidden bg-primary/80 p-6 md:p-8 rounded-2xl border border-outline-variant shadow-sm flex flex-col gap-4 text-white">
+          <div className="absolute right-0 bottom-0 opacity-100 pointer-events-none transform translate-y-6 translate-x-1 scale-150">
             <ShoppingCart className="size-48" />
           </div>
           <div className="flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold w-fit">

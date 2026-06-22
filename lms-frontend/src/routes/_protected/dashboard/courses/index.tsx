@@ -11,6 +11,16 @@ import { isStudent } from '#/lib/auth'
 import { PAGINATION } from '#/lib/constants'
 import { useMemo } from 'react'
 
+function buildQueryParams(deps: Partial<CoursesSearchParams>) {
+  return {
+    page: deps.page || PAGINATION.DEFAULT_PAGE,
+    limit: deps.limit || PAGINATION.COURSES_GRID_LIMIT,
+    search: deps.search,
+    categoryId: deps.categoryId,
+    status: deps.status,
+  }
+}
+
 export const Route = createFileRoute('/_protected/dashboard/courses/')({
   validateSearch: createSearchValidator(coursesSearchSchema),
   loaderDeps: ({ search }: { search: CoursesSearchParams }) => ({
@@ -21,62 +31,48 @@ export const Route = createFileRoute('/_protected/dashboard/courses/')({
     status: search.status,
   }),
   loader: async ({ context, deps }) => {
-    const queryClient = context.queryClient
-    const user = (context as any).user
+    const { queryClient, user } = context
     const role = (user?.data?.role as Roles) ?? rolesEnum.enum.Student
-    const student = isStudent(role)
-    const params = {
-      page: deps.page || PAGINATION.DEFAULT_PAGE,
-      limit: deps.limit || PAGINATION.COURSES_GRID_LIMIT,
-      search: deps.search,
-      categoryId: deps.categoryId,
-      status: deps.status,
-    }
-    if (student) {
+    const params = buildQueryParams(deps)
+
+    if (isStudent(role)) {
       await queryClient.ensureQueryData(myEnrollmentsQueryOptions({ page: params.page, limit: params.limit }))
     } else {
       await queryClient.ensureQueryData(coursesQueryOptions(params))
     }
   },
   head: () => ({
-    meta: [
-      {
-        title: 'EduPro - Courses',
-        description: 'EduPro Courses',
-      },
-    ],
+    meta: [{ title: 'EduPro - Courses', description: 'EduPro Courses' }],
   }),
   component: RouteComponent,
 })
 
 function RouteComponent() {
   const searchParams = Route.useSearch()
-
   const { user } = Route.useRouteContext()
 
   const role = (user.data?.role as Roles) ?? rolesEnum.enum.Student
   const student = isStudent(role)
+  const queryParams = buildQueryParams(searchParams)
 
-  const queryParams = {
-    page: searchParams.page || PAGINATION.DEFAULT_PAGE,
-    limit: searchParams.limit || PAGINATION.COURSES_GRID_LIMIT,
-    search: searchParams.search,
-    categoryId: searchParams.categoryId,
-    status: searchParams.status,
-  }
-
-  const { data: allCoursesData, isPending: loadingAll } = useGetCourses(queryParams, { enabled: !student })
-
-  const { data: myEnrollmentsData, isPending: loadingEnrollments } = useGetMyEnrollments(
+  const { data: allCoursesData, isPending: isAllCoursesPending } = useGetCourses(queryParams, { enabled: !student })
+  const { data: myEnrollmentsData, isPending: isEnrollmentsPending } = useGetMyEnrollments(
     { page: queryParams.page, limit: queryParams.limit },
     { enabled: student },
   )
 
-  const isLoading = student ? loadingEnrollments : loadingAll
+  const isLoading = student ? isEnrollmentsPending : isAllCoursesPending
 
   const mappedCourses = useMemo(() => {
-    return transformCoursesData(role, allCoursesData, myEnrollmentsData)
-  }, [role, allCoursesData, myEnrollmentsData])
+    const courses = transformCoursesData(role, allCoursesData, myEnrollmentsData)
+    if (student && queryParams.search) {
+      const q = queryParams.search.toLowerCase()
+      return courses.filter(
+        (c) => c.title.toLowerCase().includes(q) || c.instructorName.toLowerCase().includes(q),
+      )
+    }
+    return courses
+  }, [role, allCoursesData, myEnrollmentsData, student, queryParams.search])
 
   const meta = student ? myEnrollmentsData?.meta : allCoursesData?.meta
 

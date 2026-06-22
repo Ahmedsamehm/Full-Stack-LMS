@@ -3,6 +3,7 @@ import type { CreateCourseRequest } from '#/schemas'
 import { createCourse } from '../../_api/courses'
 import { toast } from 'sonner'
 import { courseKeys } from '../query-keys'
+import { extractErrorMessage } from '#/lib/errors'
 
 export function useCreateCourse() {
   const queryClient = useQueryClient()
@@ -14,9 +15,7 @@ export function useCreateCourse() {
       toast.success('Course created successfully')
     },
     onError: (e: unknown) => {
-      const error = e as { response?: { data?: { message?: string | string[] } }; message?: string }
-      const message = error.response?.data?.message || error.message
-      toast.error(Array.isArray(message) ? message.join(', ') : message)
+      toast.error(extractErrorMessage(e))
     },
   })
 }

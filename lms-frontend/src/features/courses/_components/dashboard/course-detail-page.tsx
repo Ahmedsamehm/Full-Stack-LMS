@@ -44,34 +44,57 @@ export default function CourseDetailPage({ course, isLoading, role }: CourseDeta
       <CourseHeader course={course} canManage={canManage} />
 
       {/* Bento Grid */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-        {/* Left Column */}
-        <div className="xl:col-span-8 flex flex-col gap-6">
-          {/* About Card */}
-          <CourseAbout course={course} />
+      {canManage ? (
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          {/* Left Column */}
+          <div className="xl:col-span-2 flex flex-col gap-6">
+            {/* About Card */}
+            <CourseAbout course={course} />
 
-          {/* Resources Card */}
-          <CourseResources resources={course.resources} />
+            {/* Resources Card */}
+            <CourseResources resources={course.resources} />
 
-          {/* Syllabus Card */}
-          <CourseSyllabus
-            modules={course.modules}
-            canManage={canManage}
-            onAddLesson={handleAddLesson}
-            onEditLesson={handleEditLesson}
-            onDeleteLesson={(id) => setLessonToDelete(id)}
-          />
+            {/* Syllabus Card */}
+            <CourseSyllabus
+              modules={course.modules}
+              canManage={canManage}
+              onAddLesson={handleAddLesson}
+              onEditLesson={handleEditLesson}
+              onDeleteLesson={(id) => setLessonToDelete(id)}
+            />
+          </div>
+
+          {/* Right Column */}
+          <div className="xl:col-span-1 flex flex-col gap-6">
+            {/* Stats Grid */}
+            {canManage && <CourseStats stats={course.stats} />}
+
+            {/* Recent Activity */}
+            {canManage && <RecentActivityCard courseId={course.id} />}
+          </div>
         </div>
-
-        {/* Right Column */}
-        <div className="xl:col-span-4 flex flex-col gap-6">
-          {/* Stats Grid */}
-          <CourseStats stats={course.stats} />
-
-          {/* Recent Activity */}
-          <RecentActivityCard courseId={course.id} />
-        </div>
-      </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            {/* Left Column */}
+            <div className="xl:col-span-2 flex flex-col gap-6">
+              {/* About Card */}
+              <CourseAbout course={course} />
+              {/* Syllabus Card */}
+              <CourseSyllabus
+                modules={course.modules}
+                canManage={canManage}
+                onAddLesson={handleAddLesson}
+                onEditLesson={handleEditLesson}
+                onDeleteLesson={(id) => setLessonToDelete(id)}
+              />
+            </div>
+            <div className="xl:col-span-1">
+              <CourseResources resources={course.resources} />
+            </div>
+          </div>
+        </>
+      )}
 
       <CreateLessonDialog
         courseId={course.id}

@@ -18,15 +18,9 @@ export function EmptyState({
 }: EmptyStateProps) {
   return (
     <div className={cn('flex flex-col items-center justify-center py-16 px-4 text-center max-w-3xl mx-auto', className)}>
-      <div className="rounded-full bg-muted p-4 mb-5 text-muted-foreground">
-        {icon}
-      </div>
-      <h3 className="text-xl font-semibold text-foreground mb-2">
-        {title}
-      </h3>
-      <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-        {message}
-      </p>
+      <div className="rounded-full bg-muted p-4 mb-5 text-muted-foreground">{icon}</div>
+      <h3 className="text-xl font-semibold text-foreground mb-2">{title}</h3>
+      <p className="text-sm text-muted-foreground mb-6 leading-relaxed">{message}</p>
       {action && <div>{action}</div>}
     </div>
   )

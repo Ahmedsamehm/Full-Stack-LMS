@@ -6,6 +6,7 @@ import { CourseFormDialog } from '../course-form-dialog'
 import type { CreateCourseRequest } from '#/schemas/course'
 import type { DashboardCourseDetail } from '#/schemas'
 import { toast } from 'sonner'
+import { extractErrorMessage } from '#/lib/errors'
 
 interface CourseHeaderProps {
   course: DashboardCourseDetail
@@ -35,11 +36,9 @@ export function CourseHeader({ course, canManage = false }: CourseHeaderProps) {
           setIsEditDialogOpen(false)
         },
         onError: (err: unknown) => {
-          const error = err as { response?: { data?: { message?: string | string[] } }; message?: string }
-          const errMsg = error.response?.data?.message || error.message || 'Failed to update course'
-          toast.error(Array.isArray(errMsg) ? errMsg.join(', ') : errMsg)
+          toast.error(extractErrorMessage(err, 'Failed to update course'))
         },
-      }
+      },
     )
   }
 
@@ -79,4 +78,3 @@ export function CourseHeader({ course, canManage = false }: CourseHeaderProps) {
     </div>
   )
 }
-

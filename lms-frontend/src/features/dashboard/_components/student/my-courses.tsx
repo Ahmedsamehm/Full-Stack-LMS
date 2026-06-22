@@ -24,18 +24,12 @@ function CourseCard({ course }: { course: StudentCourse }) {
     <Card className="p-0 gap-0 hover:shadow-md transition-shadow">
       <CardContent className="p-3 sm:p-4 flex flex-col gap-3 sm:gap-4">
         <div className="flex items-center gap-3 sm:gap-4">
-          <div
-            className={`size-10 sm:size-12 rounded-lg ${course.iconBg} flex items-center justify-center ${course.iconColor} shrink-0`}
-          >
+          <div className={`size-10 sm:size-12 rounded-lg ${course.iconBg} flex items-center justify-center ${course.iconColor} shrink-0`}>
             <Icon className="size-5 sm:size-6" />
           </div>
           <div className="min-w-0">
-            <h4 className="text-sm font-bold text-foreground truncate">
-              {course.title}
-            </h4>
-            <p className="text-xs text-muted-foreground truncate">
-              Instructor: {course.instructor}
-            </p>
+            <h4 className="text-sm font-bold text-foreground truncate">{course.title}</h4>
+            <p className="text-xs text-muted-foreground truncate">Instructor: {course.instructor}</p>
           </div>
         </div>
 
@@ -59,12 +53,7 @@ export default function MyCourses({ courses, isLoading }: MyCoursesProps) {
   if (!courses) return null
 
   if (courses.length === 0) {
-    return (
-      <EmptyState
-        title="No enrolled courses"
-        message="Enroll in a course to get started on your learning journey."
-      />
-    )
+    return <EmptyState title="No enrolled courses" message="Enroll in a course to get started on your learning journey." />
   }
 
   return (

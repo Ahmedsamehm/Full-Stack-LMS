@@ -1,4 +1,5 @@
-import api, { getErrorMessage } from '#/lib/axios'
+import api from '#/lib/axios'
+import { extractErrorMessage } from '#/lib/errors'
 import type { z } from 'zod'
 import type {
   courseListParamsSchema,
@@ -29,7 +30,7 @@ export async function createCourse({ data: course }: { data: z.infer<typeof crea
     const { data } = await api.post('/courses', course)
     return { success: true, data }
   } catch (e) {
-    return { success: false, error: getErrorMessage(e) }
+    return { success: false, error: extractErrorMessage(e) }
   }
 }
 

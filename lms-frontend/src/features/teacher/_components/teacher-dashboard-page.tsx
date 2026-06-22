@@ -12,7 +12,7 @@ export default function TeacherDashboardPage() {
     <main className="flex-1 w-full px-4 md:px-8 py-6 lg:py-8 max-w-[1440px] mx-auto flex flex-col gap-6">
       <SectionHeader
         title="Teacher Dashboard"
-        description="Welcome back, Professor. Here&apos;s what&apos;s happening with your courses today."
+        description="Welcome back, Professor. Here's what's happening with your courses today."
         viewAll={false}
       />
 

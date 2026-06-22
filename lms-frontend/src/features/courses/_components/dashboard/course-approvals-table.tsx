@@ -3,14 +3,7 @@ import { Avatar, AvatarFallback } from '#/components/ui/avatar'
 import { Badge } from '#/components/ui/badge'
 import { EmptyState } from '#/components/empty-state'
 import SectionHeader from '#/components/section-header'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '#/components/ui/table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '#/components/ui/table'
 
 import type { ApprovalItem } from '#/schemas'
 
@@ -30,18 +23,14 @@ export default function CourseApprovalsTable({ approvals, isLoading }: CourseApp
     return (
       <div className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm col-span-1 lg:col-span-2 flex flex-col overflow-hidden">
         <SectionHeader title="Course Approvals" viewAll={false} />
-        <EmptyState
-          title="No pending approvals"
-          message="All courses have been reviewed."
-          className="py-12"
-        />
+        <EmptyState title="No pending approvals" message="All courses have been reviewed." className="py-12" />
       </div>
     )
   }
 
   return (
     <div className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm col-span-1 lg:col-span-2 flex flex-col overflow-hidden">
-      <SectionHeader title="Course Approvals" viewAll />
+      <SectionHeader title="Course Approvals" />
 
       {/* Mobile Card Layout */}
       <div className="md:hidden flex flex-col divide-y divide-outline-variant">
@@ -52,10 +41,7 @@ export default function CourseApprovalsTable({ approvals, isLoading }: CourseApp
                 <h4 className="text-sm font-semibold text-on-surface">{item.courseTitle}</h4>
                 <p className="text-xs text-on-surface-variant">Submitted {item.submittedAgo}</p>
               </div>
-              <Badge
-                variant="outline"
-                className="text-xs font-medium bg-surface-container-high border-outline-variant/30"
-              >
+              <Badge variant="outline" className="text-xs font-medium bg-surface-container-high border-outline-variant/30">
                 {item.category}
               </Badge>
             </div>
@@ -114,10 +100,7 @@ export default function CourseApprovalsTable({ approvals, isLoading }: CourseApp
                   </div>
                 </TableCell>
                 <TableCell className="p-4">
-                  <Badge
-                    variant="outline"
-                    className="text-xs font-medium bg-surface-container-high border-outline-variant/30"
-                  >
+                  <Badge variant="outline" className="text-xs font-medium bg-surface-container-high border-outline-variant/30">
                     {item.category}
                   </Badge>
                 </TableCell>

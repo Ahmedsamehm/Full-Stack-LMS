@@ -17,12 +17,8 @@ export function ErrorState({
       <div className="rounded-full bg-destructive/10 p-4 mb-5 text-destructive animate-pulse">
         <AlertCircle className="w-12 h-12" />
       </div>
-      <h3 className="text-2xl font-bold text-foreground mb-2 leading-tight">
-        {title}
-      </h3>
-      <p className="text-base text-muted-foreground mb-8 leading-relaxed">
-        {message}
-      </p>
+      <h3 className="text-2xl font-bold text-foreground mb-2 leading-tight">{title}</h3>
+      <p className="text-base text-muted-foreground mb-8 leading-relaxed">{message}</p>
       {onRetry && (
         <Button onClick={onRetry} variant="default" className="text-white hover:bg-primary/95 min-w-[120px]">
           Try Again

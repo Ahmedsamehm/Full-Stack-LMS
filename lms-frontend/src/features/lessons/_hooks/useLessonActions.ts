@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useDeleteLesson } from './useDeleteLesson'
 import { toast } from 'sonner'
+import { extractErrorMessage } from '#/lib/errors'
 
 export function useLessonActions(courseId: string) {
   const [isLessonDialogOpen, setIsLessonDialogOpen] = useState(false)
@@ -21,8 +22,8 @@ export function useLessonActions(courseId: string) {
       await deleteLesson({ courseId, id: lessonToDelete })
       toast.success('Lesson deleted successfully')
       setLessonToDelete(null)
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to delete lesson')
+    } catch (err: unknown) {
+      toast.error(extractErrorMessage(err, 'Failed to delete lesson'))
     }
   }
 

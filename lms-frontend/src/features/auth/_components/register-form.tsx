@@ -13,7 +13,7 @@ import { registerRequestSchema } from '#/schemas/auth'
 
 import type { RegisterRequest } from '#/schemas/auth'
 import { useRegister } from '../_hooks/useRegister'
-import { getAuthErrorMessage } from '../_utils/getAuthErrorMessage'
+import { extractErrorMessage } from '#/lib/errors'
 
 export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false)
@@ -279,7 +279,7 @@ export default function RegisterForm() {
             </Button>
             {error && (
               <p className="text-sm text-destructive">
-                {getAuthErrorMessage(
+{extractErrorMessage(
                   error,
                   'Registration failed. Please check your details and try again.',
                 )}

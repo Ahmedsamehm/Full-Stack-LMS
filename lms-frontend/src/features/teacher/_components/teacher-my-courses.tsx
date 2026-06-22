@@ -6,14 +6,7 @@ import { useDeleteTeacherCourse } from '../_hooks/useDeleteTeacherCourse'
 import { useUpdateTeacherCourse } from '../_hooks/useUpdateTeacherCourse'
 import { CourseFormDialog } from '#/features/courses/_components/dashboard/course-form-dialog'
 import { ConfirmDeleteDialog } from '#/components/confirm-delete-dialog'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '#/components/ui/table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '#/components/ui/table'
 
 import type { TeacherCourse } from '#/schemas'
 import type { CreateCourseRequest } from '#/schemas/course'
@@ -39,9 +32,7 @@ function StatusBadge({ status }: { status: TeacherCourse['status'] }) {
     )
   }
   return (
-    <span className="inline-flex items-center px-2 py-1 rounded-full bg-surface-variant text-on-surface-variant text-xs font-semibold">
-      Draft
-    </span>
+    <span className="inline-flex items-center px-2 py-1 rounded-full bg-surface-variant text-on-surface-variant text-xs font-semibold">Draft</span>
   )
 }
 
@@ -65,11 +56,7 @@ export default function MyCourses({ courses, isLoading }: MyCoursesProps) {
         <div className="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-white">
           <h3 className="text-lg font-semibold text-on-surface">Active Courses</h3>
         </div>
-        <EmptyState
-          title="No courses yet"
-          message="Create your first course to get started."
-          className="py-12"
-        />
+        <EmptyState title="No courses yet" message="Create your first course to get started." className="py-12" />
       </div>
     )
   }
@@ -77,9 +64,7 @@ export default function MyCourses({ courses, isLoading }: MyCoursesProps) {
   return (
     <div className="lg:col-span-2 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-[0_2px_4px_rgba(15,23,42,0.04)] overflow-hidden flex flex-col relative">
       <div className="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-white">
-        <h3 className="text-lg font-semibold text-on-surface">
-          Active Courses
-        </h3>
+        <h3 className="text-lg font-semibold text-on-surface">Active Courses</h3>
       </div>
 
       {/* Mobile Card Layout */}
@@ -90,9 +75,7 @@ export default function MyCourses({ courses, isLoading }: MyCoursesProps) {
             <div key={course.id} className="relative p-4 flex flex-col gap-3 bg-white">
               <div className="flex justify-between items-start">
                 <div className="flex items-center gap-3">
-                  <div
-                    className={`size-10 rounded ${course.iconBg} flex items-center justify-center ${course.iconColor}`}
-                  >
+                  <div className={`size-10 rounded ${course.iconBg} flex items-center justify-center ${course.iconColor}`}>
                     <Icon className="text-lg" />
                   </div>
                   <div>
@@ -164,24 +147,15 @@ export default function MyCourses({ courses, isLoading }: MyCoursesProps) {
             {courses.map((course) => {
               const Icon = (iconMap as Record<string, React.ComponentType<{ className?: string }> | undefined>)[course.icon] || Code
               return (
-                <TableRow
-                  key={course.id}
-                  className="hover:bg-surface-bright transition-colors group"
-                >
+                <TableRow key={course.id} className="hover:bg-surface-bright transition-colors group">
                   <TableCell className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div
-                        className={`size-10 rounded ${course.iconBg} flex items-center justify-center ${course.iconColor}`}
-                      >
+                      <div className={`size-10 rounded ${course.iconBg} flex items-center justify-center ${course.iconColor}`}>
                         <Icon className="text-lg" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-on-surface">
-                          {course.title}
-                        </p>
-                        <p className="text-xs text-on-surface-variant">
-                          {course.code}
-                        </p>
+                        <p className="text-sm font-medium text-on-surface">{course.title}</p>
+                        <p className="text-xs text-on-surface-variant">{course.code}</p>
                       </div>
                     </div>
                   </TableCell>
@@ -194,9 +168,7 @@ export default function MyCourses({ courses, isLoading }: MyCoursesProps) {
                       {course.students}
                     </div>
                   </TableCell>
-                  <TableCell className="px-6 py-4 text-sm text-on-surface-variant">
-                    {course.lastUpdated}
-                  </TableCell>
+                  <TableCell className="px-6 py-4 text-sm text-on-surface-variant">{course.lastUpdated}</TableCell>
                   <TableCell className="px-6 py-4 text-right relative">
                     <button
                       onClick={() => useStateActive(activeMenuId === course.id ? null : course.id)}
@@ -239,7 +211,9 @@ export default function MyCourses({ courses, isLoading }: MyCoursesProps) {
           mode="edit"
           course={editingCourse}
           open
-          onOpenChange={(open) => { if (!open) setEditingCourse(null) }}
+          onOpenChange={(open) => {
+            if (!open) setEditingCourse(null)
+          }}
           onSubmit={(data: CreateCourseRequest) => {
             updateCourse(editingCourse.id, data)
           }}
